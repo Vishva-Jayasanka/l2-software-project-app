@@ -1,0 +1,66 @@
+<mat-card class="authentication">
+
+  <mat-card-header>
+    <mat-card-title>Add recovery email</mat-card-title>
+    <mat-card-subtitle>In case you forgot the password, we will send an OTP to this email.</mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <mat-horizontal-stepper labelPosition="bottom" [linear]="true" #stepper>
+
+      <mat-step [stepControl]="emailForm">
+
+        <ng-template matStepLabel>Enter recovery email</ng-template>
+
+        <form [formGroup]="emailForm" (ngSubmit)="onSubmitEmail()">
+
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Recovery email</mat-label>
+            <input type="email" matInput formControlName="email" placeholder="someone@example.com"/>
+            <mat-error *ngIf="email.touched && email.errors?.required">This field is required</mat-error>
+            <mat-error *ngIf="email.touched && email.errors?.email">Please enter a valid email address</mat-error>
+          </mat-form-field>
+
+          <button mat-raised-button matStepperNext [disabled]="emailForm.invalid">
+            <span *ngIf="false" class="spinner-border spinner-border-sm mr-1"></span>
+            Send
+          </button>
+
+        </form>
+      </mat-step>
+
+      <mat-step [formGroup]="verificationCodeForm">
+
+        <ng-template matStepLabel>Enter verification code</ng-template>
+
+        <mat-card-subtitle>
+          We sent an email that contains six digit verification code to {{ email.value }}
+        </mat-card-subtitle>
+
+        <form [formGroup]="verificationCodeForm" (ngSubmit)="onSubmitOTP()">
+
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Verification code</mat-label>
+            <input type="text" matInput formControlName="verificationCode"/>
+            <mat-error *ngIf="OTP.touched && OTP.errors?.minLength">Verification code consists of six digits</mat-error>
+            <mat-error *ngIf="OTP.touched && OTP.errors?.required">Please enter the verification code.</mat-error>
+          </mat-form-field>
+
+          <button mat-button matStepperPrevious style="margin-right: 10px">Back</button>
+          <button mat-raised-button type="submit" color="primary" [disabled]="verificationCodeForm.invalid">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!progress"></span>
+            Verify
+          </button>
+
+        </form>
+
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+
+      </mat-step>
+
+    </mat-horizontal-stepper>
+  </mat-card-content>
+
+</mat-card>
+

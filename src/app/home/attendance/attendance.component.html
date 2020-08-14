@@ -1,0 +1,49 @@
+<div class="data-container">
+
+  <div class="jumbotron">
+    <h3>Attendance</h3>
+    <p>You can check your attendance for each module with dates</p>
+  </div>
+
+  <mat-form-field class="filter">
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Enter keyword" #input />
+  </mat-form-field>
+
+  <mat-slide-toggle color="primary" (change)="getCurrentRegistrations($event.checked)">
+    Current Registrations
+  </mat-slide-toggle>
+
+  <mat-spinner class="spinner" [hidden]="!progress"></mat-spinner>
+
+  <table matSort (matSortChange)="sortData($event)">
+
+    <tr>
+      <th mat-sort-header="moduleCode">Module Code</th>
+      <th mat-sort-header="moduleName">Module Name</th>
+      <th mat-sort-header="level">Level</th>
+      <th mat-sort-header="type">Type</th>
+      <th mat-sort-header="attendance">Attendance</th>
+    </tr>
+
+    <tr *ngFor="let attendance of sortedData">
+      <td>{{ attendance.moduleCode }}</td>
+      <td>{{ attendance.moduleName }}</td>
+      <td>{{ attendance.level }}</td>
+      <td>{{ attendance.type }}</td>
+      <td>
+        <mat-chip-list *ngIf="attendance.value; else elseBlock" aria-label="attendance">
+          <mat-chip [class.danger]="attendance.value < 80" [class.success]="attendance.value >= 80">{{ attendance.value }}%</mat-chip>
+          <a class="details-button" (click)="openDialog(attendance.moduleName, attendance.moduleCode, attendance.type)">
+            <i>View Details</i>
+          </a>
+        </mat-chip-list>
+        <ng-template #elseBlock><i>Not Available</i></ng-template>
+      </td>
+    </tr>
+
+  </table>
+
+  <p class="filter" *ngIf="sortedData === undefined || sortedData.length == 0"><i>No data found</i></p>
+
+</div>

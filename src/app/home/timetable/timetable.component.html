@@ -1,0 +1,59 @@
+<div class="data-container">
+
+  <div class="jumbotron">
+    <h3>Timetables</h3>
+    <p>Time allocation for each module</p>
+  </div>
+
+  <mat-spinner class="spinner" [hidden]="!progress"></mat-spinner>
+
+  <mat-tab-group class="tab-group" backgroundColor="primary" mat-align-tabs="start" [hidden]="progress" *ngIf="!error" dynamicHeight>
+
+    <div *ngFor="let n of iterate()" >
+
+      <mat-tab *ngIf="hasRecords(n)" [label]="getLevel(n)">
+
+        <table>
+
+          <tr>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+
+          <tr>
+            <td *ngFor="let day of weekdays">
+              <ejs-tooltip *ngFor="let timeSlot of getTimeSlots(n, day)" mouseTrail="true">
+                <ng-template #content>
+                  <div class="tooltip">
+                    {{ getTime(timeSlot.start) }} - {{ getTime(timeSlot.end) }} <br/>
+                    {{ timeSlot.lectureHall }}
+                  </div>
+                </ng-template>
+                <div aria-label="details"
+                     [routerLink]="['../results', timeSlot.moduleCode]"
+                     [style.top]="(timeSlot.start - 485) + 'px'"
+                     [style.height]="(timeSlot.end - timeSlot.start - 2) + 'px'"
+                     [style.background]="'#' + timeSlot.color"
+                     class="time-slot">
+                  <b>{{ timeSlot.moduleName }}</b><br/>
+                  <small>{{ timeSlot.moduleCode }}</small><br/>
+                  {{ timeSlot.type}}
+                </div>
+              </ejs-tooltip>
+            </td>
+          </tr>
+
+        </table>
+
+      </mat-tab>
+
+    </div>
+
+  </mat-tab-group>
+
+  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+
+</div>

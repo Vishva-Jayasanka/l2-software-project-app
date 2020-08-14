@@ -1,0 +1,60 @@
+.toolbar-spacer {
+ flex: 1 1 auto;
+}
+
+.avatar {
+  background-image: url('https://scontent.fcmb3-1.fna.fbcdn.net/v/t1.0-9/76197820_2182161368551954_4217311061767880704_n.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_ohc=CCyoygUv-icAX82AevN&_nc_ht=scontent.fcmb3-1.fna&oh=f073cba099c91749cbf178d630b9e905&oe=5F41CA63');
+  background-size: cover;
+}
+
+.toolbar {
+  padding: 10px; height: 50px;
+  border-bottom: 1px solid lightgray;
+}
+
+.logo {
+  background-image: url('https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Institute_of_Technology%2C_University_of_Moratuwa.png/220px-Institute_of_Technology%2C_University_of_Moratuwa.png');
+  background-size: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  height: 40px;
+  width: 40px;
+  margin-top: 0;
+  margin-right: 5px;
+}
+
+.settings-menu-avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  height: 120px;
+  width: 120px;
+  margin: 15px auto auto;
+}
+
+.settings-list-item {
+  font-size: 15px;
+}
+
+.sidenav-container {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidenav {
+  display: flex;
+  width: 250px;
+  background: white;
+}
+
+.selected {
+  background-color: rgb(220, 220, 240);
+  font-weight: bold;
+  color: rgb(100, 60, 180);
+}
+
+button:focus {
+  outline: none !important;
+}

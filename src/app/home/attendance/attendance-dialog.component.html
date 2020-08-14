@@ -1,0 +1,28 @@
+<button mat-icon-button class="close-button" (click)="onNoClick()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<h1 mat-dialog-title style="margin-bottom: 0">{{ data.moduleName }}</h1>
+<p>{{ data.moduleCode }}</p>
+
+
+<table class="attendance-table">
+
+  <tr>
+    <th>Date</th>
+    <th>Attendance</th>
+  </tr>
+
+  <tr *ngFor="let record of data.dates">
+    <td>{{ record | date }}</td>
+    <td>
+      <mat-chip-list aria-label="attendance">
+        <mat-chip *ngIf="isAbsent(record); else elseBlock" class="success"><mat-icon>check</mat-icon></mat-chip>
+        <ng-template #elseBlock>
+          <mat-chip class="danger"><mat-icon>close</mat-icon></mat-chip>
+        </ng-template>
+      </mat-chip-list>
+    </td>
+  </tr>
+
+</table>

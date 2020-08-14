@@ -1,0 +1,149 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
+
+button {
+  outline: none !important;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+table {
+  width: 100%;
+}
+
+td, th {
+  padding: 10px;
+  vertical-align: center;
+}
+
+th {
+  color: rgb(120, 120, 120);
+  font-weight: normal;
+}
+
+tr {
+  border-top: 1px solid rgb(224, 224, 224);
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+tr:hover {
+  background: rgb(245, 245, 245);
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.tooltip {
+  background: black;
+  border-radius: 10px;
+  color: white;
+  padding: 9px;
+  font-size: 12px;
+  vertical-align: center;
+  text-align: center;
+  opacity: 0.8
+}
+
+.close-button {
+  float: right;
+  top: -20px;
+  right: -20px;
+}
+
+.input-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.authentication {
+  max-width: 400px;
+  margin: auto;
+  text-align: left;
+}
+
+.logo {
+  height: 100px;
+  width: 100px;
+}
+
+.heading {
+  font-size: 26px;
+  margin-bottom: 0;
+}
+
+.spinner {
+  margin: auto;
+  top: 30%;
+  position: absolute;
+}
+
+.data-container {
+  padding: 0 40px 40px 40px;
+  height: 100%;
+  position: relative;
+}
+
+.details-button {
+  text-align: center;
+  cursor: pointer;
+  padding-top: 4px;
+  height: 30px;
+  border-radius: 15px;
+  margin-left: 10px;
+  border: 1px solid rgb(224, 224, 224);
+  width: 100px
+}
+
+.details-button:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.jumbotron {
+  margin-top: 20px;
+  height: 100px;
+  padding-top: 15px;
+}
+
+.text-area {
+  resize: none;
+  overflow: hidden;
+}
+
+.input-group {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.input-group-header {
+  font-size: 12px;
+}
+
+.dialog-subtitle {
+  font-size: 15px;
+  color: rgb(120, 120, 120);
+  margin-top: -20px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e3e3e3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

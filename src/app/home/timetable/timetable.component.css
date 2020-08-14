@@ -1,0 +1,51 @@
+table {
+  margin-top: 30px;
+}
+
+th {
+  color: rgb(120, 120, 120);
+  font-weight: normal;
+  text-align: center;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  border-top: 1px solid rgb(220, 220, 220);
+}
+
+td {
+  vertical-align: top;
+  position: relative;
+  width: 20%;
+  height: 600px;
+}
+
+tr {
+  border: none !important;
+}
+
+tr:hover {
+  background: none;
+}
+
+.time-slot {
+  cursor: pointer;
+  font-size: 15px;
+  position: absolute;
+  width: calc(100% - 2px);
+  padding: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  color: white;
+}
+
+.time-slot:hover {
+  -webkit-filter: brightness(90%);
+}
+
+.tooltip {
+  height: 55px;
+  width: 150px;
+}
+
+.tab-group {
+  border: 1px solid rgb(220, 220, 220);
+}
+

@@ -1,0 +1,104 @@
+<div class="data-container">
+
+  <div class="jumbotron">
+    <h3 style="margin-top: 0">Course Modules</h3>
+    <p>All the modules you registered so far appear here</p>
+  </div>
+
+  <mat-spinner class="spinner" [hidden]="!progress"></mat-spinner>
+
+  <div *ngIf="!error" [hidden]="progress">
+
+    <mat-slide-toggle *ngIf="getRole !== 'admin'"
+                      (change)="filter($event.checked)"
+                      class="slide-toggle"
+                      color="primary">
+      Current Registrations
+    </mat-slide-toggle>
+
+    <div *ngFor="let semester of semesters | keyvalue">
+      <div *ngIf="semester.value.length !== 0" class="mat-semester-group">
+        <p class="semester-group-header">{{ semester.key }}</p>
+
+        <mat-accordion class="module-headers-align">
+          <mat-expansion-panel id="{{ module.moduleCode.replace(' ', '') }}"
+                               [expanded]="module.moduleCode === routeParameter.id"
+                               *ngFor="let module of semester.value">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ module.moduleCode }}</mat-panel-title>
+              <mat-panel-description class="panel-description">{{ module.moduleName }}</mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+
+            <p class="description">{{ module.description }}</p>
+
+            <table class="details-table">
+
+              <tr>
+                <td class="details-table-category">TEACHERS</td>
+                <td>
+                  <mat-chip-list class="mat-chip-list-stacked">
+                    <span *ngIf="module.teachers.length === 0; else teachersBlock"><i>Not Available</i></span>
+                    <ng-template #teachersBlock>
+                    <mat-chip *ngFor="let teacher of module.teachers">{{ teacher.firstName }} {{ teacher.lastName }}</mat-chip>
+                    </ng-template>
+                  </mat-chip-list>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="details-table-category">TIME</td>
+                <td>
+                  <span *ngIf="module.lectureHours.length === 0; else lectureHourBlock"><i>Not Available</i></span>
+                  <ng-template #lectureHourBlock>
+                    <mat-chip-list aria-label="times" *ngFor="let time of module.lectureHours">
+                      {{ time.type }} :
+                      <mat-chip>
+                        {{ time.day }} from {{ getTime(time.startingTime) }}H
+                        to {{ getTime(time.endingTime) }}H at {{ time.lectureHall }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </ng-template>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="details-table-category">CREDITS</td>
+                <td>
+                  <span *ngIf="!module.credits; else creditBlock"><i>Not Available</i></span>
+                  <ng-template #creditBlock>
+                    <mat-chip-list aria-label="credits">
+                      <mat-chip>{{ module.credits }}</mat-chip>
+                    </mat-chip-list>
+                  </ng-template>
+                </td>
+              </tr>
+
+              <tr *ngIf="getRole === 'student'">
+                <td class="details-table-category">RESULTS</td>
+                <td>
+                  <mat-chip-list aria-label="results">
+                    <mat-chip>
+                      <i>Final grade is not available</i>
+                    </mat-chip>
+                    <a class="details-button" (click)="openResultsDialog(module)">View Details</a>
+                  </mat-chip-list>
+                </td>
+              </tr>
+
+            </table>
+
+            <mat-action-row *ngIf="getRole === 'admin'">
+              <button mat-raised-button color="primary" (click)="openEditDetailsDialog(module)">Edit</button>
+              <button mat-button color="warn">Delete</button>
+            </mat-action-row>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+
+</div>
+
