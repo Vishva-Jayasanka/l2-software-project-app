@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild, OnInit, Inject} from '@angular/core';
-import {FormBuilder, FormGroup, Validators, FormControl, AbstractControl} from '@angular/forms';
+import {FormBuilder, FormArray, FormGroup, Validators, FormControl, AbstractControl} from '@angular/forms';
 import {MatAutocomplete} from '@angular/material/autocomplete';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -144,7 +144,7 @@ export class ResultsComponent implements OnInit {
 
   openEditDetailsDialog(module): void {
     const dialogRef = this.dialog.open(EditModuleDialogComponent, {
-      width: '500px',
+      width: '700px',
       minHeight: '400px',
       data: module,
       disableClose: true,
@@ -248,12 +248,9 @@ export class EditModuleDialogComponent implements OnInit {
   allTeachers: Teacher[] = [];
   oldCode: string;
 
-  lectureHours: LectureHour[];
-  TYPES: string[] = ['Lecture', 'Lab Session', 'Tutorial'];
-  DAYS_OF_WEEK: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  LECTURE_HALLS: string[] = ['Phase 1 Auditorium', 'Phase 2 Auditorium', 'Lab 1', 'Lab 2', '2LH01', '2LH03'];
-
-  controls: Map<string, AbstractControl>;
+  LECTURE_TYPES: string[] = ['Lecture', 'Lab Session', 'Tutorial'];
+  DAYS_OF_WEEK: string[] = ['Sunday', 'Monday', 'Wednesday', 'Thursday', 'Friday'];
+  LECTURE_HALLS: string[] = ['New Auditorium', 'Phase 1 Auditorium', 'L1H01', 'L2H02', 'Lab 1', 'Lab 2', 'Lab 3'];
 
   editModuleForm: FormGroup;
   progress = false;
@@ -273,7 +270,6 @@ export class EditModuleDialogComponent implements OnInit {
   ngOnInit() {
     this.progress = true;
     this.teachers = JSON.parse(JSON.stringify(this.data.teachers));
-    this.lectureHours = JSON.parse(JSON.stringify(this.data.lectureHours));
     this.oldCode = this.data.moduleCode;
     this.editModuleForm = this.formBuilder.group({
       moduleCode: [this.data.moduleCode, [Validators.required, Validators.pattern(/^[A-Za-z]{2}\s[0-9]{4}/)]],
@@ -281,23 +277,21 @@ export class EditModuleDialogComponent implements OnInit {
       description: [this.data.description, [Validators.required, Validators.minLength(6)]],
       credits: [this.data.credits, [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
       semester: [this.data.semester.toString()],
-      teacher: [''],
-      type: [''],
-      day: [''],
-      lectureHall: [''],
-      startingTime: [''],
-      endingTime: [''],
+      teacher: [],
+      lectureHours: this.formBuilder.array([], Validators.required),
+      newLectureHours: this.formBuilder.array([], Validators.required),
       enabled: [false]
     });
-    this.controls = new Map([
-      ['type', this.type],
-      ['startingTime', this.startingTime],
-      ['endingTime', this.endingTime],
-      ['day', this.day],
-      ['lectureHall', this.lectureHall]
-    ]);
     this.teacher.markAsTouched();
-    this.controls.forEach((control: AbstractControl) => control.markAsTouched());
+    for (const lectureHour of this.data.lectureHours) {
+      this.lectureHours.push(this.newLectureHour(
+        lectureHour.type,
+        lectureHour.day,
+        lectureHour.lectureHall,
+        this.getTime(lectureHour.startingTime),
+        this.getTime(lectureHour.endingTime)
+      ));
+    }
     this.dataService.getTeachers().subscribe(
       response => {
         this.allTeachers = response.teachers;
@@ -325,25 +319,6 @@ export class EditModuleDialogComponent implements OnInit {
     }
   }
 
-  addLecture(): void {
-    let allValid = true;
-    console.log(this.editModuleForm.value);
-    const temp: LectureHour = {moduleCode: '', type: '', startingTime: 0, endingTime: 0, day: '', lectureHall: ''};
-    this.controls.forEach((control: AbstractControl, key: string) => {
-      if (control.value !== '') {
-        temp[key] = (key === 'startingTime' || key === 'endingTime') ? this.convertTime(control.value) : control.value;
-      } else {
-        control.setErrors({incorrect: true});
-        allValid = false;
-      }
-    });
-    if (allValid) {
-      this.controls.forEach((value: AbstractControl) => value.setValue(''));
-      this.lectureHours.push(temp);
-      console.log(temp);
-    }
-  }
-
   removeTeacher(teacher: Teacher): void {
     const index = this.teachers.indexOf(teacher);
     if (index >= 0) {
@@ -351,11 +326,26 @@ export class EditModuleDialogComponent implements OnInit {
     }
   }
 
-  removeLectureHour(lectureHour: LectureHour): void {
-    const index = this.lectureHours.indexOf(lectureHour);
-    if (index >= 0) {
-      this.lectureHours.splice(index, 1);
-    }
+  addNewLectureHour(): void {
+    this.newLectureHours.push(this.newLectureHour('', '', '', '', '',));
+  }
+
+  newLectureHour(type: string, day: string, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
+    return this.formBuilder.group({
+      type: [type, Validators.required],
+      day: [day, Validators.required],
+      lectureHall: [lectureHall, Validators.required],
+      startingTime: [startingTime, Validators.required],
+      endingTime: [endingTime, Validators.required]
+    });
+  }
+
+  removeLectureHour(index): void {
+    this.lectureHours.removeAt(index);
+  }
+
+  removeNewLectureHour(index): void {
+    this.newLectureHours.removeAt(index);
   }
 
   convertTime(value) {
@@ -370,46 +360,12 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   submitForm() {
-    if (this.editModuleForm.invalid) {
-      document.querySelector(`#form`).scrollIntoView({behavior: 'smooth'});
-    } else {
-      if (!this.enabled.value && this.teachers.length === 0) {
-        document.querySelector(`#teachers`).scrollIntoView({behavior: 'smooth'});
-        this.teacher.setErrors({required: true});
-      } else {
-        if (!this.enabled.value && this.lectureHours.length === 0) {
-          document.querySelector(`#lectureHours`).scrollIntoView({behavior: 'smooth'});
-          this.controls.forEach((value: AbstractControl) => value.setErrors({incorrect: true}));
-        } else {
-          this.data = {
-            moduleName: this.moduleName.value,
-            moduleCode: this.moduleCode.value,
-            credits: parseInt(this.credits.value, 10),
-            semester: parseInt(this.semester.value, 10),
-            description: this.description.value,
-            teachers: this.teachers,
-            lectureHours: this.lectureHours
-          };
-          const res = confirm('Are you sure, you want to save change?');
-          if (res) {
-            this.dataService.editModule({moduleCode: this.oldCode, data: this.data}).subscribe(
-              response => {
-                console.log(response);
-                // this.dialogRef.close(this.data);
-              },
-              error => {
-                console.error(error);
-              });
-          }
-        }
-      }
-    }
+    console.log(this.editModuleForm.value);
   }
 
   checkbox() {
     if (this.enabled.value) {
       this.teacher.setErrors(null);
-      this.controls.forEach((control: AbstractControl) => control.setErrors(null));
     }
   }
 
@@ -450,24 +406,12 @@ export class EditModuleDialogComponent implements OnInit {
     return this.editModuleForm.get('teacher');
   }
 
-  get type() {
-    return this.editModuleForm.get('type');
+  get lectureHours(): FormArray {
+    return this.editModuleForm.get('lectureHours') as FormArray;
   }
 
-  get day() {
-    return this.editModuleForm.get('day');
-  }
-
-  get lectureHall() {
-    return this.editModuleForm.get('lectureHall');
-  }
-
-  get startingTime() {
-    return this.editModuleForm.get('startingTime');
-  }
-
-  get endingTime() {
-    return this.editModuleForm.get('endingTime');
+  get newLectureHours(): FormArray {
+    return this.editModuleForm.get('newLectureHours') as FormArray;
   }
 
   get enabled() {

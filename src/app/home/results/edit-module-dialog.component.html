@@ -79,7 +79,7 @@
         </mat-chip-list>
 
         <mat-form-field appearance="outline" class="input-field"
-                        style="margin-bottom: -5px !important; width: 80%; margin-right: 5%;">
+                        style="margin-bottom: -5px !important; width: 50%; margin-right: 2%;">
           <mat-label>Teacher ID</mat-label>
           <input matInput
                  placeholder="Ex: 184061R"
@@ -96,7 +96,7 @@
           </mat-autocomplete>
         </mat-form-field>
 
-        <button mat-mini-fab type="button" color="primary" style="margin-top: 7px" (click)="addTeacher()">
+        <button type="button" class="fab-button btn btn-success btn-sm" style="margin-top: 12px" (click)="addTeacher()">
           <mat-icon>add</mat-icon>
         </button>
 
@@ -105,66 +105,117 @@
       <div class="input-group" id="lectureHours">
 
         <div style="width: 100%">
-          <p class="input-group-header">Lecture Hours</p>
+          <p class="input-group-header">Existing Lecture Hours</p>
         </div>
 
-        <p *ngIf="lectureHours.length === 0">
-          To add lectures fill below details and click add button. <br/>
-          <span class="text-danger" *ngIf="!enabled.value">You must add at least one lecture hour.</span>
-        </p>
+        <div formArrayName="lectureHours" *ngFor="let lectureHour of lectureHours.controls; let i = index">
 
-        <mat-chip-list style="margin-bottom: 15px" #lectureHourList aria-label="Lecture Hour Selection">
-          <mat-chip *ngFor="let lectureHour of lectureHours"
-                    [selectable]="selectable"
-                    [removable]="removable"
-                    (removed)="removeLectureHour(lectureHour)"
-                    class="mat-chip-edit-details">
-            {{lectureHour.type}} | {{getTime(lectureHour.startingTime)}} - {{ getTime(lectureHour.endingTime) }}
-            | {{ lectureHour.day }} | {{ lectureHour.lectureHall }}
-            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-          </mat-chip>
-        </mat-chip-list>
+          <div [formGroupName]="i">
 
-        <mat-form-field appearance="fill" class="input-field" style="width: 30%; margin-right: 5%">
-          <mat-label>Type</mat-label>
-          <mat-select formControlName="type">
-            <mat-option *ngFor="let type of TYPES" [value]="type">
-              {{ type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let type of LECTURE_TYPES" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="input-field" style="width: 30%; margin-right: 5%">
-          <mat-label>Day</mat-label>
-          <mat-select formControlName="day">
-            <mat-option *ngFor="let day of DAYS_OF_WEEK" [value]="day">
-              {{ day }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Day</mat-label>
+              <mat-select formControlName="day">
+                <mat-option *ngFor="let type of DAYS_OF_WEEK" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="input-field" style="width: 30%">
-          <mat-label>Lecture Hall</mat-label>
-          <mat-select formControlName="lectureHall">
-            <mat-option *ngFor="let lectureHall of LECTURE_HALLS" [value]="lectureHall">
-              {{ lectureHall }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Lecture Hall</mat-label>
+              <mat-select formControlName="lectureHall">
+                <mat-option *ngFor="let lectureHall of LECTURE_HALLS" [value]="lectureHall">
+                  {{ lectureHall }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="input-field" style="width: 37%; margin-right: 5%">
-          <mat-label>Starting Time</mat-label>
-          <input matInput type="time" formControlName="startingTime"/>
-        </mat-form-field>
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Starting Time</mat-label>
+              <input matInput type="time" formControlName="startingTime">
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="input-field" style="width: 37%; margin-right: 5%">
-          <mat-label>Ending Time</mat-label>
-          <input matInput type="time" formControlName="endingTime"/>
-        </mat-form-field>
+            <mat-form-field style="width: 17%; margin-right: 2%">
+              <mat-label>Ending Time</mat-label>
+              <input matInput type="time" formControlName="endingTime">
+            </mat-form-field>
 
-        <button mat-mini-fab color="primary" type="button" style="margin-top: 7px" (click)="addLecture()">
-          <mat-icon>add</mat-icon>
-        </button>
+            <button type="button" class="fab-button btn btn-danger btn-sm" (click)="removeLectureHour(i)">
+              <mat-icon>remove</mat-icon>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="input-group" id="newLectureHours">
+
+        <div style="width: 100%">
+          <p class="input-group-header">Add New Lecture Hours</p>
+        </div>
+
+        <div formArrayName="newLectureHours" *ngFor="let lectureHour of newLectureHours.controls; let i = index">
+
+          <div [formGroupName]="i">
+
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let type of LECTURE_TYPES" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Day</mat-label>
+              <mat-select formControlName="day">
+                <mat-option *ngFor="let type of DAYS_OF_WEEK" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Lecture Hall</mat-label>
+              <mat-select formControlName="lectureHall">
+                <mat-option *ngFor="let lectureHall of LECTURE_HALLS" [value]="lectureHall">
+                  {{ lectureHall }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="width: 17%; margin-right: 1%">
+              <mat-label>Starting Time</mat-label>
+              <input matInput type="time" formControlName="startingTime">
+            </mat-form-field>
+
+            <mat-form-field style="width: 17%; margin-right: 2%">
+              <mat-label>Ending Time</mat-label>
+              <input matInput type="time" formControlName="endingTime">
+            </mat-form-field>
+
+            <button type="button" class="fab-button btn btn-danger btn-sm" (click)="removeNewLectureHour(i)">
+              <mat-icon>remove</mat-icon>
+            </button>
+
+          </div>
+
+        </div>
+
+        <button type="button" class="btn btn-success btn-sm" (click)="addNewLectureHour()">Add</button>
+
 
       </div>
 
