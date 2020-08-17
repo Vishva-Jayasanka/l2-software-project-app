@@ -12,7 +12,14 @@
 
     <div [hidden]="progress" *ngIf="!error">
 
-      <mat-form-field appearance="outline" id="form" class="input-field">
+      <mat-form-field appearance="outline" style="width: 30%; margin-right: 2%" class="input-field" id="form">
+        <mat-label>Module Code</mat-label>
+        <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM 1100">
+        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">Required</mat-error>
+        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid format</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="width: 68%" class="input-field">
         <mat-label>Module Name</mat-label>
         <input type="text" matInput formControlName="moduleName" placeholder="Ex: Information Technology">
         <mat-error *ngIf="moduleName.touched && moduleName.errors?.required">This field is required</mat-error>
@@ -21,40 +28,42 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" style="width: 30%; margin-right: 5%" class="input-field">
-        <mat-label>Module Code</mat-label>
-        <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM 1100">
-        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">Required</mat-error>
-        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid format</mat-error>
-      </mat-form-field>
+      <div style="width: 100%">
+        <div style="width: 30%; margin-right: 2%; display: inline-block">
 
-      <mat-form-field appearance="outline" style="width: 30%; margin-right: 5%" class="input-field">
-        <mat-label>Credits</mat-label>
-        <input matInput formControlName="credits" placeholder="Ex: 2">
-        <mat-error *ngIf="credits.touched && credits.errors?.required">Required</mat-error>
-        <mat-error *ngIf="credits.touched && credits.errors?.pattern">Invalid input</mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%" class="input-field">
+            <mat-label>Credits</mat-label>
+            <input matInput formControlName="credits" placeholder="Ex: 2">
+            <mat-error *ngIf="credits.touched && credits.errors?.required">Required</mat-error>
+            <mat-error *ngIf="credits.touched && credits.errors?.pattern">Invalid input</mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline" style="width: 30%" class="input-field">
-        <mat-label>Semester</mat-label>
-        <mat-select formControlName="semester">
-          <mat-option value="1">L01S01</mat-option>
-          <mat-option value="2">L01S02</mat-option>
-          <mat-option value="3">L02S01</mat-option>
-          <mat-option value="4">L02S02</mat-option>
-        </mat-select>
-      </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%" class="input-field">
+            <mat-label>Semester</mat-label>
+            <mat-select formControlName="semester">
+              <mat-option value="1">L01S01</mat-option>
+              <mat-option value="2">L01S02</mat-option>
+              <mat-option value="3">L02S01</mat-option>
+              <mat-option value="4">L02S02</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline" class="input-field">
-        <mat-label>Module Description</mat-label>
-        <textarea style="overflow: hidden !important; resize: none !important;" rows="3" matInput
-                  formControlName="description" placeholder="Add a description to this module"></textarea>
-        <mat-error *ngIf="description.touched && description.errors?.required">This field is required</mat-error>
-        <mat-error *ngIf="description.touched && description.errors?.minLength">Module description must be more than
-          six
-          characters long
-        </mat-error>
-      </mat-form-field>
+        </div>
+
+        <div style="width: 68%; display: inline-block">
+
+          <mat-form-field appearance="outline" style="width: 100%" class="input-field">
+            <mat-label>Module Description</mat-label>
+            <textarea style="overflow: hidden !important; resize: none !important; height: 107px" matInput
+                      formControlName="description" placeholder="Add a description to this module"></textarea>
+            <mat-error *ngIf="description.touched && description.errors?.required">This field is required</mat-error>
+            <mat-error *ngIf="description.touched && description.errors?.minLength">
+              Module description must be more than six characters long
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+      </div>
 
       <div class="input-group" id="teachers">
 
@@ -79,9 +88,10 @@
         </mat-chip-list>
 
         <mat-form-field appearance="outline" class="input-field"
-                        style="margin-bottom: -5px !important; width: 50%; margin-right: 2%;">
+                        style="margin-bottom: -5px !important; width: 89%; margin-right: 2%;">
           <mat-label>Teacher ID</mat-label>
-          <input matInput
+          <input id="selectTeacher"
+                 matInput
                  placeholder="Ex: 184061R"
                  type="text"
                  formControlName="teacher"
@@ -108,9 +118,17 @@
           <p class="input-group-header">Existing Lecture Hours</p>
         </div>
 
+        <p>
+          If you remove existing lecture hours, attendance will be enterd to the new ones.
+        </p>
+
         <div formArrayName="lectureHours" *ngFor="let lectureHour of lectureHours.controls; let i = index">
 
           <div [formGroupName]="i">
+
+            <mat-form-field [hidden]="true">
+              <input matInput formControlName="id">
+            </mat-form-field>
 
             <mat-form-field style="width: 17%; margin-right: 1%">
               <mat-label>Type</mat-label>
@@ -165,9 +183,18 @@
           <p class="input-group-header">Add New Lecture Hours</p>
         </div>
 
+        <p *ngIf="newLectureHours.length === 0" style="width: 100%">
+          Click add button to add new lecture hours. <br/>
+          <span class="text-danger" *ngIf="!enabled.value && lectureHours.length === 0">You must add at least one teacher</span>
+        </p>
+
         <div formArrayName="newLectureHours" *ngFor="let lectureHour of newLectureHours.controls; let i = index">
 
           <div [formGroupName]="i">
+
+            <mat-form-field [hidden]="true">
+              <input matInput formControlName="id">
+            </mat-form-field>
 
             <mat-form-field style="width: 17%; margin-right: 1%">
               <mat-label>Type</mat-label>

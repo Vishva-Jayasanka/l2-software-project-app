@@ -8,6 +8,7 @@ import {AuthenticationService} from '../../_services/authentication.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 import {ActivatedRoute} from '@angular/router';
+import {FormFieldValidator} from '../../_validators/form-field.validator';
 
 export interface ResultData {
   module;
@@ -25,6 +26,7 @@ export interface ModuleData {
 }
 
 export interface LectureHour {
+  _id: string;
   moduleCode: string;
   type: string;
   startingTime: number;
@@ -144,7 +146,7 @@ export class ResultsComponent implements OnInit {
 
   openEditDetailsDialog(module): void {
     const dialogRef = this.dialog.open(EditModuleDialogComponent, {
-      width: '700px',
+      width: '600px',
       minHeight: '400px',
       data: module,
       disableClose: true,
@@ -263,11 +265,13 @@ export class EditModuleDialogComponent implements OnInit {
     private dataService: DataService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EditModuleDialogComponent>,
+    private elementRef: ElementRef,
     @Inject(MAT_DIALOG_DATA) public data: ModuleData
   ) {
   }
 
   ngOnInit() {
+    console.log(this.data.lectureHours);
     this.progress = true;
     this.teachers = JSON.parse(JSON.stringify(this.data.teachers));
     this.oldCode = this.data.moduleCode;
@@ -277,14 +281,15 @@ export class EditModuleDialogComponent implements OnInit {
       description: [this.data.description, [Validators.required, Validators.minLength(6)]],
       credits: [this.data.credits, [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
       semester: [this.data.semester.toString()],
-      teacher: [],
-      lectureHours: this.formBuilder.array([], Validators.required),
-      newLectureHours: this.formBuilder.array([], Validators.required),
+      teacher: [''],
+      lectureHours: this.formBuilder.array([]),
+      newLectureHours: this.formBuilder.array([]),
       enabled: [false]
     });
     this.teacher.markAsTouched();
     for (const lectureHour of this.data.lectureHours) {
       this.lectureHours.push(this.newLectureHour(
+        lectureHour._id,
         lectureHour.type,
         lectureHour.day,
         lectureHour.lectureHall,
@@ -327,11 +332,12 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   addNewLectureHour(): void {
-    this.newLectureHours.push(this.newLectureHour('', '', '', '', '',));
+    this.newLectureHours.push(this.newLectureHour('', '', '', '', '', ''));
   }
 
-  newLectureHour(type: string, day: string, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
+  newLectureHour(id: string, type: string, day: string, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
     return this.formBuilder.group({
+      id: [id],
       type: [type, Validators.required],
       day: [day, Validators.required],
       lectureHall: [lectureHall, Validators.required],
@@ -360,7 +366,33 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   submitForm() {
-    console.log(this.editModuleForm.value);
+    if (this.editModuleForm.valid) {
+      if (this.teachers.length !== 0) {
+        if (this.lectureHours.length !== 0 || this.newLectureHours.length !== 0) {
+          this.dataService.editModule({
+            oldCode: this.oldCode,
+            moduleDetails: this.editModuleForm.value,
+            teachers: this.teachers
+          }).subscribe(
+            response => console.log(response),
+            error => console.error(error)
+          );
+        } else {
+          this.elementRef.nativeElement.querySelector('#newLectureHours').scrollIntoView({behavior: 'smooth'});
+        }
+      } else {
+        this.elementRef.nativeElement.querySelector('#selectTeacher').scrollIntoView({behavior: 'smooth'});
+        this.teacher.setErrors({incorrect: true});
+      }
+    } else {
+      this.editModuleForm.markAllAsTouched();
+      this.scrollToFirstInvalidControl();
+    }
+  }
+
+  scrollToFirstInvalidControl() {
+    const firstInvalidControl: HTMLElement = this.elementRef.nativeElement.querySelector('form .ng-invalid');
+    firstInvalidControl.scrollIntoView({behavior: 'smooth'});
   }
 
   checkbox() {
