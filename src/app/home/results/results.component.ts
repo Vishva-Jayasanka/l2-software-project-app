@@ -83,6 +83,10 @@ export class ResultsComponent implements OnInit {
     });
     this.currentRegistration = this.getCurrentLevel(this.authentication.details.currentRegistration);
     this.progress = true;
+    this.getData();
+  }
+
+  getData() {
     this.data.getModules().subscribe(
       response => {
         this.modules = response.modules;
@@ -111,7 +115,7 @@ export class ResultsComponent implements OnInit {
   getModules(modules, current) {
     for (let i = 0; i < 4; i++) {
       this.semesters[this.getCurrentLevel(i)] = this.modules.filter(module => (module.semester === i + 1) &&
-        (this.currentModules.has(module.moduleCode) || !current));
+        (this.currentModules.has(module._id) || !current));
     }
   }
 
@@ -153,9 +157,9 @@ export class ResultsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        const index = this.modules.indexOf(module);
-        this.modules[index] = response;
-        this.getModules(this.modules, false);
+        if (response) {
+          this.getData();
+        }
       }
     });
   }
@@ -271,7 +275,6 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data.lectureHours);
     this.progress = true;
     this.teachers = JSON.parse(JSON.stringify(this.data.teachers));
     this.oldCode = this.data.moduleCode;
@@ -332,7 +335,7 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   addNewLectureHour(): void {
-    this.newLectureHours.push(this.newLectureHour('', '', '', '', '', ''));
+    this.newLectureHours.push(this.newLectureHour('', 'Lecture', 'Sunday', 'Lab 1', '08:15', '10:15'));
   }
 
   newLectureHour(id: string, type: string, day: string, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
@@ -369,14 +372,19 @@ export class EditModuleDialogComponent implements OnInit {
     if (this.editModuleForm.valid) {
       if (this.teachers.length !== 0) {
         if (this.lectureHours.length !== 0 || this.newLectureHours.length !== 0) {
-          this.dataService.editModule({
-            oldCode: this.oldCode,
-            moduleDetails: this.editModuleForm.value,
-            teachers: this.teachers
-          }).subscribe(
-            response => console.log(response),
-            error => console.error(error)
-          );
+          const res = confirm('Are you sure you want to save changes?');
+          if (res) {
+            this.dataService.editModule({
+              oldCode: this.oldCode,
+              moduleDetails: this.editModuleForm.value,
+              teachers: this.teachers
+            }).subscribe(
+              response => {
+                this.dialogRef.close(true);
+              },
+              error => this.error = error
+            );
+          }
         } else {
           this.elementRef.nativeElement.querySelector('#newLectureHours').scrollIntoView({behavior: 'smooth'});
         }
@@ -404,7 +412,7 @@ export class EditModuleDialogComponent implements OnInit {
   onNoClick(): void {
     const response = confirm('Are you sure, you want to discard all changes?');
     if (response) {
-      this.dialogRef.close(null);
+      this.dialogRef.close(false);
     }
   }
 
