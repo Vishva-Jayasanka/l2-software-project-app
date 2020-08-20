@@ -19,7 +19,7 @@ import {VerificationComponent} from './auth/verification/verification.component'
 import {AuthComponent} from './auth/auth.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
 import {AttendanceDialogComponent, AttendanceComponent} from './home/attendance/attendance.component';
-import {ResultsDialogComponent, ResultsComponent} from './home/results/results.component';
+import {ResultsDialogComponent, ResultsComponent, DeleteModuleDialogComponent} from './home/results/results.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
 import {EditModuleDialogComponent} from './home/results/results.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -37,7 +37,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ResultsDialogComponent,
     AttendanceDialogComponent,
     TimetableComponent,
-    EditModuleDialogComponent
+    EditModuleDialogComponent,
+    DeleteModuleDialogComponent
   ],
     imports: [
         BrowserModule,

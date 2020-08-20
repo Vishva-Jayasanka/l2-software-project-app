@@ -16,6 +16,7 @@ export interface ResultData {
 }
 
 export interface ModuleData {
+  _id: string;
   moduleCode: string;
   moduleName: string;
   description: string;
@@ -157,9 +158,20 @@ export class ResultsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        if (response) {
-          this.getData();
-        }
+        this.getData();
+      }
+    });
+  }
+
+  openDeleteModuleDialog(module): void {
+    const dialogRef = this.dialog.open(DeleteModuleDialogComponent, {
+      width: '450px',
+      data: module,
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+        this.getData();
       }
     });
   }
@@ -456,6 +468,42 @@ export class EditModuleDialogComponent implements OnInit {
 
   get enabled() {
     return this.editModuleForm.get('enabled');
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// Delete Module Component
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@Component({
+  selector: 'app-delete-module-dialog',
+  templateUrl: './delete-module-dialog.component.html',
+  styleUrls: ['./results.component.css']
+})
+
+export class DeleteModuleDialogComponent implements OnInit {
+
+  constructor(
+    public dataService: DataService,
+    public dialogRef: MatDialogRef<DeleteModuleDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ModuleData
+  ) {
+  }
+
+  ngOnInit() {
+  }
+
+  onNoClick() {
+    this.dialogRef.close(false);
+  }
+
+  deleteModule() {
+    this.dataService.deleteModule({_id: this.data._id, moduleCode: this.data.moduleCode}).subscribe(
+      response => console.log(response),
+      error => console.error(error)
+    );
   }
 
 }

@@ -30,8 +30,11 @@ export class DataService {
   }
 
   editModule(data) {
-    console.log(data);
     return this.http.post<any>(`${environment.adminUrl}edit-module`, data);
+  }
+
+  deleteModule(data) {
+    return this.http.post<any>(`${environment.adminUrl}delete-module`, data);
   }
 
 }
