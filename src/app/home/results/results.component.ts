@@ -149,6 +149,30 @@ export class ResultsComponent implements OnInit {
     });
   }
 
+  openAddNewModuleDialog(): void {
+    const moduleData: ModuleData = {
+      _id: '',
+      moduleCode: '',
+      moduleName: 'Information Technology',
+      credits: 2,
+      description: 'This is a module and it has nothing to do with anything',
+      semester: 1,
+      teachers: [{username: '100005R', firstName: 'Leonard', lastName: 'Renee'}],
+      lectureHours: [],
+    };
+    const dialogRef = this.dialog.open(EditModuleDialogComponent, {
+      width: '600px',
+      minHeight: '400px',
+      data: moduleData,
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+        this.getData();
+      }
+    });
+  }
+
   openEditDetailsDialog(module): void {
     const dialogRef = this.dialog.open(EditModuleDialogComponent, {
       width: '600px',
@@ -247,7 +271,7 @@ export class ResultsDialogComponent implements OnInit {
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
-// Module Edit component
+// Add and Edit Module Component
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 @Component({
@@ -272,6 +296,9 @@ export class EditModuleDialogComponent implements OnInit {
 
   editModuleForm: FormGroup;
   progress = false;
+  savingData = false;
+  savingError = '';
+  moduleExists = false;
   error = '';
 
   @ViewChild('teacherInput') teacherInput: ElementRef<HTMLInputElement>;
@@ -323,6 +350,18 @@ export class EditModuleDialogComponent implements OnInit {
     ).add(() => {
       this.progress = false;
     });
+  }
+
+  checkIfModuleExists(value) {
+    this.dataService.checkIfModuleExists(value).subscribe(
+      response => {
+          if (this.oldCode !== value && !response) {
+            this.moduleCode.setErrors({incorrect: false});
+            this.moduleExists = true;
+          }
+      },
+      error => console.error(error)
+    );
   }
 
   addTeacher(): void {
@@ -386,16 +425,28 @@ export class EditModuleDialogComponent implements OnInit {
         if (this.lectureHours.length !== 0 || this.newLectureHours.length !== 0) {
           const res = confirm('Are you sure you want to save changes?');
           if (res) {
-            this.dataService.editModule({
-              oldCode: this.oldCode,
-              moduleDetails: this.editModuleForm.value,
-              teachers: this.teachers
-            }).subscribe(
-              response => {
-                this.dialogRef.close(true);
-              },
-              error => this.error = error
-            );
+            this.savingData = true;
+            if (this.oldCode) {
+              this.dataService.editModule({
+                oldCode: this.oldCode,
+                moduleDetails: this.editModuleForm.value,
+                teachers: this.teachers,
+              }).subscribe(
+                response => {
+                  this.dialogRef.close(true);
+                },
+                error => this.savingError = error
+              ).add(() => this.savingData = false);
+            } else {
+              console.log(this.oldCode);
+              this.dataService.addModule({
+                moduleDetails: this.editModuleForm.value,
+                teachers: this.teachers,
+              }).subscribe(
+                response => this.dialogRef.close(true),
+                error => this.savingError = error,
+              ).add(() => this.savingData = false);
+            }
           }
         } else {
           this.elementRef.nativeElement.querySelector('#newLectureHours').scrollIntoView({behavior: 'smooth'});

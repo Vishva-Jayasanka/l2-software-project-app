@@ -14,9 +14,10 @@
 
       <mat-form-field appearance="outline" style="width: 30%; margin-right: 2%" class="input-field" id="form">
         <mat-label>Module Code</mat-label>
-        <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM 1100">
+        <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM 1100" (focusout)="checkIfModuleExists($event.target.value)">
         <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">Required</mat-error>
         <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid format</mat-error>
+        <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && moduleExists">Module code exists</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" style="width: 68%" class="input-field">
@@ -251,12 +252,15 @@
 
     </div>
 
-    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+    <div *ngIf="savingError" class="alert alert-danger mt-3 mb-0">Error saving data. {{ savingError }}.</div>
 
   </mat-dialog-content>
 
   <mat-dialog-actions style="margin-bottom: -10px" *ngIf="!error" [hidden]="progress">
-    <button mat-raised-button color="primary" (click)="submitForm()">Save</button>
+    <button mat-raised-button color="primary" (click)="submitForm()">
+      <span *ngIf="savingData" class="spinner-border spinner-border-sm mr-1"></span>
+      Save
+    </button>
     <button mat-flat-button>Cancel</button>
   </mat-dialog-actions>
 
