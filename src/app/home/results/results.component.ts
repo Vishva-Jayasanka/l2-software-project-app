@@ -211,6 +211,10 @@ export class ResultsComponent implements OnInit {
     return this.authentication.details.role;
   }
 
+  get daysOfWeek () {
+    return DAYS_OF_WEEK;
+  }
+
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -531,6 +535,9 @@ export class EditModuleDialogComponent implements OnInit {
 
 export class DeleteModuleDialogComponent implements OnInit {
 
+  progress = false;
+  error;
+
   constructor(
     public dataService: DataService,
     public dialogRef: MatDialogRef<DeleteModuleDialogComponent>,
@@ -546,10 +553,17 @@ export class DeleteModuleDialogComponent implements OnInit {
   }
 
   deleteModule() {
+    this.progress = true;
     this.dataService.deleteModule({moduleCode: this.data.moduleCode}).subscribe(
-      response => console.log(response),
-      error => console.error(error)
-    );
+      response => {
+        if (response.status) {
+          this.dialogRef.close(true);
+        } else {
+          this.error = response.message;
+        }
+      },
+      error => this.error = error
+    ).add(() => this.progress = false);
   }
 
 }

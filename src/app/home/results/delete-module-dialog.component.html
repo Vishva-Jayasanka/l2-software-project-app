@@ -17,9 +17,15 @@
     </mat-list-item>
   </mat-list>
   <div mat-subheader class="text-danger">Lecture hours, attendance associated with this module will also be deleted.</div>
+
+  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">Error saving data. {{ error }}.</div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions style="padding-bottom: 25px">
-  <button mat-raised-button color="warn" (click)="deleteModule()">Delete</button>
+  <button mat-raised-button color="warn" (click)="deleteModule()">
+    <span *ngIf="progress" class="spinner-border spinner-border-sm mr-1"></span>
+    Delete
+  </button>
   <button mat-flat-button color="primary" (click)="onNoClick()">Cancel</button>
 </mat-dialog-actions>

@@ -62,7 +62,7 @@
                     <mat-chip-list aria-label="times" *ngFor="let lectureHour of getLectureHours(module.moduleCode)">
                       {{ lectureHour.type }} :
                       <mat-chip>
-                        {{ lectureHour.day }} from {{ lectureHour.startingTime }}H
+                        {{ daysOfWeek[lectureHour.day] }} from {{ lectureHour.startingTime }}H
                         to {{ lectureHour.endingTime }}H at {{ lectureHour.lectureHall }}
                       </mat-chip>
                     </mat-chip-list>
