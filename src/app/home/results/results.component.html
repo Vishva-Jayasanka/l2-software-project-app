@@ -28,7 +28,7 @@
         <p class="semester-group-header">{{ semester.key }}</p>
 
         <mat-accordion class="module-headers-align">
-          <mat-expansion-panel id="{{ module.moduleCode.replace(' ', '') }}"
+          <mat-expansion-panel id="{{ module.moduleCode }}"
                                [expanded]="module.moduleCode === routeParameter.id"
                                *ngFor="let module of semester.value">
 
@@ -46,9 +46,9 @@
                 <td class="details-table-category">TEACHERS</td>
                 <td>
                   <mat-chip-list class="mat-chip-list-stacked">
-                    <span *ngIf="module.teachers.length === 0; else teachersBlock"><i>Not Available</i></span>
+                    <span *ngIf="getTeachers(module.moduleCode).length === 0; else teachersBlock"><i>Not Available</i></span>
                     <ng-template #teachersBlock>
-                    <mat-chip *ngFor="let teacher of module.teachers">{{ teacher.firstName }} {{ teacher.lastName }}</mat-chip>
+                    <mat-chip *ngFor="let teacher of getTeachers(module.moduleCode)">{{ teacher.firstName }} {{ teacher.lastName }}</mat-chip>
                     </ng-template>
                   </mat-chip-list>
                 </td>
@@ -57,13 +57,13 @@
               <tr>
                 <td class="details-table-category">TIME</td>
                 <td>
-                  <span *ngIf="module.lectureHours.length === 0; else lectureHourBlock"><i>Not Available</i></span>
+                  <span *ngIf="getLectureHours(module.moduleCode).length === 0; else lectureHourBlock"><i>Not Available</i></span>
                   <ng-template #lectureHourBlock>
-                    <mat-chip-list aria-label="times" *ngFor="let time of module.lectureHours">
-                      {{ time.type }} :
+                    <mat-chip-list aria-label="times" *ngFor="let lectureHour of getLectureHours(module.moduleCode)">
+                      {{ lectureHour.type }} :
                       <mat-chip>
-                        {{ time.day }} from {{ getTime(time.startingTime) }}H
-                        to {{ getTime(time.endingTime) }}H at {{ time.lectureHall }}
+                        {{ lectureHour.day }} from {{ lectureHour.startingTime }}H
+                        to {{ lectureHour.endingTime }}H at {{ lectureHour.lectureHall }}
                       </mat-chip>
                     </mat-chip-list>
                   </ng-template>

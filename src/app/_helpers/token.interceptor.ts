@@ -1,5 +1,5 @@
 import {Injectable, Injector} from '@angular/core';
-import {HttpInterceptor} from '@angular/common/http';
+import {HttpInterceptor, HttpRequest} from '@angular/common/http';
 
 import {AuthenticationService} from '../_services/authentication.service';
 
@@ -13,7 +13,7 @@ export class TokenInterceptor implements HttpInterceptor {
     private injector: Injector,
   ) { }
 
-  intercept(request, next) {
+  intercept(request: HttpRequest<any>, next) {
     const authentication = this.injector.get(AuthenticationService);
     const currentUser = authentication.token;
     if (currentUser) {

@@ -36,12 +36,8 @@ export class DataService {
     }));
   }
 
-  addModule(data) {
-    return this.http.post<any>(`${environment.adminUrl}add-module`, data);
-  }
-
   editModule(data) {
-    return this.http.post<any>(`${environment.adminUrl}edit-module`, data);
+    return this.http.post<any>(`${environment.adminUrl}add-edit-module`, data);
   }
 
   deleteModule(data) {

@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild, OnInit, Inject} from '@angular/core';
-import {FormBuilder, FormArray, FormGroup, Validators, FormControl, AbstractControl} from '@angular/forms';
+import {FormBuilder, FormArray, FormGroup, Validators, FormControl} from '@angular/forms';
 import {MatAutocomplete} from '@angular/material/autocomplete';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -8,7 +8,6 @@ import {AuthenticationService} from '../../_services/authentication.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 import {ActivatedRoute} from '@angular/router';
-import {FormFieldValidator} from '../../_validators/form-field.validator';
 
 export interface ResultData {
   module;
@@ -16,7 +15,6 @@ export interface ResultData {
 }
 
 export interface ModuleData {
-  _id: string;
   moduleCode: string;
   moduleName: string;
   description: string;
@@ -24,15 +22,16 @@ export interface ModuleData {
   semester: number;
   teachers: Teacher[];
   lectureHours: LectureHour[];
+  new: boolean;
 }
 
 export interface LectureHour {
-  _id: string;
+  lectureHourID: number;
   moduleCode: string;
   type: string;
-  startingTime: number;
-  endingTime: number;
-  day: string;
+  startingTime: string;
+  endingTime: string;
+  day: number;
   lectureHall: string;
 }
 
@@ -49,6 +48,8 @@ export interface Results {
   date: Date;
 }
 
+export const DAYS_OF_WEEK: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // Module Component
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -62,6 +63,7 @@ export class ResultsComponent implements OnInit {
 
   modules = [];
   lectureHours = [];
+  teachers = [];
   results = [];
   semesters = {};
   currentRegistration: string;
@@ -91,7 +93,8 @@ export class ResultsComponent implements OnInit {
     this.data.getModules().subscribe(
       response => {
         this.modules = response.modules;
-        this.currentModules = new Set(response.currentModules);
+        this.lectureHours = response.lectureHours;
+        this.teachers = response.teachers;
         this.results = response.results;
         this.getModules(this.modules, false);
       },
@@ -115,9 +118,16 @@ export class ResultsComponent implements OnInit {
 
   getModules(modules, current) {
     for (let i = 0; i < 4; i++) {
-      this.semesters[this.getCurrentLevel(i)] = this.modules.filter(module => (module.semester === i + 1) &&
-        (this.currentModules.has(module._id) || !current));
+      this.semesters[this.getCurrentLevel(i)] = this.modules.filter(module => (module.semester === i + 1));
     }
+  }
+
+  getLectureHours(moduleCode) {
+    return this.lectureHours.filter(lectureHour => lectureHour.moduleCode === moduleCode);
+  }
+
+  getTeachers(moduleCode) {
+    return this.teachers.filter(teacher => teacher.moduleCode === moduleCode);
   }
 
   getResults(moduleCode) {
@@ -127,12 +137,6 @@ export class ResultsComponent implements OnInit {
 
   getCurrentLevel(val) {
     return 'Level ' + (Math.floor(val / 2) + 1) + ' Semester ' + (val % 2 + 1);
-  }
-
-  getTime(time) {
-    const hours = Math.floor(time / 60);
-    const minutes = time % 60;
-    return ((hours < 10) ? '0' : '') + hours + ':' + ((minutes < 10) ? '0' : '') + minutes;
   }
 
   filter(checked) {
@@ -150,15 +154,15 @@ export class ResultsComponent implements OnInit {
   }
 
   openAddNewModuleDialog(): void {
-    const moduleData: ModuleData = {
-      _id: '',
+    const moduleData = {
       moduleCode: '',
-      moduleName: 'Information Technology',
+      moduleName: '',
       credits: 2,
-      description: 'This is a module and it has nothing to do with anything',
+      description: '',
       semester: 1,
-      teachers: [{username: '100005R', firstName: 'Leonard', lastName: 'Renee'}],
+      teachers: [],
       lectureHours: [],
+      new: true
     };
     const dialogRef = this.dialog.open(EditModuleDialogComponent, {
       width: '600px',
@@ -173,7 +177,10 @@ export class ResultsComponent implements OnInit {
     });
   }
 
-  openEditDetailsDialog(module): void {
+  openEditDetailsDialog(module: ModuleData): void {
+    module.teachers = this.teachers.filter(teacher => teacher.moduleCode === module.moduleCode);
+    module.lectureHours = this.lectureHours.filter(lectureHour => lectureHour.moduleCode === module.moduleCode);
+    module.new = false;
     const dialogRef = this.dialog.open(EditModuleDialogComponent, {
       width: '600px',
       minHeight: '400px',
@@ -288,10 +295,8 @@ export class EditModuleDialogComponent implements OnInit {
   filteredTeachers: Observable<Teacher[]>;
   teachers: Teacher[] = [];
   allTeachers: Teacher[] = [];
-  oldCode: string;
 
   LECTURE_TYPES: string[] = ['Lecture', 'Lab Session', 'Tutorial'];
-  DAYS_OF_WEEK: string[] = ['Sunday', 'Monday', 'Wednesday', 'Thursday', 'Friday'];
   LECTURE_HALLS: string[] = ['New Auditorium', 'Phase 1 Auditorium', 'L1H01', 'L2H02', 'Lab 1', 'Lab 2', 'Lab 3'];
 
   editModuleForm: FormGroup;
@@ -315,10 +320,9 @@ export class EditModuleDialogComponent implements OnInit {
 
   ngOnInit() {
     this.progress = true;
-    this.teachers = JSON.parse(JSON.stringify(this.data.teachers));
-    this.oldCode = this.data.moduleCode;
+    this.teachers = this.data.teachers;
     this.editModuleForm = this.formBuilder.group({
-      moduleCode: [this.data.moduleCode, [Validators.required, Validators.pattern(/^[A-Za-z]{2}\s[0-9]{4}/)]],
+      moduleCode: [this.data.moduleCode, [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [this.data.moduleName, [Validators.required, Validators.minLength(6)]],
       description: [this.data.description, [Validators.required, Validators.minLength(6)]],
       credits: [this.data.credits, [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
@@ -331,12 +335,13 @@ export class EditModuleDialogComponent implements OnInit {
     this.teacher.markAsTouched();
     for (const lectureHour of this.data.lectureHours) {
       this.lectureHours.push(this.newLectureHour(
-        lectureHour._id,
+        lectureHour.lectureHourID,
+        lectureHour.moduleCode,
         lectureHour.type,
         lectureHour.day,
         lectureHour.lectureHall,
-        this.getTime(lectureHour.startingTime),
-        this.getTime(lectureHour.endingTime)
+        lectureHour.startingTime,
+        lectureHour.endingTime
       ));
     }
     this.dataService.getTeachers().subscribe(
@@ -355,10 +360,10 @@ export class EditModuleDialogComponent implements OnInit {
   checkIfModuleExists(value) {
     this.dataService.checkIfModuleExists(value).subscribe(
       response => {
-          if (this.oldCode !== value && !response) {
-            this.moduleCode.setErrors({incorrect: false});
-            this.moduleExists = true;
-          }
+        if (this.data.new && !response) {
+          this.moduleCode.setErrors({incorrect: false});
+          this.moduleExists = true;
+        }
       },
       error => console.error(error)
     );
@@ -386,12 +391,20 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   addNewLectureHour(): void {
-    this.newLectureHours.push(this.newLectureHour('', 'Lecture', 'Sunday', 'Lab 1', '08:15', '10:15'));
+    this.newLectureHours.push(this.newLectureHour(0, '', 'Lecture', 1, 'Lab 1', '08:15', '10:15'));
   }
 
-  newLectureHour(id: string, type: string, day: string, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
+  newLectureHour(lectureHourID: number,
+                 moduleCode: string,
+                 type: string,
+                 day: number,
+                 lectureHall: string,
+                 startingTime: string,
+                 endingTime: string
+  ): FormGroup {
     return this.formBuilder.group({
-      id: [id],
+      lectureHourID: [lectureHourID],
+      moduleCode: [moduleCode],
       type: [type, Validators.required],
       day: [day, Validators.required],
       lectureHall: [lectureHall, Validators.required],
@@ -408,11 +421,6 @@ export class EditModuleDialogComponent implements OnInit {
     this.newLectureHours.removeAt(index);
   }
 
-  convertTime(value) {
-    const time = value.split(':');
-    return parseInt(time[0], 10) * 60 + parseInt(time[1], 10);
-  }
-
   private _filter(value: string): Teacher[] {
     value = value.toLowerCase();
     return this.allTeachers.filter(teacher => teacher.username.toLowerCase().includes(value) ||
@@ -426,27 +434,16 @@ export class EditModuleDialogComponent implements OnInit {
           const res = confirm('Are you sure you want to save changes?');
           if (res) {
             this.savingData = true;
-            if (this.oldCode) {
-              this.dataService.editModule({
-                oldCode: this.oldCode,
-                moduleDetails: this.editModuleForm.value,
-                teachers: this.teachers,
-              }).subscribe(
-                response => {
-                  this.dialogRef.close(true);
-                },
-                error => this.savingError = error
-              ).add(() => this.savingData = false);
-            } else {
-              console.log(this.oldCode);
-              this.dataService.addModule({
-                moduleDetails: this.editModuleForm.value,
-                teachers: this.teachers,
-              }).subscribe(
-                response => this.dialogRef.close(true),
-                error => this.savingError = error,
-              ).add(() => this.savingData = false);
-            }
+            this.dataService.editModule({
+              moduleDetails: this.editModuleForm.value,
+              teachers: this.teachers,
+              new: this.data.new
+            }).subscribe(
+              () => {
+                this.dialogRef.close(true);
+              },
+              error => this.savingError = error
+            ).add(() => this.savingData = false);
           }
         } else {
           this.elementRef.nativeElement.querySelector('#newLectureHours').scrollIntoView({behavior: 'smooth'});
@@ -477,12 +474,6 @@ export class EditModuleDialogComponent implements OnInit {
     if (response) {
       this.dialogRef.close(false);
     }
-  }
-
-  getTime(value: number) {
-    const hours = Math.floor(value / 60);
-    const minutes = value % 60;
-    return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
   }
 
   get moduleName() {
@@ -521,6 +512,10 @@ export class EditModuleDialogComponent implements OnInit {
     return this.editModuleForm.get('enabled');
   }
 
+  get daysOfWeek() {
+    return DAYS_OF_WEEK;
+  }
+
 }
 
 
@@ -551,7 +546,7 @@ export class DeleteModuleDialogComponent implements OnInit {
   }
 
   deleteModule() {
-    this.dataService.deleteModule({_id: this.data._id, moduleCode: this.data.moduleCode}).subscribe(
+    this.dataService.deleteModule({moduleCode: this.data.moduleCode}).subscribe(
       response => console.log(response),
       error => console.error(error)
     );

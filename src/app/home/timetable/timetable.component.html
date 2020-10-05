@@ -33,7 +33,7 @@
                   </div>
                 </ng-template>
                 <div aria-label="details"
-                     [routerLink]="['../results', timeSlot.moduleCode]"
+                     [routerLink]="['../results', timeSlot.moduleCode.replace(' ', '')]"
                      [style.top]="(timeSlot.start - 485) + 'px'"
                      [style.height]="(timeSlot.end - timeSlot.start - 2) + 'px'"
                      [style.background]="'#' + timeSlot.color"
