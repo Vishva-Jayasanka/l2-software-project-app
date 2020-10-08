@@ -16,3 +16,35 @@
   background-color: green;
   color: white;
 }
+
+.card-content:hover {
+  background: #e3e3e3;
+}
+
+.type {
+  width: 33%;
+  color: rgb(104, 108, 112);
+}
+
+.attendance-success {
+  background: #00aa00;
+  color: white;
+}
+
+.attendance-danger {
+  background: #aa0000;
+  color: white;
+}
+
+.secondary-nav {
+  width: 250px;
+  float: left;
+}
+
+.nav-link {
+  color: black;
+}
+
+.active {
+  background: rgb(100, 60, 180) !important;
+}

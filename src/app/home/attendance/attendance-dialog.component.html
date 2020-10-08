@@ -2,8 +2,8 @@
   <mat-icon>close</mat-icon>
 </button>
 
-<h1 mat-dialog-title style="margin-bottom: 0">{{ data.moduleName }}</h1>
-<p>{{ data.moduleCode }}</p>
+<h1 mat-dialog-title style="margin-bottom: 0">{{data.moduleCode + ' - ' + data.moduleName }}</h1>
+<p>{{ data.type }}</p>
 
 
 <table class="attendance-table">
@@ -13,11 +13,11 @@
     <th>Attendance</th>
   </tr>
 
-  <tr *ngFor="let record of data.dates">
-    <td>{{ record | date }}</td>
+  <tr *ngFor="let record of data.attendance">
+    <td>{{ record.date | date }}</td>
     <td>
       <mat-chip-list aria-label="attendance">
-        <mat-chip *ngIf="isAbsent(record); else elseBlock" class="success"><mat-icon>check</mat-icon></mat-chip>
+        <mat-chip *ngIf="record.status; else elseBlock" class="success"><mat-icon>check</mat-icon></mat-chip>
         <ng-template #elseBlock>
           <mat-chip class="danger"><mat-icon>close</mat-icon></mat-chip>
         </ng-template>
@@ -26,3 +26,4 @@
   </tr>
 
 </table>
+

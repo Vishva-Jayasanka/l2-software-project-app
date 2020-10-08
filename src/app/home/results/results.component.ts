@@ -96,7 +96,7 @@ export class ResultsComponent implements OnInit {
         this.lectureHours = response.lectureHours;
         this.teachers = response.teachers;
         this.results = response.results;
-        this.getModules(this.modules, false);
+        this.getModules();
       },
       error => {
         this.error = error;
@@ -116,18 +116,32 @@ export class ResultsComponent implements OnInit {
     );
   }
 
-  getModules(modules, current) {
+  getModules() {
     for (let i = 0; i < 4; i++) {
-      this.semesters[this.getCurrentLevel(i)] = this.modules.filter(module => (module.semester === i + 1));
+      const semester = [];
+      for (const module of this.modules.filter(m => m.semester === i + 1)) {
+        const tempModule: ModuleData = {
+          moduleCode: module.moduleCode,
+          moduleName: module.moduleName,
+          description: module.description,
+          credits: module.credits,
+          semester: module.semester,
+          teachers: this.getTeachers(module.moduleCode),
+          lectureHours: this.getLectureHours(module.moduleCode),
+          new: false
+        };
+        semester.push(tempModule);
+      }
+      this.semesters[this.getCurrentLevel(i)] = semester;
     }
   }
 
-  getLectureHours(moduleCode) {
-    return this.lectureHours.filter(lectureHour => lectureHour.moduleCode === moduleCode);
+  getTeachers(moduleCode: string): Teacher[] {
+    return this.teachers.filter(teacher => teacher.moduleCode === moduleCode);
   }
 
-  getTeachers(moduleCode) {
-    return this.teachers.filter(teacher => teacher.moduleCode === moduleCode);
+  getLectureHours(moduleCode): LectureHour[] {
+    return this.lectureHours.filter(lectureHour => lectureHour.moduleCode === moduleCode);
   }
 
   getResults(moduleCode) {
@@ -137,10 +151,6 @@ export class ResultsComponent implements OnInit {
 
   getCurrentLevel(val) {
     return 'Level ' + (Math.floor(val / 2) + 1) + ' Semester ' + (val % 2 + 1);
-  }
-
-  filter(checked) {
-    this.getModules(this.modules, checked);
   }
 
   openResultsDialog(module): void {
@@ -157,7 +167,7 @@ export class ResultsComponent implements OnInit {
     const moduleData = {
       moduleCode: '',
       moduleName: '',
-      credits: 2,
+      credits: null,
       description: '',
       semester: 1,
       teachers: [],
@@ -211,7 +221,7 @@ export class ResultsComponent implements OnInit {
     return this.authentication.details.role;
   }
 
-  get daysOfWeek () {
+  get daysOfWeek() {
     return DAYS_OF_WEEK;
   }
 

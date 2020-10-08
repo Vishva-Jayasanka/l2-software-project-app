@@ -22,8 +22,24 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}get-attendance`, {});
   }
 
+  getDetailedAttendance(moduleCode: string, type: string, batch: number) {
+    return this.http.post<any>(`${environment.apiUrl}get-detailed-attendance`, {
+      moduleCode,
+      type,
+      batch
+    });
+  }
+
   getLectureHours() {
     return this.http.post<any>(`${environment.apiUrl}get-lecture-hours`, {});
+  }
+
+  getLectureHoursOfModule(moduleCode: string) {
+    return this.http.post<any>(`${environment.adminUrl}get-module-lecture-hours`, {moduleCode});
+  }
+
+  getSessions(lectureHourID) {
+    return this.http.post<any>(`${environment.adminUrl}get-sessions`, {lectureHourID});
   }
 
   getTeachers() {

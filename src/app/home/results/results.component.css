@@ -58,3 +58,29 @@ mat-chip {
   font-size: 12px;
   min-height: 25px !important;
 }
+
+.accordion-header {
+  cursor: pointer;
+  border: none !important;
+}
+
+.accordion-header:hover {
+  background: #efefef;
+}
+
+.type {
+  width: 23%;
+  color: rgb(104, 108, 112);
+}
+
+.content {
+  width: 100%;;
+}
+
+.result {
+  cursor: pointer;
+}
+
+.highlight {
+  font-weight: 550;
+}
