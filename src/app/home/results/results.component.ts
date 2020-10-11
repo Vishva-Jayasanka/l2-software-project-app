@@ -107,7 +107,7 @@ export class ResultsComponent implements OnInit {
         if (!this.error) {
           setTimeout(() => {
             try {
-              document.querySelector(`#${this.routeParameter.id.replace(' ', '')}`).scrollIntoView({behavior: 'smooth'});
+              document.querySelector(`#${this.routeParameter.id}`).scrollIntoView({behavior: 'smooth'});
             } catch (exeption) {
             }
           }, 200);

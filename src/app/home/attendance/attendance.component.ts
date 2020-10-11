@@ -5,6 +5,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import {AuthenticationService} from '../../_services/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LectureHour} from '../results/results.component';
+import * as XLSX from 'xlsx';
 
 export interface Attendance {
   moduleName: string;
@@ -20,6 +21,7 @@ export interface DetailedAttendance {
   moduleCode: string;
   moduleName: string;
   type: string;
+  batch: number;
   attendance: [{}];
 }
 
@@ -37,9 +39,15 @@ export class AttendanceComponent implements OnInit {
   detailedAttendance: DetailedAttendance;
   uploadAttendanceForm: FormGroup;
   moduleExists = true;
+  disableUpload = true;
   progress = false;
   moduleError = false;
   error = '';
+  fileError = false;
+  uploadAttendanceError = '';
+  uploadAttendanceProgress = true;
+  maxDate = new Date();
+  attendanceFile;
 
   constructor(
     private router: Router,
@@ -57,7 +65,9 @@ export class AttendanceComponent implements OnInit {
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [''],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
-      session: [{value: '', disabled: true}, [Validators.required]]
+      session: [{value: '', disabled: true}, [Validators.required]],
+      date: [{value: '', disabled: true}],
+      time: [{value: '', disabled: true}]
     });
     this.data.getAttendance().subscribe(
       response => {
@@ -114,21 +124,9 @@ export class AttendanceComponent implements OnInit {
       moduleCode,
       moduleName,
       type,
+      batch,
       attendance: [{}]
     };
-    this.data.getDetailedAttendance(moduleCode, type, batch).subscribe(
-      response => {
-        for (const session of response) {
-          this.detailedAttendance.attendance.push({
-            date: session.dateHeld,
-            status: session.status
-          });
-        }
-      }, error => {
-        this.detailedAttendance = null;
-      }
-    );
-    this.detailedAttendance.attendance.shift();
     const dialogRef = this.dialog.open(AttendanceDialogComponent, {
       width: '500px',
       data: this.detailedAttendance
@@ -152,6 +150,8 @@ export class AttendanceComponent implements OnInit {
   }
 
   getLectureHoursOfModule() {
+    this.uploadAttendanceProgress = false;
+    this.uploadAttendanceError = '';
     this.data.getLectureHoursOfModule(this.uploadAttendanceForm.get('moduleCode').value).subscribe(
       response => {
         this.moduleName.setValue(response.moduleName);
@@ -167,21 +167,81 @@ export class AttendanceComponent implements OnInit {
           this.moduleError = true;
         }
       }, error => {
-        this.error = error;
+        this.uploadAttendanceError = error;
       }
-    );
+    ).add(() => this.uploadAttendanceProgress = true);
   }
 
   getSessions(lectureHourID) {
+    this.uploadAttendanceError = '';
+    this.uploadAttendanceProgress = false;
     this.data.getSessions(lectureHourID).subscribe(
       response => {
         this.sessions = response.sessions;
         this.session.enable();
         this.elementRef.nativeElement.querySelector('#sessions').focus();
       }, error => {
-        console.error(error);
+        this.uploadAttendanceError = error;
       }
-    );
+    ).add(() => this.uploadAttendanceProgress = true);
+  }
+
+  clickFileUpload() {
+    document.getElementById('fileUpload').click();
+  }
+
+  checkValue(value) {
+    if (parseInt(value, 10) === 0) {
+      this.date.enable();
+      this.time.enable();
+      this.disableUpload = false;
+    } else {
+      this.date.disable();
+      this.time.disable();
+      this.disableUpload = true;
+    }
+  }
+
+  onFileChange(ev) {
+    this.uploadAttendanceProgress = false;
+    let workBook = null;
+    let jsonData = null;
+    const reader = new FileReader();
+    const file = ev.target.files[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' });
+      jsonData = workBook.SheetNames.reduce((initial, name) => {
+        const sheet = workBook.Sheets[name];
+        initial[name] = XLSX.utils.sheet_to_json(sheet);
+        return initial;
+      }, {});
+      this.attendanceFile = jsonData.Sheet1;
+      if (this.attendanceFile[0].hasOwnProperty('index') && this.attendanceFile[0].hasOwnProperty('status')) {
+        let isValid = true;
+        for (const attendance of this.attendanceFile) {
+          if (attendance.index.match(/^[0-9]{6}[A-Za-z]$/) === null || attendance.status !== 0 && attendance.status !== 1) {
+            isValid = false;
+            break;
+          }
+        }
+        if (isValid) {
+          this.attendanceFile.sort((a, b) => a.index > b.index ? 1 : -1);
+          this.fileError = false;
+        } else {
+          this.attendanceFile = '';
+          this.fileError = true;
+        }
+      } else {
+        this.attendanceFile = '';
+        this.fileError = true;
+      }
+      this.uploadAttendanceProgress = true;
+    };
+    reader.readAsBinaryString(file);
+  }
+
+  uploadAttendance() {
   }
 
   get getRole() {
@@ -204,6 +264,14 @@ export class AttendanceComponent implements OnInit {
     return this.uploadAttendanceForm.get('session');
   }
 
+  get date() {
+    return this.uploadAttendanceForm.get('date');
+  }
+
+  get time() {
+    return this.uploadAttendanceForm.get('time');
+  }
+
 }
 
 
@@ -216,14 +284,30 @@ export class AttendanceComponent implements OnInit {
 export class AttendanceDialogComponent implements OnInit {
 
   error = false;
+  progress = false;
 
   constructor(
+    private dataService: DataService,
     public dialogRef: MatDialogRef<AttendanceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DetailedAttendance
   ) {
   }
 
   ngOnInit() {
+    this.progress = true;
+    this.dataService.getDetailedAttendance(this.data.moduleCode, this.data.type, this.data.batch).subscribe(
+      response => {
+        for (const session of response) {
+          this.data.attendance.push({
+            date: session.dateHeld,
+            status: session.status
+          });
+        }
+      }, error => {
+        this.error = true;
+      }
+    ).add(() => this.progress = false);
+    this.data.attendance.shift();
   }
 
   onNoClick(): void {

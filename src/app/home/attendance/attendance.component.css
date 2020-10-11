@@ -48,3 +48,8 @@
 .active {
   background: rgb(100, 60, 180) !important;
 }
+
+.preview {
+  max-height: 300px;
+  overflow-y: scroll;
+}

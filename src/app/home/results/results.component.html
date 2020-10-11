@@ -5,7 +5,7 @@
     <p>All the modules you registered so far appear here</p>
   </div>
 
-  <mat-spinner class="spinner" [hidden]="!progress"></mat-spinner>
+  <mat-spinner [hidden]="!progress" style="  margin: 100px auto auto"></mat-spinner>
 
   <div *ngIf="!error" [hidden]="progress">
 
@@ -29,7 +29,7 @@
 
         <div [attr.id]="'accordion' + semester.value[0].moduleCode">
 
-          <div class="card" style="margin-bottom: 15px" *ngFor="let module of semester.value">
+          <div [attr.id]="module.moduleCode" class="card" style="margin-bottom: 15px" *ngFor="let module of semester.value">
             <h5 class="card-header accordion-header" [attr.id]="'heading' + module.moduleCode" data-toggle="collapse"
                 [attr.data-target]="'#collapse' + module.moduleCode"
                 aria-expanded="false" [attr.aria-controls]="'collapse' + module.moduleCode">
@@ -114,91 +114,5 @@
       </div>
     </div>
 
-    <!--    <div *ngFor="let semester of semesters | keyvalue">-->
-    <!--      <div *ngIf="semester.value.length !== 0" class="mat-semester-group">-->
-    <!--        <p class="semester-group-header">{{ semester.key }}</p>-->
-
-    <!--        <mat-accordion class="module-headers-align">-->
-    <!--          <mat-expansion-panel id="{{ module.moduleCode }}"-->
-    <!--                               [expanded]="module.moduleCode === routeParameter.id"-->
-    <!--                               *ngFor="let module of semester.value">-->
-
-    <!--            <mat-expansion-panel-header>-->
-    <!--              <mat-panel-title>{{ module.moduleCode }}</mat-panel-title>-->
-    <!--              <mat-panel-description class="panel-description">{{ module.moduleName }}</mat-panel-description>-->
-    <!--            </mat-expansion-panel-header>-->
-    <!--            <mat-divider></mat-divider>-->
-
-    <!--            <p class="description">{{ module.description }}</p>-->
-
-    <!--            <table class="details-table">-->
-
-    <!--              <tr>-->
-    <!--                <td class="details-table-category">TEACHERS</td>-->
-    <!--                <td>-->
-    <!--                  <mat-chip-list class="mat-chip-list-stacked">-->
-    <!--                    <span-->
-    <!--                      *ngIf="getTeachers(module.moduleCode).length === 0; else teachersBlock"><i>Not Available</i></span>-->
-    <!--                    <ng-template #teachersBlock>-->
-    <!--                      <mat-chip-->
-    <!--                        *ngFor="let teacher of getTeachers(module.moduleCode)">{{ teacher.firstName }} {{ teacher.lastName }}</mat-chip>-->
-    <!--                    </ng-template>-->
-    <!--                  </mat-chip-list>-->
-    <!--                </td>-->
-    <!--              </tr>-->
-
-    <!--              <tr>-->
-    <!--                <td class="details-table-category">TIME</td>-->
-    <!--                <td>-->
-    <!--                  <span-->
-    <!--                    *ngIf="getLectureHours(module.moduleCode).length === 0; else lectureHourBlock"><i>Not Available</i></span>-->
-    <!--                  <ng-template #lectureHourBlock>-->
-    <!--                    <mat-chip-list aria-label="times" *ngFor="let lectureHour of getLectureHours(module.moduleCode)">-->
-    <!--                      {{ lectureHour.type }} :-->
-    <!--                      <mat-chip>-->
-    <!--                        {{ daysOfWeek[lectureHour.day] }} from {{ lectureHour.startingTime }}H-->
-    <!--                        to {{ lectureHour.endingTime }}H at {{ lectureHour.lectureHall }}-->
-    <!--                      </mat-chip>-->
-    <!--                    </mat-chip-list>-->
-    <!--                  </ng-template>-->
-    <!--                </td>-->
-    <!--              </tr>-->
-
-    <!--              <tr>-->
-    <!--                <td class="details-table-category">CREDITS</td>-->
-    <!--                <td>-->
-    <!--                  <span *ngIf="!module.credits; else creditBlock"><i>Not Available</i></span>-->
-    <!--                  <ng-template #creditBlock>-->
-    <!--                    <mat-chip-list aria-label="credits">-->
-    <!--                      <mat-chip>{{ module.credits }}</mat-chip>-->
-    <!--                    </mat-chip-list>-->
-    <!--                  </ng-template>-->
-    <!--                </td>-->
-    <!--              </tr>-->
-
-    <!--              <tr *ngIf="getRole === 'student'">-->
-    <!--                <td class="details-table-category">RESULTS</td>-->
-    <!--                <td>-->
-    <!--                  <mat-chip-list aria-label="results">-->
-    <!--                    <mat-chip>-->
-    <!--                      <i>Final grade is not available</i>-->
-    <!--                    </mat-chip>-->
-    <!--                    <a class="details-button" (click)="openResultsDialog(module)">View Details</a>-->
-    <!--                  </mat-chip-list>-->
-    <!--                </td>-->
-    <!--              </tr>-->
-
-    <!--            </table>-->
-
-    <!--            <mat-action-row *ngIf="getRole === 'admin'">-->
-    <!--              <button mat-raised-button color="primary" (click)="openEditDetailsDialog(module)">Edit</button>-->
-    <!--              <button mat-button color="warn" (click)="openDeleteModuleDialog(module)">Delete</button>-->
-    <!--            </mat-action-row>-->
-
-    <!--          </mat-expansion-panel>-->
-    <!--        </mat-accordion>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
   </div>
-
+</div>

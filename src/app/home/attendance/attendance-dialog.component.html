@@ -5,8 +5,11 @@
 <h1 mat-dialog-title style="margin-bottom: 0">{{data.moduleCode + ' - ' + data.moduleName }}</h1>
 <p>{{ data.type }}</p>
 
+<mat-spinner *ngIf="progress" style="margin: 50px auto 50px;"></mat-spinner>
 
-<table class="attendance-table">
+
+
+<table *ngIf="!progress && !error" class="attendance-table">
 
   <tr>
     <th>Date</th>
@@ -26,4 +29,6 @@
   </tr>
 
 </table>
+
+<div *ngIf="error" class="alert alert-danger mt-3 mb-0">Error retrieving the data..!</div>
 

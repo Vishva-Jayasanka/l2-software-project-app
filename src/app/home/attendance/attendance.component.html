@@ -11,118 +11,188 @@
     <input matInput (keyup)="applyFilter($event)" placeholder="Enter keyword" #input/>
   </mat-form-field>
 
-  <div *ngFor="let module of filteredAttendance" class="card" style="margin-bottom: 15px">
+  <div *ngIf="!progress; else progressBlock">
 
-    <h5 class="card-header">
-      <span style="float: left">{{ module.moduleName }}</span>
-      <span style="float: right">{{ module.moduleCode }}</span>
-    </h5>
+    <div *ngFor="let module of filteredAttendance" class="card" style="margin-bottom: 15px">
 
-    <div class="card-body" style="padding: 0">
+      <h5 class="card-header">
+        <span style="float: left">{{ module.moduleName }}</span>
+        <span style="float: right">{{ module.moduleCode }}</span>
+      </h5>
 
-      <div class="list-group list-group-flush">
-        <a *ngFor="let lectureHour of module.attendance"
-           (click)="openDialog(module.moduleCode, module.moduleName, lectureHour.type, module.batch)"
-           class="list-group-item list-group-item-action d-flex">
-          <div class="type">{{ lectureHour.type | uppercase }}</div>
-          <div style="width: 33%; text-align: center">
-            <mat-chip-list aria-label="attendance">
-              <mat-chip class="attendance-success"
-                        [class.attendance-danger]="lectureHour.percentage < 80">{{ lectureHour.percentage + '%' }}</mat-chip>
-            </mat-chip-list>
-          </div>
-          <div style="width: 33%; text-align: right">
-            <mat-icon>keyboard_arrow_right</mat-icon>
-          </div>
-        </a>
+      <div class="card-body" style="padding: 0">
+
+        <div class="list-group list-group-flush">
+          <a *ngFor="let lectureHour of module.attendance"
+             (click)="openDialog(module.moduleCode, module.moduleName, lectureHour.type, module.batch)"
+             class="list-group-item list-group-item-action d-flex">
+            <div class="type">{{ lectureHour.type | uppercase }}</div>
+            <div style="width: 33%; text-align: center">
+              <mat-chip-list aria-label="attendance">
+                <mat-chip class="attendance-success"
+                          [class.attendance-danger]="lectureHour.percentage < 80">{{ lectureHour.percentage + '%' }}</mat-chip>
+              </mat-chip-list>
+            </div>
+            <div style="width: 33%; text-align: right">
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </div>
+          </a>
+        </div>
+
       </div>
 
     </div>
 
-  </div>
+    <div *ngIf="getRole === 'admin'">
 
-  <div *ngIf="getRole === 'admin'">
+      <div class="nav flex-column nav-pills secondary-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="upload-attendance-tab" data-toggle="pill" href="#upload-attendance" role="tab" aria-controls="upload-attendance" aria-selected="true">Upload Attendance</a>
+        <a class="nav-link" id="modify-attendance-tab" data-toggle="pill" href="#modify-attendance" role="tab" aria-controls="modify-attendance" aria-selected="false">Modify Attendance</a>
+        <a class="nav-link" id="view-attendance-tab" data-toggle="pill" href="#view-attendance" role="tab" aria-controls="view-attendance" aria-selected="false">View Attendance</a>
+      </div>
 
-    <div class="nav flex-column nav-pills secondary-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <a class="nav-link active" id="upload-attendance-tab" data-toggle="pill" href="#upload-attendance" role="tab" aria-controls="upload-attendance" aria-selected="true">Upload Attendance</a>
-      <a class="nav-link" id="modify-attendance-tab" data-toggle="pill" href="#modify-attendance" role="tab" aria-controls="modify-attendance" aria-selected="false">Modify Attendance</a>
-      <a class="nav-link" id="view-attendance-tab" data-toggle="pill" href="#view-attendance" role="tab" aria-controls="view-attendance" aria-selected="false">View Attendance</a>
-    </div>
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="upload-attendance" role="tabpanel" aria-labelledby="upload-attendance-tab">
 
-    <div class="tab-content" id="v-pills-tabContent">
-      <div class="tab-pane fade show active" id="upload-attendance" role="tabpanel" aria-labelledby="upload-attendance-tab">
+          <div class="card" style="width: calc(100% - 260px); margin: auto; float: right">
 
-        <div class="card" style="width: calc(100% - 260px); margin: auto; float: right">
+            <div class="card-header">
+              <h5>Upload Attendance</h5>
+              <p style="margin-bottom: 0">Upload attendance related to any session</p>
+            </div>
 
-          <div class="card-header">
-            <h5>Upload Attendance</h5>
-            <p style="margin-bottom: 0">Upload attendance related to any session</p>
-          </div>
+            <div class="card-body">
 
-          <div class="card-body">
-
-            <form [formGroup]="uploadAttendanceForm">
-
-              <div>
-
-                <mat-form-field appearance="outline" class="input-field" style="font-size: 15px; width: calc(100% - 45px); margin-right: 15px">
-                  <mat-label>Module Code</mat-label>
-                  <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100" (focusout)="checkIfModuleExists($event.target.value)"/>
-                  <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
-                  <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid module Code</mat-error>
-                  <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && !moduleExists">Module does not exist</mat-error>
-                  <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && moduleExists && moduleError">No lecture hours found for this module! Please add lecture hours first.</mat-error>
-                </mat-form-field>
-
-                <button type="button" [disabled]="moduleCode.invalid" class="fab-button btn btn-success" style="margin-bottom: 10px" (click)="getLectureHoursOfModule()">
-                  <mat-icon>add</mat-icon>
-                </button>
-
+              <div style="height: 25px">
+                <mat-progress-bar [hidden]="uploadAttendanceProgress" mode="query"></mat-progress-bar>
               </div>
 
-              <mat-form-field appearance="outline" class="input-field" style="width: 100%; font-size: 15px">
-                <mat-label>Module Name</mat-label>
-                <input type="text" matInput readonly formControlName="moduleName">
-              </mat-form-field>
+              <form [formGroup]="uploadAttendanceForm">
 
-              <mat-form-field appearance="outline" class="input-field" style="width: calc(50% - 10px); margin-right: 10px; font-size: 15px">
-                <mat-label>Lecture Hour</mat-label>
-                <mat-select id="lectureHours" formControlName="lectureHour" (selectionChange)="getSessions($event.value)">
-                  <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                <div>
 
-              <mat-form-field appearance="outline" class="input-field" style="width: 50%; font-size: 15px">
-                <mat-label>Session</mat-label>
-                <mat-select id="sessions" formControlName="session">
-                  <mat-option value="0">New Session</mat-option>
-                  <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a'}}</mat-option>
-                </mat-select>
-              </mat-form-field>
+                  <mat-form-field appearance="outline" class="input-field" style="font-size: 15px; width: calc(100% - 45px); margin-right: 15px">
+                    <mat-label>Module Code</mat-label>
+                    <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100" (focusout)="checkIfModuleExists($event.target.value)"/>
+                    <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
+                    <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid module Code</mat-error>
+                    <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && !moduleExists">Module does not exist</mat-error>
+                    <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && moduleExists && moduleError">No lecture hours found for this module! Please add lecture hours first.</mat-error>
+                  </mat-form-field>
 
-            </form>
+                  <button type="button" [disabled]="moduleCode.invalid" class="fab-button btn btn-success" style="margin-bottom: 10px" (click)="getLectureHoursOfModule()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+
+                </div>
+
+                <mat-form-field appearance="outline" class="input-field" style="width: 100%; font-size: 15px">
+                  <mat-label>Module Name</mat-label>
+                  <input type="text" matInput readonly formControlName="moduleName">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="input-field" style="width: calc(50% - 10px); margin-right: 10px; font-size: 15px">
+                  <mat-label>Lecture Hour</mat-label>
+                  <mat-select id="lectureHours" formControlName="lectureHour" (selectionChange)="getSessions($event.value)">
+                    <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="input-field" style="width: 50%; font-size: 15px">
+                  <mat-label>Session</mat-label>
+                  <mat-select id="sessions" formControlName="session" (valueChange)="checkValue($event)">
+                    <mat-option value="0">New Session</mat-option>
+                    <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a'}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 6px); margin-right: 10px; font-size: 15px">
+                  <mat-label>Date</mat-label>
+                  <input matInput formControlName="date" [matDatepicker]="myDatePicker" [max]="maxDate" />
+                  <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #myDatePicker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="width: calc(33% - 6px); margin-right: 10px; font-size: 15px">
+                  <mat-label>Time</mat-label>
+                  <input matInput type="time" formControlName="time" />
+                </mat-form-field>
+
+                <button [disabled]="!!session.errors?.required || session.disabled" type="button" (click)="clickFileUpload()" class="btn btn-light" style="height: 53px; margin-top: -10px; width: calc(33% - 6px)">Select Attendace File</button>
+                <input id="fileUpload" type="file" accept=".xls,.xlsx" hidden (change)="onFileChange($event)"/>
+
+                <div style="width: 100%; border: 1px solid lightgray; border-radius: 5px">
+
+                  <p style="margin-top: 10px; margin-left: 10px">Preview of the attendance</p>
+
+                  <div class="preview" *ngIf="!!attendanceFile; else elseBlock">
+                  <table class="table table-sm">
+
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Index Number</th>
+                        <th scope="col">Attendance Status</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr *ngFor="let attendance of attendanceFile; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ attendance.index }}</td>
+                        <td>{{ attendance.status === 1 ? 'Present' : 'Absent' }}</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+
+                  </div>
+
+                  <ng-template #elseBlock>
+                    <p *ngIf="!fileError; else fileErrorBlock" style="margin-bottom: 10px; margin-left: 10px">
+                      <i>Preview not available. Please select a file.</i>
+                    </p>
+                    <ng-template #fileErrorBlock>
+                      <p style="margin-bottom: 10px; margin-left: 10px" class="text-danger">File uploaded contains errors. Please check the file.</p>
+                    </ng-template>
+                  </ng-template>
+
+                </div>
+
+                <div *ngIf="uploadAttendanceError" class="alert alert-danger mt-3 mb-0">{{ uploadAttendanceError }}</div>
+
+                <button mat-raised-button type="submit" style="margin: 20px 10px 10px" (click)="uploadAttendance()">Upload</button>
+                <button mat-flat-button type="reset" style="margin-top: 20px">Reset</button>
+
+              </form>
+
+            </div>
 
           </div>
 
         </div>
 
+        <div class="tab-pane fade" id="modify-attendance" role="tabpanel" aria-labelledby="modify-attendance-tab">
+
+        </div>
+
+        <div class="tab-pane fade" id="view-attendance" role="tabpanel" aria-labelledby="view-attendance-tab">
+
+        </div>
+
       </div>
-
-      <div class="tab-pane fade" id="modify-attendance" role="tabpanel" aria-labelledby="modify-attendance-tab">
-
-      </div>
-
-      <div class="tab-pane fade" id="view-attendance" role="tabpanel" aria-labelledby="view-attendance-tab">
-
-      </div>
-
     </div>
+
+    <div *ngIf="filteredAttendance.length === 0 && getRole !== 'admin'" class="alert alert-dark mt-3 mb-0">No modules
+      found..!
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">Error retrieving the data..!</div>
+
   </div>
 
-  <div *ngIf="filteredAttendance.length === 0 && getRole !== 'admin'" class="alert alert-dark mt-3 mb-0">Mo modules
-    found..!
-  </div>
-
-  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">Error retrieving the data..!</div>
+  <ng-template #progressBlock>
+    <mat-spinner style="margin: 100px auto auto;"></mat-spinner>
+  </ng-template>
 
 </div>

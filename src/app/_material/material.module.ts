@@ -20,6 +20,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatSelectModule} from '@angular/material/select';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MaterialFileInputModule} from 'ngx-material-file-input';
 
 const Material = [
   MatButtonModule,
@@ -43,6 +47,10 @@ const Material = [
   MatProgressSpinnerModule,
   MatTabsModule,
   MatSelectModule,
+  MatProgressBarModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MaterialFileInputModule
 ];
 
 @NgModule({
