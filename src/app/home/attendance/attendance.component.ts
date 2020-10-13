@@ -25,6 +25,11 @@ export interface DetailedAttendance {
   attendance: [{}];
 }
 
+export interface Session {
+  sessionID: number;
+  dateHeld: Date;
+}
+
 @Component({
   selector: 'app-attendance',
   templateUrl: './attendance.component.html',
@@ -35,19 +40,24 @@ export class AttendanceComponent implements OnInit {
   attendance: Attendance[] = [];
   filteredAttendance: Attendance[] = [];
   lectureHours: LectureHour[] = [];
-  sessions: [];
+  sessions: Session[] = [];
+
   detailedAttendance: DetailedAttendance;
   uploadAttendanceForm: FormGroup;
+
   moduleExists = true;
-  disableUpload = true;
-  progress = false;
   moduleError = false;
-  error = '';
   fileError = false;
-  uploadAttendanceError = '';
+  progress = false;
   uploadAttendanceProgress = true;
+  success = false;
+
+  uploadAttendanceError = '';
+  attendanceError = '';
+
   maxDate = new Date();
   attendanceFile;
+  file;
 
   constructor(
     private router: Router,
@@ -66,26 +76,20 @@ export class AttendanceComponent implements OnInit {
       moduleName: [''],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]],
-      date: [{value: '', disabled: true}],
-      time: [{value: '', disabled: true}]
+      date: [{value: '', disabled: true}, [Validators.required]],
+      time: [{value: '', disabled: true}, [Validators.required]]
     });
     this.data.getAttendance().subscribe(
-      response => {
-        this.getAttendance(response);
-      },
-      error => {
-        this.error = error;
-      }
-    ).add(
-      () => this.progress = false
-    );
+      response => this.getAttendance(response.attendance),
+      error => this.attendanceError = error
+    ).add(() => this.progress = false);
   }
 
   getAttendance(response) {
     for (const attendance of response) {
-      let temp;
-      if ((temp = this.attendance.filter(value => value.moduleCode === attendance.moduleCode)).length > 0) {
-        temp[0].attendance.push({
+      const temp = this.attendance.find(value => value.moduleCode === attendance.moduleCode);
+      if (temp !== undefined) {
+        temp.attendance.push({
           type: attendance.type,
           percentage: this.calculateAttendance(attendance.total, attendance.count)
         });
@@ -133,29 +137,12 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  checkIfModuleExists(moduleCode: string) {
-    this.data.checkIfModuleExists(moduleCode).subscribe(
-      response => {
-        if (response) {
-          this.moduleCode.setErrors({incorrect: false});
-          this.lectureHour.disable();
-          this.session.disable();
-          this.moduleName.setValue('');
-          this.moduleExists = false;
-        }
-      }, error => {
-        console.error(error);
-      }
-    );
-  }
-
   getLectureHoursOfModule() {
     this.uploadAttendanceProgress = false;
-    this.uploadAttendanceError = '';
     this.data.getLectureHoursOfModule(this.uploadAttendanceForm.get('moduleCode').value).subscribe(
       response => {
         this.moduleName.setValue(response.moduleName);
-        if (response.lectureHours.length !== 0) {
+        if (response.status && response.lectureHours.length !== 0) {
           this.lectureHour.enable();
           this.session.disable();
           this.sessions = [];
@@ -163,13 +150,24 @@ export class AttendanceComponent implements OnInit {
           this.elementRef.nativeElement.querySelector('#lectureHours').focus();
           this.moduleError = false;
         } else {
-          this.moduleCode.setErrors({invalid: false});
-          this.moduleError = true;
+          this.moduleCode.setErrors({incorrect: false});
+          this.lectureHour.disable();
+          this.session.disable();
+          if (response.lectureHours.length === 0) {
+            this.moduleError = true;
+          } else {
+            this.moduleName.setValue('');
+            this.moduleExists = false;
+          }
         }
       }, error => {
+        this.success = !error;
         this.uploadAttendanceError = error;
       }
-    ).add(() => this.uploadAttendanceProgress = true);
+    ).add(() => {
+      this.attendanceFile = '';
+      this.uploadAttendanceProgress = true;
+    });
   }
 
   getSessions(lectureHourID) {
@@ -181,6 +179,7 @@ export class AttendanceComponent implements OnInit {
         this.session.enable();
         this.elementRef.nativeElement.querySelector('#sessions').focus();
       }, error => {
+        this.success = !error;
         this.uploadAttendanceError = error;
       }
     ).add(() => this.uploadAttendanceProgress = true);
@@ -194,54 +193,97 @@ export class AttendanceComponent implements OnInit {
     if (parseInt(value, 10) === 0) {
       this.date.enable();
       this.time.enable();
-      this.disableUpload = false;
+      this.date.reset();
+      this.time.reset();
     } else {
       this.date.disable();
       this.time.disable();
-      this.disableUpload = true;
     }
   }
 
   onFileChange(ev) {
     this.uploadAttendanceProgress = false;
+    this.attendanceFile = '';
     let workBook = null;
     let jsonData = null;
     const reader = new FileReader();
-    const file = ev.target.files[0];
+    this.file = ev.target.files[0];
     reader.onload = (event) => {
       const data = reader.result;
-      workBook = XLSX.read(data, { type: 'binary' });
+      workBook = XLSX.read(data, {type: 'binary'});
       jsonData = workBook.SheetNames.reduce((initial, name) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
         return initial;
       }, {});
       this.attendanceFile = jsonData.Sheet1;
+      let isValid = true;
       if (this.attendanceFile[0].hasOwnProperty('index') && this.attendanceFile[0].hasOwnProperty('status')) {
-        let isValid = true;
         for (const attendance of this.attendanceFile) {
-          if (attendance.index.match(/^[0-9]{6}[A-Za-z]$/) === null || attendance.status !== 0 && attendance.status !== 1) {
+          if (attendance.index.toString().match(/^[0-9]{6}[A-Za-z]$/) === null || attendance.status !== 0 && attendance.status !== 1) {
             isValid = false;
             break;
           }
         }
-        if (isValid) {
-          this.attendanceFile.sort((a, b) => a.index > b.index ? 1 : -1);
-          this.fileError = false;
-        } else {
-          this.attendanceFile = '';
-          this.fileError = true;
-        }
+      } else {
+        isValid = false;
+      }
+      if (isValid) {
+        this.attendanceFile.sort((a, b) => a.index > b.index ? 1 : -1);
+        this.elementRef.nativeElement.querySelector('#preview').style.border = '1px solid lightgray';
+        this.elementRef.nativeElement.querySelector('#addFile').style.border = 'none';
       } else {
         this.attendanceFile = '';
-        this.fileError = true;
+        this.elementRef.nativeElement.querySelector('#preview').style.border = '2px solid red';
       }
-      this.uploadAttendanceProgress = true;
+      this.fileError = !isValid;
     };
-    reader.readAsBinaryString(file);
+    reader.readAsBinaryString(this.file);
+    this.uploadAttendanceProgress = true;
   }
 
   uploadAttendance() {
+    if (this.uploadAttendanceForm.valid) {
+      if (this.attendanceFile) {
+        this.uploadAttendanceProgress = false;
+        const data = {
+          moduleCode: this.moduleCode.value,
+          lectureHourID: this.lectureHour.value,
+          sessionID: parseInt(this.session.value, 10),
+          date: this.date.value,
+          time: this.time.value,
+          attendance: this.attendanceFile
+        };
+        this.data.uploadAttendance(data).subscribe(
+          response => {
+            this.attendanceFile = '';
+            this.uploadAttendanceError = '';
+            this.success = true;
+            this.uploadAttendanceForm.reset();
+          },
+          error => {
+            this.success = false;
+            this.uploadAttendanceError = error;
+          }
+        ).add(() => this.uploadAttendanceProgress = true);
+      } else {
+        this.elementRef.nativeElement.querySelector('#preview').style.border = '2px solid red';
+        this.elementRef.nativeElement.querySelector('#addFile').style.border = '2px solid black';
+      }
+    } else {
+      this.scrollToFirstInvalidControl();
+    }
+  }
+
+  scrollToFirstInvalidControl() {
+    const firstInvalidControl: HTMLElement = this.elementRef.nativeElement.querySelector('form .ng-invalid');
+    firstInvalidControl.scrollIntoView({behavior: 'smooth'});
+  }
+
+  clearData() {
+    this.attendanceFile = '';
+    this.date.disable();
+    this.time.disable();
   }
 
   get getRole() {

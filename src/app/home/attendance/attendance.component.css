@@ -1,3 +1,8 @@
+.container-md {
+  margin-left: 0;
+  max-width: 1000px;
+}
+
 .filter {
   margin: 0 20px 0 10px;
   width: 250px;
@@ -21,7 +26,7 @@
   background: #e3e3e3;
 }
 
-.type {
+.container {
   width: 33%;
   color: rgb(104, 108, 112);
 }
@@ -49,7 +54,53 @@
   background: rgb(100, 60, 180) !important;
 }
 
-.preview {
+.sub-header {
+  margin-bottom: 0;
+}
+
+.input-field {
+  font-size: 15px;
+}
+
+#upload-attendance > .card {
+  width: calc(100% - 260px);
+  margin: auto;
+  float: right
+}
+
+#preview {
+  width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  transition: border 100ms;
+}
+
+#preview > p {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+#preview > div {
   max-height: 300px;
   overflow-y: scroll;
+}
+
+#preview > div > ul > li > span {
+  color: rgb(104, 108, 112)
+}
+
+#submit-button {
+  margin: 20px 10px 10px;
+}
+
+#reset-button {
+  margin-top: 20px;
+}
+
+#add-button {
+  margin-bottom: 10px;
+}
+
+mat-spinner {
+  margin: 100px auto auto;
 }

@@ -60,4 +60,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}delete-module`, data);
   }
 
+  uploadAttendance(data) {
+    return this.http.post<any>(`${environment.adminUrl}upload-attendance`, data);
+  }
+
 }
