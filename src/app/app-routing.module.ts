@@ -11,6 +11,9 @@ import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.co
 import {AttendanceComponent} from './home/attendance/attendance.component';
 import {ResultsComponent} from './home/results/results.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
+import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
+import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
+import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 
 
 const routes: Routes = [
@@ -21,7 +24,24 @@ const routes: Routes = [
     children: [
       {
         path: 'attendance',
-        component: AttendanceComponent
+        component: AttendanceComponent,
+        children: [
+          {
+            path: 'upload-attendance',
+            component: UploadAttendanceComponent,
+            canActivate: [AuthenticationGuard]
+          },
+          {
+            path: 'edit-attendance',
+            component: EditAttendanceComponent,
+            canActivate: [AuthenticationGuard]
+          },
+          {
+            path: 'view-attendance',
+            component: ViewAttendanceComponent,
+            canActivate: [AuthenticationGuard]
+          }
+        ]
       },
       {
         path: 'results',

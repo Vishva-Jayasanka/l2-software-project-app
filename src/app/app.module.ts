@@ -23,6 +23,9 @@ import {ResultsDialogComponent, ResultsComponent, DeleteModuleDialogComponent} f
 import {TimetableComponent} from './home/timetable/timetable.component';
 import {EditModuleDialogComponent} from './home/results/results.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { UploadAttendanceComponent } from './home/attendance/upload-attendance/upload-attendance.component';
+import { EditAttendanceComponent } from './home/attendance/edit-attendance/edit-attendance.component';
+import { ViewAttendanceComponent } from './home/attendance/view-attendance/view-attendance.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     AttendanceDialogComponent,
     TimetableComponent,
     EditModuleDialogComponent,
-    DeleteModuleDialogComponent
+    DeleteModuleDialogComponent,
+    UploadAttendanceComponent,
+    EditAttendanceComponent,
+    ViewAttendanceComponent
   ],
     imports: [
         BrowserModule,

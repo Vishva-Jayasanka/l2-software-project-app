@@ -1,0 +1,134 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5>Upload Attendance</h5>
+    <p class="sub-header">Upload attendance related to any session</p>
+  </div>
+
+  <div class="card-body">
+
+    <div style="height: 25px">
+      <mat-progress-bar [hidden]="uploadAttendanceProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="uploadAttendanceForm">
+
+      <div>
+
+        <mat-form-field appearance="outline" class="input-field" style="width: calc(100% - 45px); margin-right: 15px">
+          <mat-label>Module Code</mat-label>
+          <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100"/>
+          <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid module Code</mat-error>
+          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && !moduleExists">Module does not exist</mat-error>
+          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.pattern && !moduleCode.errors?.required && moduleExists && moduleError">No lecture hours found for this module! Please add lecture hours first.</mat-error>
+        </mat-form-field>
+
+        <button [disabled]="moduleCode.invalid" (click)="getLectureHoursOfModule()" type="button" class="fab-button btn btn-success" id="add-button">
+          <mat-icon>add</mat-icon>
+        </button>
+
+      </div>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: 100%">
+        <mat-label>Module Name</mat-label>
+        <input type="text" matInput readonly formControlName="moduleName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(50% - 10px); margin-right: 10px; font-size: 15px">
+        <mat-label>Lecture Hour</mat-label>
+        <mat-select id="lectureHours" formControlName="lectureHour" (selectionChange)="getSessions($event.value)">
+          <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: 50%">
+        <mat-label>Session</mat-label>
+        <mat-select id="sessions" formControlName="session" (valueChange)="checkValue($event)">
+          <mat-option value="0">New Session</mat-option>
+          <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a'}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 6px); margin-right: 10px">
+        <mat-label>Date</mat-label>
+        <input matInput formControlName="date" [matDatepicker]="myDatePicker" [max]="maxDate" />
+        <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #myDatePicker></mat-datepicker>
+        <mat-error *ngIf="session.value === '0' && date.touched && date.errors?.required">This field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 6px); margin-right: 10px">
+        <mat-label>Time</mat-label>
+        <input matInput type="time" formControlName="time" />
+        <mat-error *ngIf="session.value === '0' && time.touched && time.errors?.required">This field required</mat-error>
+      </mat-form-field>
+
+      <button [disabled]="!!session.errors?.required || session.disabled" type="button" (click)="clickFileUpload()" id= "addFile" class="btn btn-light" style="height: 53px; margin-top: -10px; width: calc(33% - 6px)">Select Attendace File</button>
+      <input (change)="onFileChange($event)" type="file" id="fileUpload" accept=".xls,.xlsx" hidden/>
+
+      <div id="preview">
+
+        <p>Preview of the attendance</p>
+
+        <div *ngIf="!!attendanceFile; else elseBlock">
+
+          <ul>
+            <li><span>File Name:</span> {{file.name}}</li>
+            <li><span>File Size:</span> {{(file.size / 1024) | number: '1.2-2'}} Kb</li>
+          </ul>
+
+          <table class="table table-sm">
+
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Index Number</th>
+              <th scope="col">Attendance Status</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let attendance of attendanceFile; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ attendance.index }}</td>
+              <td>{{ attendance.status === 1 ? 'Present' : 'Absent' }}</td>
+            </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <ng-template #elseBlock>
+          <p *ngIf="!fileError; else fileErrorBlock">
+            <i>Preview not available. Please select a file.</i>
+          </p>
+          <ng-template #fileErrorBlock>
+            <p class="text-danger">File uploaded contains errors. Please check the file.</p>
+          </ng-template>
+        </ng-template>
+
+      </div>
+
+      <button [disabled]="!uploadAttendanceProgress" (click)="uploadAttendance()" type="submit" mat-raised-button color="primary" id="submit-button">
+        Upload
+        <span *ngIf="!uploadAttendanceProgress" class="spinner-border spinner-border-sm mr-1"></span>
+      </button>
+
+      <button (click)="clearData()" mat-flat-button type="button" id="reset-button">Reset</button>
+
+    </form>
+
+    <div *ngIf="uploadAttendanceError" class="alert alert-danger mt-3 mb-0">
+      {{ uploadAttendanceError }}
+    </div>
+
+    <div *ngIf="success" class="alert alert-success mt-3 mb-0">
+      Attendance saved successfully
+    </div>
+
+  </div>
+
+</div>
+
