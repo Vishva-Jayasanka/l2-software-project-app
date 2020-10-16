@@ -50,10 +50,6 @@
   color: black;
 }
 
-.active {
-  background: rgb(100, 60, 180) !important;
-}
-
 .sub-header {
   margin-bottom: 0;
 }

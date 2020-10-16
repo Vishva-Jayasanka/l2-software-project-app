@@ -10,7 +10,7 @@ import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-upload-attendance',
   templateUrl: './upload-attendance.component.html',
-  styleUrls: ['./upload-attendance.component.css']
+  styleUrls: ['./upload-attendance.component.css', '../attendance.component.css']
 })
 export class UploadAttendanceComponent implements OnInit {
 
@@ -43,7 +43,6 @@ export class UploadAttendanceComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.progress = true;
     this.uploadAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [''],

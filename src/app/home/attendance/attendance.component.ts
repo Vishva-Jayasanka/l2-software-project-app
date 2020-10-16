@@ -55,6 +55,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.progress = true;
     this.data.getAttendance().subscribe(
       response => this.getAttendance(response.attendance),
       error => this.attendanceError = error

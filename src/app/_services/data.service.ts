@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 
 import {environment} from '../../environments/environment';
+import {ModifiedAttendance} from '../home/attendance/edit-attendance/edit-attendance.component';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +63,14 @@ export class DataService {
 
   uploadAttendance(data) {
     return this.http.post<any>(`${environment.adminUrl}upload-attendance`, data);
+  }
+
+  getAttendanceOfSession(data: number) {
+    return this.http.post<any>(`${environment.adminUrl}get-session-attendance`, {sessionID: data});
+  }
+
+  saveAttendanceChanges(data, sessionID: number) {
+    return this.http.post<any>(`${environment.adminUrl}save-attendance-changes`, {sessionID, attendance: data});
   }
 
 }
