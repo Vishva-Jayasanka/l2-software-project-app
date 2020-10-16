@@ -1,0 +1,115 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5>Edit Attendance</h5>
+    <p class="sub-header">Edit attendance related to any session</p>
+  </div>
+
+  <div class="card-body">
+
+    <div style="height: 25px">
+      <mat-progress-bar [hidden]="!editAttendanceProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="editAttendanceForm">
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(30% - 10px); margin-right: 10px">
+        <mat-label>Module Code</mat-label>
+        <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100"/>
+        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
+        <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
+        <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && !moduleName">Module does not exist</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(30% - 10px); margin-right: 10px">
+        <mat-label>Lecture Hour</mat-label>
+        <mat-select (selectionChange)="getSession($event.value)" id="lectureHour" formControlName="lectureHour">
+          <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(30% - 10px); margin-right: 20px">
+        <mat-label>Session</mat-label>
+        <mat-select id="session" formControlName="session" (selectionChange)="focusAddButton()">
+          <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a' }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button [disabled]="moduleCode.invalid" (click)="getAttendance()" type="button" class="fab-button btn btn-success" id="add-attendance-button">
+        <mat-icon>add</mat-icon>
+      </button>
+
+    </form>
+
+    <div id="preview" style="transition: box-shadow 1s">
+
+      <p>Preview of the attendance</p>
+
+      <ul *ngIf="moduleName">
+        <li>Module Name: <span style="font-weight: 570">{{ moduleName }}</span></li>
+      </ul>
+
+      <p *ngIf="attendance.length === 0; else attendanceBlock" style="color: #888888"><i>Attendance will appear here once selected the required inputs</i></p>
+
+      <ng-template #attendanceBlock>
+
+        <mat-form-field class="filter">
+          <mat-label>Filter</mat-label>
+          <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
+        </mat-form-field>
+
+        <div *ngIf="filteredAttendance.length === 0; else attendanceTable" style="color: darkgray"><i>No records found!</i></div>
+
+        <ng-template #attendanceTable>
+
+          <table class="table table-sm">
+
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Index Number</th>
+              <th scope="col">Status</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let record of filteredAttendance; let i = index" [attr.id]="'tr' + (i + 1)" [class.changed]="record.modified">
+              <td>{{ i + 1 }}</td>
+              <td>{{ record.studentID }}</td>
+              <td>
+                <select [attr.id]="'sel' + (i + 1)" (change)="updateAttendanceRecord($event)">
+                  <option [selected]="record.status" value="0">Absent</option>
+                  <option [selected]="record.status" value="1">Present</option>
+                </select>
+              </td>
+            </tr>
+            </tbody>
+
+          </table>
+
+        </ng-template>
+
+      </ng-template>
+
+      <div style="padding: 10px; overflow: hidden !important;">
+        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" style="float: right; margin-left: 10px">Reset</button>
+        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" style="float: right">Save</button>
+      </div>
+
+    </div>
+
+    <div id="messages">
+
+      <div *ngIf="!lectureHoursFound" class="alert alert-dark mt-3 mb-0">No lecture hours found for this module!</div>
+
+      <div *ngIf="!sessionsFound" class="alert alert-dark mt-3 mb-0">No sessions found for this lecture hour!</div>
+
+      <div *ngIf="successfullySaved" class="alert alert-success mt-3 mb-0">Attendance saved successfully!</div>
+
+      <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+
+    </div>
+
+  </div>
+
+</div>
