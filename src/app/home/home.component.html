@@ -1,6 +1,6 @@
 <mat-toolbar class="toolbar" (window:resize)="onResize($event)">
 
-  <button mat-icon-button [hidden]="!width" (click)="sidenav.toggle()">
+  <button mat-icon-button [hidden]="!widthSidenav" (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
 
@@ -8,13 +8,17 @@
 
   <span class="toolbar-spacer"></span>
 
+  <button mat-icon-button [hidden]="!widthNotification" (click)="notifications.toggle()">
+    <mat-icon>notifications</mat-icon>
+  </button>
+
   <button mat-mini-fab class="avatar" [matMenuTriggerFor]="settings"></button>
 
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">
 
-  <mat-sidenav #sidenav [mode]="width ? 'over' : 'side'" [opened]="!width" class="sidenav">
+  <mat-sidenav #sidenav [mode]="widthSidenav ? 'over' : 'side'" [opened]="!widthSidenav" class="sidenav">
 
     <mat-selection-list #list [multiple]="false">
 
@@ -28,6 +32,10 @@
 
     </mat-selection-list>
 
+  </mat-sidenav>
+
+  <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthNotification" class="notification-bar">
+    <app-notification></app-notification>
   </mat-sidenav>
 
   <mat-sidenav-content>

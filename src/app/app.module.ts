@@ -26,6 +26,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { UploadAttendanceComponent } from './home/attendance/upload-attendance/upload-attendance.component';
 import { EditAttendanceComponent } from './home/attendance/edit-attendance/edit-attendance.component';
 import { ViewAttendanceComponent } from './home/attendance/view-attendance/view-attendance.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ViewAttendanceComponent } from './home/attendance/view-attendance/view-
     DeleteModuleDialogComponent,
     UploadAttendanceComponent,
     EditAttendanceComponent,
-    ViewAttendanceComponent
+    ViewAttendanceComponent,
+    NotificationComponent
   ],
     imports: [
         BrowserModule,

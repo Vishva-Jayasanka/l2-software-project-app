@@ -5,6 +5,7 @@
 .avatar {
   background-image: url('https://scontent.fcmb3-1.fna.fbcdn.net/v/t1.0-9/76197820_2182161368551954_4217311061767880704_n.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_ohc=CCyoygUv-icAX82AevN&_nc_ht=scontent.fcmb3-1.fna&oh=f073cba099c91749cbf178d630b9e905&oe=5F41CA63');
   background-size: cover;
+  margin-left: 10px;
 }
 
 .toolbar {
@@ -46,6 +47,12 @@
 .sidenav {
   display: flex;
   width: 250px;
+  background: white;
+}
+
+.notification-bar {
+  display: flex;
+  width: 350px;
   background: white;
 }
 

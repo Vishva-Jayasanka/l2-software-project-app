@@ -9,7 +9,8 @@ import {AuthenticationService} from '../_services/authentication.service';
 
 export class HomeComponent implements OnInit {
 
-  width: boolean;
+  widthSidenav: boolean;
+  widthNotification: boolean;
   activeRoute: string;
   user;
   ROUTS = [
@@ -20,13 +21,15 @@ export class HomeComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
-    this.width = event.target.innerWidth < 950;
+    this.widthSidenav = event.target.innerWidth < 850;
+    this.widthNotification = event.target.innerWidth < 1170;
   }
 
   constructor(
     private authentication: AuthenticationService
   ) {
-    this.width = (window.innerWidth) < 950;
+    this.widthSidenav = (window.innerWidth) < 850;
+    this.widthNotification = (window.innerWidth) < 1170;
   }
 
   ngOnInit(): void {
