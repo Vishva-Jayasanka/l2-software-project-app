@@ -30,7 +30,7 @@
 
       <mat-form-field appearance="outline" class="input-field" style="width: calc(30% - 10px); margin-right: 20px">
         <mat-label>Session</mat-label>
-        <mat-select id="session" formControlName="session" (selectionChange)="focusAddButton()">
+        <mat-select (selectionChange)="focusAddButton()" id="session" formControlName="session">
           <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a' }}</mat-option>
         </mat-select>
       </mat-form-field>

@@ -6,6 +6,8 @@ import {Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
 import * as XLSX from 'xlsx';
+import {EMPTY, Subject, Subscription} from 'rxjs';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload-attendance',
@@ -18,16 +20,20 @@ export class UploadAttendanceComponent implements OnInit {
   sessions: Session[] = [];
 
   uploadAttendanceForm: FormGroup;
+  term$ = new Subject<string>();
+  private searchSubscription: Subscription;
 
-  moduleExists = true;
   moduleError = false;
   fileError = false;
   progress = false;
-  uploadAttendanceProgress = true;
-  success = false;
+  uploadAttendanceProgress = false;
+  successfullySaved = false;
+  lectureHoursFound = true;
+  sessionsFound = true;
 
-  uploadAttendanceError = '';
-  attendanceError = '';
+  error = '';
+  previousModuleCode = '';
+  moduleName = '';
 
   maxDate = new Date();
   attendanceFile;
@@ -40,65 +46,85 @@ export class UploadAttendanceComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
     private elementRef: ElementRef
-  ) { }
+  ) {
+    this.searchSubscription = this.term$.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      switchMap(moduleCode => {
+        this.getLectureHours(moduleCode);
+        return EMPTY;
+      })
+    ).subscribe();
+  }
 
   ngOnInit(): void {
     this.uploadAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
-      moduleName: [''],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]],
       date: [{value: '', disabled: true}, [Validators.required]],
       time: [{value: '', disabled: true}, [Validators.required]]
     });
   }
-  getLectureHoursOfModule() {
-    this.uploadAttendanceProgress = false;
-    this.success = false;
-    this.moduleName.setValue('');
-    this.data.getLectureHoursOfModule(this.uploadAttendanceForm.get('moduleCode').value).subscribe(
-      response => {
-        this.moduleName.setValue(response.moduleName);
-        if (response.status && response.lectureHours.length !== 0) {
-          this.lectureHour.enable();
-          this.session.disable();
-          this.sessions = [];
-          this.lectureHours = response.lectureHours;
-          this.elementRef.nativeElement.querySelector('#lectureHours').focus();
-          this.moduleError = false;
-        } else {
-          this.moduleCode.setErrors({incorrect: false});
-          this.lectureHour.disable();
-          this.session.disable();
-          this.date.disable();
-          this.time.disable();
-          this.moduleExists = response.lectureHours !== undefined;
-          if (this.moduleExists && response.lectureHours.length === 0) {
-            this.moduleError = true;
-          }
-        }
-      }, error => {
-        this.uploadAttendanceError = error;
-      }
-    ).add(() => {
-      this.attendanceFile = '';
+
+  getLectureHours(moduleCode: string) {
+    this.successfullySaved = false;
+    this.sessionsFound = true;
+    this.lectureHoursFound = true;
+    this.error = '';
+    this.lectureHour.disable();
+    this.session.disable();
+    this.date.disable();
+    this.time.disable();
+    if (moduleCode && moduleCode !== this.previousModuleCode) {
       this.uploadAttendanceProgress = true;
-    });
+      this.data.getLectureHoursOfModule(moduleCode).subscribe(
+        response => {
+          if (response.status) {
+            this.moduleName = response.moduleName;
+            this.lectureHours = response.lectureHours;
+            this.lectureHoursFound = (this.lectureHours.length !== 0);
+            this.lectureHour.reset();
+            if (this.lectureHoursFound) {
+              this.lectureHour.enable();
+              this.elementRef.nativeElement.querySelector('#lectureHour').focus();
+            } else {
+              this.lectureHour.disable();
+            }
+          } else {
+            this.lectureHour.disable();
+            this.moduleCode.markAsDirty();
+            this.moduleCode.setErrors({incorrect: false});
+            this.moduleName = '';
+          }
+        }, error => {
+          this.lectureHour.disable();
+        }
+      ).add(() => {
+        this.session.disable();
+        this.session.reset();
+        this.uploadAttendanceProgress = false;
+        this.previousModuleCode = moduleCode;
+      });
+    }
   }
 
   getSessions(lectureHourID) {
-    this.uploadAttendanceError = '';
-    this.uploadAttendanceProgress = false;
+    this.uploadAttendanceProgress = true;
+    this.session.disable();
     this.data.getSessions(lectureHourID).subscribe(
       response => {
         this.sessions = response.sessions;
-        this.session.enable();
-        this.elementRef.nativeElement.querySelector('#sessions').focus();
+        this.sessions.sort((date1, date2) => date1 > date2 ? 1 : -1);
+        this.sessionsFound = this.sessions.length !== 0;
+        if (this.sessionsFound) {
+          this.session.enable();
+          this.elementRef.nativeElement.querySelector('#session').focus();
+        }
       }, error => {
-        this.success = !error;
-        this.uploadAttendanceError = error;
+        this.error = error;
       }
-    ).add(() => this.uploadAttendanceProgress = true);
+    ).add(() => this.uploadAttendanceProgress = false);
   }
 
   clickFileUpload() {
@@ -118,7 +144,7 @@ export class UploadAttendanceComponent implements OnInit {
   }
 
   onFileChange(ev) {
-    this.uploadAttendanceProgress = false;
+    this.uploadAttendanceProgress = true;
     this.attendanceFile = '';
     let workBook = null;
     let jsonData = null;
@@ -146,49 +172,58 @@ export class UploadAttendanceComponent implements OnInit {
       }
       if (isValid) {
         this.attendanceFile.sort((a, b) => a.index > b.index ? 1 : -1);
-        this.elementRef.nativeElement.querySelector('#preview').style.border = '1px solid lightgray';
-        this.elementRef.nativeElement.querySelector('#addFile').style.border = 'none';
+        this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
+        setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
       } else {
         this.attendanceFile = '';
-        this.elementRef.nativeElement.querySelector('#preview').style.border = '2px solid red';
+        this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px red';
+        setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(255, 200, 200)', 2000);
       }
       this.fileError = !isValid;
     };
     reader.readAsBinaryString(this.file);
-    this.uploadAttendanceProgress = true;
+    this.uploadAttendanceProgress = false;
     this.elementRef.nativeElement.querySelector('#fileUpload').value = '';
   }
 
   uploadAttendance() {
-    if (this.uploadAttendanceForm.valid) {
-      if (this.attendanceFile) {
-        this.uploadAttendanceProgress = false;
-        const data = {
-          moduleCode: this.moduleCode.value,
-          lectureHourID: this.lectureHour.value,
-          sessionID: parseInt(this.session.value, 10),
-          date: this.date.value,
-          time: this.time.value,
-          attendance: this.attendanceFile
-        };
-        this.data.uploadAttendance(data).subscribe(
-          response => {
-            this.attendanceFile = '';
-            this.uploadAttendanceForm.reset();
-            this.success = true;
-          },
-          error => {
-            this.success = false;
-            this.uploadAttendanceError = error;
-          }
-        ).add(() => this.uploadAttendanceProgress = true);
+    if (confirm('Are sure you want to upload this file?')) {
+      if (this.uploadAttendanceForm.valid) {
+        if (this.attendanceFile) {
+          this.uploadAttendanceProgress = true;
+          const data = {
+            moduleCode: this.moduleCode.value,
+            lectureHourID: this.lectureHour.value,
+            sessionID: parseInt(this.session.value, 10),
+            date: this.date.value,
+            time: this.time.value,
+            attendance: this.attendanceFile
+          };
+          this.data.uploadAttendance(data).subscribe(
+            response => {
+              this.successfullySaved = true;
+              this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
+              setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+            },
+            error => {
+              this.successfullySaved = false;
+              this.error = error;
+            }
+          ).add(() => this.uploadAttendanceProgress = false);
+        } else {
+          this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px red';
+          setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+          this.elementRef.nativeElement.querySelector('#messages').scrollIntoView({behavior: 'smooth'});
+          this.elementRef.nativeElement.querySelector('#addFile').style.border = '2px solid black';
+        }
       } else {
-        this.elementRef.nativeElement.querySelector('#preview').style.border = '2px solid red';
-        this.elementRef.nativeElement.querySelector('#addFile').style.border = '2px solid black';
+        this.scrollToFirstInvalidControl();
       }
-    } else {
-      this.scrollToFirstInvalidControl();
     }
+  }
+
+  toggleProgress() {
+    this.uploadAttendanceProgress = this.moduleCode.value !== '';
   }
 
   scrollToFirstInvalidControl() {
@@ -203,10 +238,6 @@ export class UploadAttendanceComponent implements OnInit {
 
   get moduleCode() {
     return this.uploadAttendanceForm.get('moduleCode');
-  }
-
-  get moduleName() {
-    return this.uploadAttendanceForm.get('moduleName');
   }
 
   get lectureHour() {

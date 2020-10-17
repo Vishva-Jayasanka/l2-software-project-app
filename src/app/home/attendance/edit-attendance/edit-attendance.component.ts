@@ -31,16 +31,15 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   sessionID: number;
   error = '';
 
+  editAttendanceForm: FormGroup;
+  term$ = new Subject<string>();
+  private searchSubscription: Subscription;
+
   editAttendanceProgress = false;
   sessionsFound = true;
   lectureHoursFound = true;
   successfullySaved = false;
   updated = false;
-
-
-  editAttendanceForm: FormGroup;
-  term$ = new Subject<string>();
-  private searchSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -79,7 +78,6 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
     this.sessionsFound = true;
     this.lectureHoursFound = true;
     this.error = '';
-    this.successfullySaved = false;
     this.lectureHour.disable();
     this.session.disable();
     if (moduleCode && moduleCode !== this.previousModuleCode) {
