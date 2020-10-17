@@ -28,6 +28,7 @@ import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-at
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
+import { RegistrationComponent } from './home/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import {NotificationComponent} from './home/notification/notification.component'
     ViewAttendanceComponent,
     NotificationComponent,
     PaymentComponent,
-    NotificationComponent
+    NotificationComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,

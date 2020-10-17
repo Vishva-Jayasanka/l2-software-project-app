@@ -17,7 +17,8 @@ export class HomeComponent implements OnInit {
     {component: 'ResultsComponent', route: 'results', icon: 'grade', label: 'Course Modules'},
     {component: 'AttendanceComponent', route: 'attendance', icon: 'assignment_turned_in', label: 'Attendance'},
     {component: 'TimetableComponent', route: 'timetable', icon: 'watch_later', label: 'Timetable'},
-    {component: 'PaymentComponent', route: 'payment', icon: 'monetization_on', label: 'Payment'}
+    {component: 'PaymentComponent', route: 'payment', icon: 'monetization_on', label: 'Payment'},
+    {component: 'RegistrationComponent', route: 'registration', icon: 'how_to_reg', label: 'Registration'}
   ];
 
   @HostListener('window:resize', ['$event'])
