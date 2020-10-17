@@ -23,10 +23,11 @@ import {ResultsDialogComponent, ResultsComponent, DeleteModuleDialogComponent} f
 import {TimetableComponent} from './home/timetable/timetable.component';
 import {EditModuleDialogComponent} from './home/results/results.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { UploadAttendanceComponent } from './home/attendance/upload-attendance/upload-attendance.component';
-import { EditAttendanceComponent } from './home/attendance/edit-attendance/edit-attendance.component';
-import { ViewAttendanceComponent } from './home/attendance/view-attendance/view-attendance.component';
-import { NotificationComponent } from './notification/notification.component';
+import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
+import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
+import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
+import {PaymentComponent} from './home/payment/payment.component';
+import {NotificationComponent} from './home/notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -46,19 +47,21 @@ import { NotificationComponent } from './notification/notification.component';
     UploadAttendanceComponent,
     EditAttendanceComponent,
     ViewAttendanceComponent,
+    NotificationComponent,
+    PaymentComponent,
     NotificationComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MaterialModule,
-        EjsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        MatAutocompleteModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    EjsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatAutocompleteModule
+  ],
   providers: [
     AuthenticationGuard,
     AuthenticationService,

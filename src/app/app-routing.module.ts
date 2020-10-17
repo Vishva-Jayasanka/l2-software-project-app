@@ -14,6 +14,7 @@ import {TimetableComponent} from './home/timetable/timetable.component';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
+import {PaymentComponent} from './home/payment/payment.component';
 
 
 const routes: Routes = [
@@ -54,6 +55,10 @@ const routes: Routes = [
       {
         path: 'timetable',
         component: TimetableComponent
+      },
+      {
+        path: 'payment',
+        component: PaymentComponent
       },
       {
         path: '',
