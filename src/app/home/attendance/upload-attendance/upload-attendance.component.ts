@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
-import {LectureHour} from '../../results/results.component';
+import {LectureHour} from '../../courese-module/course-module.component';
 import {Session} from '../attendance.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';

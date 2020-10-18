@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LectureHour} from '../results/results.component';
+import {LectureHour} from '../courese-module/course-module.component';
 import * as XLSX from 'xlsx';
 
 export interface Attendance {

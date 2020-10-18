@@ -9,15 +9,13 @@ import {VerificationComponent} from './auth/verification/verification.component'
 import {AuthComponent} from './auth/auth.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
 import {AttendanceComponent} from './home/attendance/attendance.component';
-import {ResultsComponent} from './home/results/results.component';
+import {CourseModuleComponent} from './home/courese-module/course-module.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
-import {AddResultComponent} from './home/results/add-result/add-result.component';
-
 
 const routes: Routes = [
   {
@@ -47,12 +45,12 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'results',
-        component: ResultsComponent,
+        path: 'course-modules',
+        component: CourseModuleComponent,
       },
       {
-        path: 'results/:id',
-        component: ResultsComponent
+        path: 'course-modules/:id',
+        component: CourseModuleComponent
       },
       {
         path: 'timetable',
@@ -67,12 +65,8 @@ const routes: Routes = [
         component: RegistrationComponent
       },
       {
-        path: 'add-result',
-        component: AddResultComponent
-      },
-      {
         path: '',
-        redirectTo: 'results',
+        redirectTo: 'course-modules',
         pathMatch: 'full'
       }
     ]

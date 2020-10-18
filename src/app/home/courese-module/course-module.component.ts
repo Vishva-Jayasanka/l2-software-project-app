@@ -56,10 +56,10 @@ export const DAYS_OF_WEEK: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday
 
 @Component({
   selector: 'app-results',
-  templateUrl: './results.component.html',
-  styleUrls: ['./results.component.css']
+  templateUrl: './course-module.component.html',
+  styleUrls: ['./course-module.component.css']
 })
-export class ResultsComponent implements OnInit {
+export class CourseModuleComponent implements OnInit {
 
   modules = [];
   lectureHours = [];
@@ -155,17 +155,13 @@ export class ResultsComponent implements OnInit {
   }
 
   openResultsDialog(module): void {
-    if (this.getRole === 'admin') {
-      this.router.navigate(['add-result', {moduleCode: module.moduleCode}], {relativeTo: this.route});
-    } else {
-      const dialogRef = this.dialog.open(ResultsDialogComponent, {
-        width: '500px',
-        data: {module, results: this.getResults(module.moduleCode)}
-      });
-      dialogRef.afterClosed().subscribe(() => {
-        console.log('The dialog was closed');
-      });
-    }
+    const dialogRef = this.dialog.open(ResultsDialogComponent, {
+      width: '500px',
+      data: {module, results: this.getResults(module.moduleCode)}
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
   }
 
   openAddNewModuleDialog(): void {
@@ -239,7 +235,7 @@ export class ResultsComponent implements OnInit {
 @Component({
   selector: 'app-results-dialog',
   templateUrl: './results-dialog.component.html',
-  styleUrls: ['./results.component.css']
+  styleUrls: ['./course-module.component.css']
 })
 
 export class ResultsDialogComponent implements OnInit {
@@ -303,7 +299,7 @@ export class ResultsDialogComponent implements OnInit {
 @Component({
   selector: 'app-edit-module-dialog',
   templateUrl: './edit-module-dialog.component.html',
-  styleUrls: ['./results.component.css']
+  styleUrls: ['./course-module.component.css']
 })
 
 export class EditModuleDialogComponent implements OnInit {
@@ -545,7 +541,7 @@ export class EditModuleDialogComponent implements OnInit {
 @Component({
   selector: 'app-delete-module-dialog',
   templateUrl: './delete-module-dialog.component.html',
-  styleUrls: ['./results.component.css']
+  styleUrls: ['./course-module.component.css']
 })
 
 export class DeleteModuleDialogComponent implements OnInit {

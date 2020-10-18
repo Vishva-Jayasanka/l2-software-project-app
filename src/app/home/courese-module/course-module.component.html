@@ -17,8 +17,6 @@
 
     <button mat-raised-button color="accent" style="margin: 5px 10px 20px 0" *ngIf="getRole === 'admin'" (click)="openAddNewModuleDialog()">Add New Module</button>
 
-    <button mat-raised-button color="accent" style="margin-top: 5px; margin-bottom: 20px" *ngIf="getRole === 'admin'" [routerLink]="['../add-result']">Add New Module</button>
-
     <div *ngFor="let semester of semesters | keyvalue">
       <div *ngIf="semester.value.length !== 0" class="mat-semester-group">
 
@@ -88,7 +86,10 @@
                       RESULTS
                     </div>
                     <div class="content">
-                      <div style="float: left"><i>Final Grade is not Available</i></div>
+                      <div *ngIf="getRole !== 'admin'; else addResultBlock" style="float: left"><i>Final Grade is not Available</i></div>
+                      <ng-template #addResultBlock>
+                        <div style="float: left"><i>Click here to add results to this module</i></div>
+                      </ng-template>
                       <div style="float: right">
                         <mat-icon>keyboard_arrow_right</mat-icon>
                       </div>
