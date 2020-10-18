@@ -10,8 +10,8 @@ import * as XLSX from 'xlsx';
 export interface Attendance {
   moduleName: string;
   moduleCode: string;
-  batch: number;
   attendance: [{
+    batch: number;
     type: string;
     percentage: number;
   }];
@@ -67,6 +67,7 @@ export class AttendanceComponent implements OnInit {
       const temp = this.attendance.find(value => value.moduleCode === attendance.moduleCode);
       if (temp !== undefined) {
         temp.attendance.push({
+          batch: attendance.batch,
           type: attendance.type,
           percentage: this.calculateAttendance(attendance.total, attendance.count)
         });
@@ -74,8 +75,8 @@ export class AttendanceComponent implements OnInit {
         this.attendance.push({
           moduleCode: attendance.moduleCode,
           moduleName: attendance.moduleName,
-          batch: attendance.batch,
           attendance: [{
+            batch: attendance.batch,
             type: attendance.type,
             percentage: this.calculateAttendance(attendance.total, attendance.count)
           }]

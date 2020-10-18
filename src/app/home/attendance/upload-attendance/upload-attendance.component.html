@@ -13,7 +13,7 @@
 
     <form [formGroup]="uploadAttendanceForm">
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(25% - 10px); margin-right: 10px">
         <mat-label>Module Code</mat-label>
         <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100"/>
         <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
@@ -21,19 +21,29 @@
         <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && !moduleName">Module does not exist</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px; font-size: 15px">
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(25% - 10px); margin-right: 10px; font-size: 15px">
         <mat-label>Lecture Hour</mat-label>
-        <mat-select (selectionChange)="getSessions($event.value)" id="lectureHour" formControlName="lectureHour">
+        <mat-select (selectionChange)="getBatch()" id="lectureHour" formControlName="lectureHour">
           <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
         </mat-select>
+        <mat-error *ngIf="lectureHour.touched && lectureHour.errors?.required">This field is required</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: 33%">
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(25% - 10px); margin-right: 10px; font-size: 15px">
+        <mat-label>Batch</mat-label>
+        <mat-select (selectionChange)="getSessions()" id="batch" formControlName="batch">
+          <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: 25%">
         <mat-label>Session</mat-label>
-        <mat-select  (valueChange)="checkValue($event)" id="session" formControlName="session">
+        <mat-select (selectionChange)="checkValue($event.value)" id="session" formControlName="session">
           <mat-option value="0">New Session</mat-option>
           <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a'}}</mat-option>
         </mat-select>
+        <mat-error *ngIf="session.touched && session.errors?.required">This field is required</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 6px); margin-right: 10px">
@@ -106,8 +116,6 @@
     </form>
 
     <div *ngIf="!lectureHoursFound" class="alert alert-danger mt-3 mb-0">No lecture hours found for this module!</div>
-
-    <div *ngIf="!sessionsFound" class="alert alert-dark mt-3 mb-0">No sessions found for this lecture hour!</div>
 
     <div *ngIf="successfullySaved" class="alert alert-success mt-3 mb-0">Attendance saved successfully!</div>
 

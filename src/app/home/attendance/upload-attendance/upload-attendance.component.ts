@@ -16,6 +16,8 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 })
 export class UploadAttendanceComponent implements OnInit {
 
+  YEARS = [2016, 2017, 2018, 2019, 2020];
+
   lectureHours: LectureHour[] = [];
   sessions: Session[] = [];
 
@@ -29,7 +31,6 @@ export class UploadAttendanceComponent implements OnInit {
   uploadAttendanceProgress = false;
   successfullySaved = false;
   lectureHoursFound = true;
-  sessionsFound = true;
 
   error = '';
   previousModuleCode = '';
@@ -61,6 +62,7 @@ export class UploadAttendanceComponent implements OnInit {
     this.uploadAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
+      batch: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]],
       date: [{value: '', disabled: true}, [Validators.required]],
       time: [{value: '', disabled: true}, [Validators.required]]
@@ -69,10 +71,10 @@ export class UploadAttendanceComponent implements OnInit {
 
   getLectureHours(moduleCode: string) {
     this.successfullySaved = false;
-    this.sessionsFound = true;
     this.lectureHoursFound = true;
     this.error = '';
     this.lectureHour.disable();
+    this.batch.disable();
     this.session.disable();
     this.date.disable();
     this.time.disable();
@@ -109,18 +111,27 @@ export class UploadAttendanceComponent implements OnInit {
     }
   }
 
-  getSessions(lectureHourID) {
+  getBatch() {
+    this.session.disable();
+    this.date.disable();
+    this.time.disable();
+    this.batch.enable();
+    this.elementRef.nativeElement.querySelector('#batch').focus();
+    this.batch.reset();
+  }
+
+  getSessions() {
     this.uploadAttendanceProgress = true;
     this.session.disable();
-    this.data.getSessions(lectureHourID).subscribe(
+    this.date.disable();
+    this.time.disable();
+    this.session.reset();
+    this.data.getSessions(this.lectureHour.value, this.batch.value).subscribe(
       response => {
         this.sessions = response.sessions;
         this.sessions.sort((date1, date2) => date1 > date2 ? 1 : -1);
-        this.sessionsFound = this.sessions.length !== 0;
-        if (this.sessionsFound) {
-          this.session.enable();
-          this.elementRef.nativeElement.querySelector('#session').focus();
-        }
+        this.session.enable();
+        this.elementRef.nativeElement.querySelector('#session').focus();
       }, error => {
         this.error = error;
       }
@@ -194,6 +205,7 @@ export class UploadAttendanceComponent implements OnInit {
           const data = {
             moduleCode: this.moduleCode.value,
             lectureHourID: this.lectureHour.value,
+            batch: parseInt(this.batch.value, 10),
             sessionID: parseInt(this.session.value, 10),
             date: this.date.value,
             time: this.time.value,
@@ -242,6 +254,10 @@ export class UploadAttendanceComponent implements OnInit {
 
   get lectureHour() {
     return this.uploadAttendanceForm.get('lectureHour');
+  }
+
+  get batch() {
+    return this.uploadAttendanceForm.get('batch');
   }
 
   get session() {

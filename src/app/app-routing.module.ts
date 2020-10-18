@@ -16,6 +16,7 @@ import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-at
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
+import {AddResultComponent} from './home/results/add-result/add-result.component';
 
 
 const routes: Routes = [
@@ -47,7 +48,17 @@ const routes: Routes = [
       },
       {
         path: 'results',
-        component: ResultsComponent
+        component: ResultsComponent,
+        children: [
+          {
+            path: 'add-result',
+            component: AddResultComponent
+          },
+          {
+            path: 'add-result/:moduleCode',
+            component: AddResultComponent
+          }
+        ]
       },
       {
         path: 'results/:id',

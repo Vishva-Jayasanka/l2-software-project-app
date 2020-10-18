@@ -7,7 +7,7 @@ import {DataService} from '../../_services/data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 export interface ResultData {
   module;
@@ -74,6 +74,7 @@ export class ResultsComponent implements OnInit {
 
   constructor(
     public route: ActivatedRoute,
+    public router: Router,
     public dialog: MatDialog,
     private data: DataService,
     private authentication: AuthenticationService
@@ -154,13 +155,17 @@ export class ResultsComponent implements OnInit {
   }
 
   openResultsDialog(module): void {
-    const dialogRef = this.dialog.open(ResultsDialogComponent, {
-      width: '500px',
-      data: {module, results: this.getResults(module.moduleCode)}
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
+    if (this.getRole === 'admin') {
+      this.router.navigate(['add-result', {moduleCode: module.moduleCode}], {relativeTo: this.route});
+    } else {
+      const dialogRef = this.dialog.open(ResultsDialogComponent, {
+        width: '500px',
+        data: {module, results: this.getResults(module.moduleCode)}
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        console.log('The dialog was closed');
+      });
+    }
   }
 
   openAddNewModuleDialog(): void {

@@ -39,8 +39,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-module-lecture-hours`, {moduleCode});
   }
 
-  getSessions(lectureHourID) {
-    return this.http.post<any>(`${environment.adminUrl}get-sessions`, {lectureHourID});
+  getSessions(lectureHourID, batch) {
+    return this.http.post<any>(`${environment.adminUrl}get-sessions`, {lectureHourID, batch});
   }
 
   getTeachers() {

@@ -21,6 +21,8 @@ export interface ModifiedAttendance {
 })
 export class EditAttendanceComponent implements OnInit, OnDestroy {
 
+  YEARS = [2016, 2017, 2018, 2019, 2020];
+
   lectureHours = [];
   attendance = [];
   modifiedAttendance: ModifiedAttendance[] = [];
@@ -62,6 +64,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
     this.editAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
+      batch: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]]
     });
   }
@@ -79,6 +82,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
     this.lectureHoursFound = true;
     this.error = '';
     this.lectureHour.disable();
+    this.batch.disable();
     this.session.disable();
     if (moduleCode && moduleCode !== this.previousModuleCode) {
       this.editAttendanceProgress = true;
@@ -114,16 +118,25 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSession(lectureHourID: string) {
+  getBatch() {
+    this.session.disable();
+    this.batch.enable();
+    this.elementRef.nativeElement.querySelector('#batch').focus();
+    this.batch.reset();
+  }
+
+  getSession() {
     this.editAttendanceProgress = true;
     this.session.disable();
-    this.data.getSessions(lectureHourID).subscribe(
+    this.data.getSessions(this.lectureHour.value, this.batch.value).subscribe(
       response => {
         this.sessions = response.sessions;
         this.sessions.sort((date1, date2) => date1 > date2 ? 1 : -1);
         this.sessionsFound = this.sessions.length !== 0;
         if (this.sessionsFound) {
+          this.batch.enable();
           this.session.enable();
+          this.session.reset();
           this.elementRef.nativeElement.querySelector('#session').focus();
         }
       },
@@ -218,16 +231,16 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
     this.editAttendanceProgress = this.moduleCode.value !== '';
   }
 
-  focusAddButton() {
-    this.elementRef.nativeElement.querySelector('#add-attendance-button').focus();
-  }
-
   get moduleCode() {
     return this.editAttendanceForm.get('moduleCode');
   }
 
   get lectureHour() {
     return this.editAttendanceForm.get('lectureHour');
+  }
+
+  get batch() {
+    return this.editAttendanceForm.get('batch');
   }
 
   get session() {

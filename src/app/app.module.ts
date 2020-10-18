@@ -29,6 +29,7 @@ import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-at
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import { RegistrationComponent } from './home/registration/registration.component';
+import { AddResultComponent } from './home/results/add-result/add-result.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { RegistrationComponent } from './home/registration/registration.componen
     NotificationComponent,
     PaymentComponent,
     NotificationComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    AddResultComponent
   ],
   imports: [
     BrowserModule,
