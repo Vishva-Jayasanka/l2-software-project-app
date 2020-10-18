@@ -16,6 +16,7 @@ import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-at
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
+import {ResultsComponent} from './home/results/results.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,10 @@ const routes: Routes = [
       {
         path: 'course-modules/:id',
         component: CourseModuleComponent
+      },
+      {
+        path: 'results',
+        component: ResultsComponent
       },
       {
         path: 'timetable',

@@ -14,7 +14,8 @@ export class HomeComponent implements OnInit {
   activeRoute: string;
   user;
   ROUTS = [
-    {component: 'ResultsComponent', route: 'results', icon: 'grade', label: 'Course Modules'},
+    {component: 'CourseModuleComponent', route: 'course-modules', icon: 'grade', label: 'Course Modules'},
+    {component: 'ResultComponent', route: 'results', icon: 'assessment', label: 'Exam Results'},
     {component: 'AttendanceComponent', route: 'attendance', icon: 'assignment_turned_in', label: 'Attendance'},
     {component: 'TimetableComponent', route: 'timetable', icon: 'watch_later', label: 'Timetable'},
     {component: 'PaymentComponent', route: 'payment', icon: 'monetization_on', label: 'Payment'},

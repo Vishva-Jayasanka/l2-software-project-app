@@ -29,6 +29,7 @@ import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-at
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import {RegistrationComponent} from './home/registration/registration.component';
+import { ResultsComponent } from './home/results/results.component';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import {RegistrationComponent} from './home/registration/registration.component'
     PaymentComponent,
     NotificationComponent,
     RegistrationComponent,
+    ResultsComponent,
   ],
   imports: [
     BrowserModule,
