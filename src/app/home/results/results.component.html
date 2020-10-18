@@ -15,12 +15,9 @@
       Current Registrations
     </mat-slide-toggle>
 
-    <button mat-raised-button color="accent"
-            style="margin-top: 5px; margin-bottom: 20px"
-            *ngIf="getRole === 'admin'"
-            (click)="openAddNewModuleDialog()">
-      Add New Module
-    </button>
+    <button mat-raised-button color="accent" style="margin: 5px 10px 20px 0" *ngIf="getRole === 'admin'" (click)="openAddNewModuleDialog()">Add New Module</button>
+
+    <button mat-raised-button color="accent" style="margin-top: 5px; margin-bottom: 20px" *ngIf="getRole === 'admin'" [routerLink]="['../add-result']">Add New Module</button>
 
     <div *ngFor="let semester of semesters | keyvalue">
       <div *ngIf="semester.value.length !== 0" class="mat-semester-group">
@@ -116,5 +113,3 @@
 
   </div>
 </div>
-
-<router-outlet></router-outlet>

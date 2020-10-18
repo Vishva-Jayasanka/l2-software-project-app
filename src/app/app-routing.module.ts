@@ -49,16 +49,6 @@ const routes: Routes = [
       {
         path: 'results',
         component: ResultsComponent,
-        children: [
-          {
-            path: 'add-result',
-            component: AddResultComponent
-          },
-          {
-            path: 'add-result/:moduleCode',
-            component: AddResultComponent
-          }
-        ]
       },
       {
         path: 'results/:id',
@@ -75,6 +65,10 @@ const routes: Routes = [
       {
         path: 'registration',
         component: RegistrationComponent
+      },
+      {
+        path: 'add-result',
+        component: AddResultComponent
       },
       {
         path: '',
