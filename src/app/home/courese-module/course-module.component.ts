@@ -155,13 +155,17 @@ export class CourseModuleComponent implements OnInit {
   }
 
   openResultsDialog(module): void {
-    const dialogRef = this.dialog.open(ResultsDialogComponent, {
-      width: '500px',
-      data: {module, results: this.getResults(module.moduleCode)}
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
+    if (this.getRole === 'admin') {
+      this.router.navigate(['../results', {moduleCode: module.moduleCode}]);
+    } else {
+      const dialogRef = this.dialog.open(ResultsDialogComponent, {
+        width: '500px',
+        data: {module, results: this.getResults(module.moduleCode)}
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        console.log('The dialog was closed');
+      });
+    }
   }
 
   openAddNewModuleDialog(): void {
@@ -375,7 +379,7 @@ export class EditModuleDialogComponent implements OnInit {
   checkIfModuleExists(value) {
     this.dataService.checkIfModuleExists(value).subscribe(
       response => {
-        if (this.data.new && !response) {
+        if (this.data.new && !response.status) {
           this.moduleCode.setErrors({incorrect: false});
           this.moduleExists = true;
         }

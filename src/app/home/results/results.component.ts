@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {AuthenticationService} from '../../_services/authentication.service';
 
 @Component({
   selector: 'app-results',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResultsComponent implements OnInit {
 
-  constructor() { }
+  moduleCode: string;
+
+  progress = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private authentication: AuthenticationService
+  ) {
+  }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.moduleCode = params.moduleCode;
+    });
+  }
+
+  get getRole() {
+    return this.authentication.details.role;
   }
 
 }

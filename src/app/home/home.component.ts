@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   user;
   ROUTS = [
     {component: 'CourseModuleComponent', route: 'course-modules', icon: 'grade', label: 'Course Modules'},
-    {component: 'ResultComponent', route: 'results', icon: 'assessment', label: 'Exam Results'},
+    {component: 'ResultsComponent', route: 'results', icon: 'assessment', label: 'Exam Results'},
     {component: 'AttendanceComponent', route: 'attendance', icon: 'assignment_turned_in', label: 'Attendance'},
     {component: 'TimetableComponent', route: 'timetable', icon: 'watch_later', label: 'Timetable'},
     {component: 'PaymentComponent', route: 'payment', icon: 'monetization_on', label: 'Payment'},
@@ -41,6 +41,10 @@ export class HomeComponent implements OnInit {
 
   getRoute(event: any) {
     this.activeRoute = event.constructor.name;
+  }
+
+  get getRole() {
+    return this.authentication.details.role;
   }
 
   logout() {

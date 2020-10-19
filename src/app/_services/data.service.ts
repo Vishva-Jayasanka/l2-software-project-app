@@ -48,9 +48,7 @@ export class DataService {
   }
 
   checkIfModuleExists(value) {
-    return this.http.post<any>(`${environment.adminUrl}check-module`, {moduleCode: value}).pipe(map(response => {
-      return response.status;
-    }));
+    return this.http.post<any>(`${environment.adminUrl}check-module`, {moduleCode: value});
   }
 
   editModule(data) {
@@ -71,6 +69,14 @@ export class DataService {
 
   saveAttendanceChanges(data, sessionID: number) {
     return this.http.post<any>(`${environment.adminUrl}save-attendance-changes`, {sessionID, attendance: data});
+  }
+
+  getExamsOfModule(moduleCode: string, batch: number) {
+    return this.http.post<any>(`${environment.adminUrl}get-module-exams`, {moduleCode, batch});
+  }
+
+  uploadExamResults(data) {
+    return this.http.post<any>(`${environment.adminUrl}upload-results`, data);
   }
 
 }

@@ -58,6 +58,10 @@ const routes: Routes = [
         component: ResultsComponent
       },
       {
+        path: 'results/:moduleCode',
+        component: ResultsComponent
+      },
+      {
         path: 'timetable',
         component: TimetableComponent
       },

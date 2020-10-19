@@ -1,0 +1,127 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5>Upload Results</h5>
+    <p class="sub-header">upload exam results related to any module</p>
+  </div>
+
+  <div class="card-body">
+
+    <div style="height: 25px">
+      <mat-progress-bar [hidden]="!uploadResultsProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="uploadResultsForm">
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
+        <mat-label>Module Code</mat-label>
+        <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100" />
+        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
+        <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
+        <mat-error *ngIf="moduleExists">Module does not exist</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
+        <mat-label>Batch</mat-label>
+        <mat-select (selectionChange)="getExams($event.value)" id="batch" formControlName="batch">
+          <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: 33%">
+        <mat-label>Exam</mat-label>
+        <mat-select (selectionChange)="checkValue()" id="exam" formControlName="exam">
+          <mat-option value="0">New Exam</mat-option>
+          <mat-option *ngFor="let exam of exams" [value]="exam.examID">{{ exam.type }} | {{ exam.dateHeld | date: 'MMMM d, y' }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="exam.touched && exam.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: 33%; margin-right: 10px">
+        <mat-label>Type</mat-label>
+        <input type="text" matInput id="type" formControlName="type" placeholder="Ex: Final Exam">
+        <mat-error *ngIf="type.touched && type.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
+        <mat-label>Date</mat-label>
+        <input matInput formControlName="dateHeld" [matDatepicker]="myDatePicker" [max]="maxDate" />
+        <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #myDatePicker></mat-datepicker>
+        <mat-error *ngIf="dateHeld.touched && dateHeld.errors?.required">This field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px)">
+        <mat-label>Allocation (%)</mat-label>
+        <input matInput type="text" formControlName="allocation" id="allocation" placeholder="Ex: 35">
+        <mat-error *ngIf="allocation.touched && allocation.errors?.required">This field is required</mat-error>
+        <mat-error *ngIf="allocation.touched && allocation.errors?.pattern">Invalid input</mat-error>
+      </mat-form-field>
+
+      <div id="preview">
+
+        <p>Preview of the attendance</p>
+
+        <p *ngIf="moduleName">Module Name:<span style="font-weight: 570"> {{moduleName}}</span></p>
+        <p *ngIf="moduleName && allocationAvailable > 0" style="margin-top: -10px">Allocation Available:<span style="font-weight: 570"> {{ allocationAvailable }}</span> </p>
+
+        <div *ngIf="resultsFile.length !== 0; else elseBlock">
+
+          <ul>
+            <li><span>File Name:</span> {{file.name}}</li>
+            <li><span>File Size:</span> {{(file.size / 1024) | number: '1.2-2'}} Kb</li>
+          </ul>
+
+          <table class="table table-sm">
+
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Index Number</th>
+              <th scope="col">Marks</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let result of resultsFile; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ result.index }}</td>
+              <td>{{ result.mark }}</td>
+            </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <ng-template #elseBlock>
+          <p *ngIf="!fileError; else fileErrorBlock">
+            <i>Preview not available. Please select a file.</i>
+          </p>
+          <ng-template #fileErrorBlock>
+            <p class="text-danger">File uploaded contains errors. Please check the file.</p>
+          </ng-template>
+        </ng-template>
+
+        <div style="overflow: hidden">
+          <button (click)="openFile()" type="button" class="btn btn-success" id="add-button" style="margin: 10px">Add Results</button>
+          <input (change)="onFileChange($event)" type="file" id="resultFileUpload" hidden/>
+        </div>
+
+      </div>
+
+      <div *ngIf="moduleExists" class="alert alert-dark" style="margin-top: 10px">Module does not exist</div>
+
+      <div *ngIf="success" class="alert alert-success" style="margin-top: 10px">Exam results successfully uploaded.</div>
+
+      <div *ngIf="error" class="alert alert-warning" style="margin-top: 10px">{{ error }}</div>
+
+      <button [disabled]="uploadResultsProgress" (click)="resetForm()" type="reset" mat-flat-button style="float: right; margin-top: 10px">Reset</button>
+      <button [disabled]="uploadResultsForm.invalid || uploadResultsProgress || resultsFile.length === 0" (click)="uploadResults()" type="button" mat-raised-button color="primary" style="margin: 10px 10px 0 0; float: right">Upload</button>
+
+    </form>
+
+  </div>
+
+</div>

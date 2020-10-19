@@ -67,7 +67,7 @@
 
         <p>Preview of the attendance</p>
 
-        <p>Module Name:<span style="font-weight: 570"> {{moduleName}}</span></p>
+        <p *ngIf="moduleName">Module Name:<span style="font-weight: 570"> {{moduleName}}</span></p>
 
         <div *ngIf="!!attendanceFile; else elseBlock">
 

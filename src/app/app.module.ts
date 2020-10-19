@@ -30,6 +30,9 @@ import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import {RegistrationComponent} from './home/registration/registration.component';
 import { ResultsComponent } from './home/results/results.component';
+import { UploadResultComponent } from './home/results/upload-result/upload-result.component';
+import { EditResultComponent } from './home/results/edit-result/edit-result.component';
+import { ViewResultComponent } from './home/results/view-result/view-result.component';
 
 
 @NgModule({
@@ -55,6 +58,9 @@ import { ResultsComponent } from './home/results/results.component';
     NotificationComponent,
     RegistrationComponent,
     ResultsComponent,
+    UploadResultComponent,
+    EditResultComponent,
+    ViewResultComponent,
   ],
   imports: [
     BrowserModule,
