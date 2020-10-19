@@ -46,7 +46,7 @@
         <mat-error *ngIf="session.touched && session.errors?.required">This field is required</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 6px); margin-right: 10px">
+      <mat-form-field appearance="outline" class="input-field" style="width: 50%; margin-right: 10px">
         <mat-label>Date</mat-label>
         <input matInput formControlName="date" [matDatepicker]="myDatePicker" [max]="maxDate" />
         <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
@@ -54,14 +54,11 @@
         <mat-error *ngIf="session.value === '0' && date.touched && date.errors?.required">This field required</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 6px); margin-right: 10px">
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(50% - 10px)">
         <mat-label>Time</mat-label>
         <input matInput type="time" formControlName="time" />
         <mat-error *ngIf="session.value === '0' && time.touched && time.errors?.required">This field required</mat-error>
       </mat-form-field>
-
-      <button [disabled]="!!session.errors?.required || session.disabled" type="button" (click)="clickFileUpload()" id= "addFile" class="btn btn-light" style="height: 53px; margin-top: -10px; width: calc(33% - 6px)">Select Attendance File</button>
-      <input (change)="onFileChange($event)" type="file" id="fileUpload" accept=".xls,.xlsx" hidden/>
 
       <div id="preview">
 
@@ -107,19 +104,23 @@
           </ng-template>
         </ng-template>
 
+        <div style="margin: 10px; overflow: hidden">
+          <button [disabled]="!!session.errors?.required || session.disabled" type="button" (click)="clickFileUpload()" id= "addFile" class="btn btn-success">Select File</button>
+          <input (change)="onFileChange($event)" type="file" id="fileUpload" accept=".xls,.xlsx" hidden/>
+        </div>
+
       </div>
 
-      <button [disabled]="uploadAttendanceProgress" (click)="uploadAttendance()" type="submit" mat-raised-button color="primary" id="submit-button">Upload</button>
+      <div *ngIf="!lectureHoursFound" class="alert alert-danger mt-3 mb-0">No lecture hours found for this module!</div>
 
-      <button (click)="clearData()" mat-flat-button type="button" id="reset-button">Reset</button>
+      <div *ngIf="successfullySaved" class="alert alert-success mt-3 mb-0">Attendance saved successfully!</div>
+
+      <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+
+      <button (click)="clearData()" mat-flat-button type="button" style="margin: 10px 0 0 0; float: right">Reset</button>
+      <button [disabled]="uploadAttendanceProgress" (click)="uploadAttendance()" type="submit" mat-raised-button color="primary" style="margin: 10px 10px 0 0; float: right">Upload</button>
 
     </form>
-
-    <div *ngIf="!lectureHoursFound" class="alert alert-danger mt-3 mb-0">No lecture hours found for this module!</div>
-
-    <div *ngIf="successfullySaved" class="alert alert-success mt-3 mb-0">Attendance saved successfully!</div>
-
-    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
 
   </div>
 

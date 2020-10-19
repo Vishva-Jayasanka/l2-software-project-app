@@ -19,9 +19,9 @@ import {VerificationComponent} from './auth/verification/verification.component'
 import {AuthComponent} from './auth/auth.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
 import {AttendanceDialogComponent, AttendanceComponent} from './home/attendance/attendance.component';
-import {ResultsDialogComponent, CourseModuleComponent, DeleteModuleDialogComponent} from './home/courese-module/course-module.component';
+import {CourseModuleComponent, DeleteModuleDialogComponent} from './home/course-module/course-module.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
-import {EditModuleDialogComponent} from './home/courese-module/course-module.component';
+import {EditModuleDialogComponent} from './home/course-module/course-module.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
@@ -29,10 +29,10 @@ import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-at
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import {RegistrationComponent} from './home/registration/registration.component';
-import { ResultsComponent } from './home/results/results.component';
-import { UploadResultComponent } from './home/results/upload-result/upload-result.component';
-import { EditResultComponent } from './home/results/edit-result/edit-result.component';
-import { ViewResultComponent } from './home/results/view-result/view-result.component';
+import {ResultsComponent} from './home/results/results.component';
+import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
+import {EditResultComponent} from './home/results/edit-result/edit-result.component';
+import {ViewResultComponent} from './home/results/view-result/view-result.component';
 
 
 @NgModule({
@@ -45,7 +45,6 @@ import { ViewResultComponent } from './home/results/view-result/view-result.comp
     ForgotPasswordComponent,
     AttendanceComponent,
     CourseModuleComponent,
-    ResultsDialogComponent,
     AttendanceDialogComponent,
     TimetableComponent,
     EditModuleDialogComponent,

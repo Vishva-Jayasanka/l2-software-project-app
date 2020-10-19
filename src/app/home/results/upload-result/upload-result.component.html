@@ -59,6 +59,10 @@
         <mat-error *ngIf="allocation.touched && allocation.errors?.pattern">Invalid input</mat-error>
       </mat-form-field>
 
+      <section style="margin-bottom: 15px">
+        <mat-checkbox formControlName="hideMarks" id="hide-marks">Show only the grade. (selecting this show only grade to students)</mat-checkbox>
+      </section>
+
       <div id="preview">
 
         <p>Preview of the attendance</p>

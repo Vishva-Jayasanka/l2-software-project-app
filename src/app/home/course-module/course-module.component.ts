@@ -64,7 +64,6 @@ export class CourseModuleComponent implements OnInit {
   modules = [];
   lectureHours = [];
   teachers = [];
-  results = [];
   semesters = {};
   currentRegistration: string;
   progress = false;
@@ -96,7 +95,6 @@ export class CourseModuleComponent implements OnInit {
         this.modules = response.modules;
         this.lectureHours = response.lectureHours;
         this.teachers = response.teachers;
-        this.results = response.results;
         this.getModules();
       },
       error => {
@@ -145,27 +143,8 @@ export class CourseModuleComponent implements OnInit {
     return this.lectureHours.filter(lectureHour => lectureHour.moduleCode === moduleCode);
   }
 
-  getResults(moduleCode) {
-    return this.results.filter(result => result.moduleCode === moduleCode)
-      .sort((result1, result2) => (result1.date > result2.date) ? -1 : 1);
-  }
-
   getCurrentLevel(val) {
     return 'Level ' + (Math.floor(val / 2) + 1) + ' Semester ' + (val % 2 + 1);
-  }
-
-  openResultsDialog(module): void {
-    if (this.getRole === 'admin') {
-      this.router.navigate(['../results', {moduleCode: module.moduleCode}]);
-    } else {
-      const dialogRef = this.dialog.open(ResultsDialogComponent, {
-        width: '500px',
-        data: {module, results: this.getResults(module.moduleCode)}
-      });
-      dialogRef.afterClosed().subscribe(() => {
-        console.log('The dialog was closed');
-      });
-    }
   }
 
   openAddNewModuleDialog(): void {
@@ -232,69 +211,69 @@ export class CourseModuleComponent implements OnInit {
 
 }
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// View Results component
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-@Component({
-  selector: 'app-results-dialog',
-  templateUrl: './results-dialog.component.html',
-  styleUrls: ['./course-module.component.css']
-})
-
-export class ResultsDialogComponent implements OnInit {
-
-  results: Results[];
-  sortedData: Results[];
-
-  constructor(
-    public dialogRef: MatDialogRef<ResultsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ResultData
-  ) {
-  }
-
-  ngOnInit(): void {
-    this.results = this.data.results;
-    this.sortedData = this.results.slice();
-  }
-
-  sortData(sort: Sort) {
-    const data = this.results.slice();
-    if (!sort.active || sort.direction === '') {
-      this.sortedData = data;
-      return;
-    }
-    this.sortedData = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      switch (sort.active) {
-        case 'type' :
-          return compare(a.type, b.type, isAsc);
-        case 'mark' :
-          return compare(a.mark, b.mark, isAsc);
-        case 'date' :
-          return compare(a.date, b.date, isAsc);
-        default :
-          return 0;
-      }
-    });
-
-    function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
-      return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-    }
-
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  getColor(val) {
-    const red = (val < 50) ? 250 : 500 - val * 5;
-    const green = (val < 50) ? val * 5 : 250;
-    return 'rgb(' + red + ',' + green + ',' + '0)';
-  }
-
-}
+// // --------------------------------------------------------------------------------------------------------------------------------------
+// // View Results component
+// // --------------------------------------------------------------------------------------------------------------------------------------
+//
+// @Component({
+//   selector: 'app-results-dialog',
+//   templateUrl: './results-dialog.component.html',
+//   styleUrls: ['./course-module.component.css']
+// })
+//
+// export class ResultsDialogComponent implements OnInit {
+//
+//   results: Results[];
+//   sortedData: Results[];
+//
+//   constructor(
+//     public dialogRef: MatDialogRef<ResultsDialogComponent>,
+//     @Inject(MAT_DIALOG_DATA) public data: ResultData
+//   ) {
+//   }
+//
+//   ngOnInit(): void {
+//     this.results = this.data.results;
+//     this.sortedData = this.results.slice();
+//   }
+//
+//   sortData(sort: Sort) {
+//     const data = this.results.slice();
+//     if (!sort.active || sort.direction === '') {
+//       this.sortedData = data;
+//       return;
+//     }
+//     this.sortedData = data.sort((a, b) => {
+//       const isAsc = sort.direction === 'asc';
+//       switch (sort.active) {
+//         case 'type' :
+//           return compare(a.type, b.type, isAsc);
+//         case 'mark' :
+//           return compare(a.mark, b.mark, isAsc);
+//         case 'date' :
+//           return compare(a.date, b.date, isAsc);
+//         default :
+//           return 0;
+//       }
+//     });
+//
+//     function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+//       return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+//     }
+//
+//   }
+//
+//   onNoClick(): void {
+//     this.dialogRef.close();
+//   }
+//
+//   getColor(val) {
+//     const red = (val < 50) ? 250 : 500 - val * 5;
+//     const green = (val < 50) ? val * 5 : 250;
+//     return 'rgb(' + red + ',' + green + ',' + '0)';
+//   }
+//
+// }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // Add and Edit Module Component

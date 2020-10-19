@@ -5,22 +5,44 @@
     <p>You can perform any exam result related tasks</p>
   </div>
 
+  <mat-form-field [hidden]="getRole === 'admin'" class="filter">
+    <mat-label>Filter</mat-label>
+    <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
+  </mat-form-field>
+
   <div *ngIf="!progress; else progressBlock">
 
-<!--    <div *ngFor="let module of filteredResults" class="card" style="margin-bottom: 15px">-->
-<!--      -->
-<!--      <h5 class="card-header">-->
-<!--        <span style="float: left">{{ module.moduleName }}</span>-->
-<!--        <span style="float: right">{{ module.moduleCode }}</span>-->
-<!--      </h5>-->
-<!--      -->
-<!--      <div class="card-body" style="padding: 0">-->
-<!--        <div class="list-group list-group-flush">-->
-<!--          -->
-<!--        </div>-->
-<!--      </div>-->
-<!--      -->
-<!--    </div>-->
+    <div *ngFor="let module of filteredResults">
+
+      <div *ngIf="module.marks.length !== 0" class="card" style="margin-bottom: 15px">
+
+        <h5 class="card-header">
+          <span style="float: left">{{ module.moduleName }}</span>
+          <span style="float: right">{{ module.moduleCode }}</span>
+        </h5>
+
+        <div class="card-body" style="padding: 0">
+          <div class="list-group list-group-flush">
+            <div *ngFor="let mark of module.marks" class="list-group-item list-group-item-action d-flex">
+              <div class="container">{{ mark.type | uppercase }}</div>
+              <div class="container" style="text-align: center">
+                <mat-chip-list aria-label="attendance">
+                  <mat-chip class="attendance-success">{{ mark.mark + '%' }}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="container" style="text-align: center">
+                {{ mark.grade }}
+              </div>
+              <div class="container" style="text-align: right">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 
     <div *ngIf="getRole === 'admin'">
 
@@ -56,7 +78,7 @@
   </div>
 
   <ng-template #progressBlock>
-    <mat-spinner></mat-spinner>
+    <mat-spinner style="margin: 100px auto"></mat-spinner>
   </ng-template>
 
 </div>

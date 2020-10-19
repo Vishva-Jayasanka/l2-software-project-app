@@ -53,6 +53,10 @@
 
       </form>
 
+      <div *ngIf="!lectureHoursFound" class="alert alert-dark mt-3 mb-0">No lecture hours found for this module!</div>
+
+      <div *ngIf="!sessionsFound" class="alert alert-dark mt-3 mb-0">No sessions found for this lecture hour!</div>
+
     </div>
 
     <div id="preview" style="transition: box-shadow 1s">
@@ -104,23 +108,20 @@
         </ng-template>
 
       </ng-template>
-
       <div style="padding: 10px; overflow: hidden !important;">
-        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" style="float: right; margin-left: 10px">Reset</button>
-        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" style="float: right">Save</button>
+
+        <div *ngIf="successfullySaved" class="alert alert-success">Attendance saved successfully!</div>
+
+        <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" style="float: right; margin: 0 0 0 10px">Reset</button>
+        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" style="float: right; margin: 0 0 0 0">Save</button>
+
       </div>
 
     </div>
 
     <div id="messages">
-
-      <div *ngIf="!lectureHoursFound" class="alert alert-dark mt-3 mb-0">No lecture hours found for this module!</div>
-
-      <div *ngIf="!sessionsFound" class="alert alert-dark mt-3 mb-0">No sessions found for this lecture hour!</div>
-
-      <div *ngIf="successfullySaved" class="alert alert-success mt-3 mb-0">Attendance saved successfully!</div>
-
-      <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
 
     </div>
 

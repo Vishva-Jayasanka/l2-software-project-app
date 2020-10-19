@@ -9,7 +9,7 @@ import {VerificationComponent} from './auth/verification/verification.component'
 import {AuthComponent} from './auth/auth.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
 import {AttendanceComponent} from './home/attendance/attendance.component';
-import {CourseModuleComponent} from './home/courese-module/course-module.component';
+import {CourseModuleComponent} from './home/course-module/course-module.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';

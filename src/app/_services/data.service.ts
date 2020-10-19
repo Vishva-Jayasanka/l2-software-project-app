@@ -79,4 +79,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}upload-results`, data);
   }
 
+  getExamResults() {
+    return this.http.post<any>(`${environment.apiUrl}get-results`, {});
+  }
+
 }

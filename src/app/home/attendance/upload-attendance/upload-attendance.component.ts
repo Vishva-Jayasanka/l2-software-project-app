@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
-import {LectureHour} from '../../courese-module/course-module.component';
+import {LectureHour} from '../../course-module/course-module.component';
 import {Session} from '../attendance.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -246,6 +246,7 @@ export class UploadAttendanceComponent implements OnInit {
   clearData() {
     this.attendanceFile = '';
     this.uploadAttendanceForm.reset();
+    setTimeout(() => this.uploadAttendanceProgress = false, 1000);
   }
 
   get moduleCode() {

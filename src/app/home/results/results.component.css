@@ -12,6 +12,11 @@
   margin-bottom: 0;
 }
 
+.filter {
+  margin: 0 20px 0 10px;
+  width: 250px;
+}
+
 #preview {
   width: 100%;
   border: 1px solid lightgray;

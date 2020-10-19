@@ -64,7 +64,8 @@ export class UploadResultComponent implements OnInit {
       exam: [{value: '', disabled: true}, [Validators.required]],
       type: [{value: '', disabled: true}, [Validators.required]],
       dateHeld: [{value: '', disabled: true}, [Validators.required]],
-      allocation: [{value: '', disabled: true}, [Validators.required, Validators.pattern(/^[1-9]$|^[1-9][0-9]$|^(100)$/)]]
+      allocation: [{value: '', disabled: true}, [Validators.required, Validators.pattern(/^[1-9]$|^[1-9][0-9]$|^(100)$/)]],
+      hideMarks: [{value: false, disabled: true}]
     });
   }
 
@@ -74,6 +75,7 @@ export class UploadResultComponent implements OnInit {
     this.type.disable();
     this.dateHeld.disable();
     this.allocation.disable();
+    this.hideMarks.disable();
     this.error = '';
     this.success = false;
     this.moduleExists = false;
@@ -103,6 +105,7 @@ export class UploadResultComponent implements OnInit {
     this.type.disable();
     this.dateHeld.disable();
     this.allocation.disable();
+    this.hideMarks.disable();
     this.data.getExamsOfModule(this.moduleCode.value, batch).subscribe(
       response => {
         if (response.allocationAvailable > 0) {
@@ -124,10 +127,12 @@ export class UploadResultComponent implements OnInit {
       this.type.disable();
       this.dateHeld.disable();
       this.allocation.disable();
+      this.hideMarks.disable();
     } else {
       this.type.enable();
       this.dateHeld.enable();
       this.allocation.enable();
+      this.hideMarks.enable();
     }
   }
 
@@ -189,6 +194,7 @@ export class UploadResultComponent implements OnInit {
             type: this.type.value,
             dateHeld: this.dateHeld.value ? this.dateHeld.value : null,
             allocation: parseInt(this.allocation.value, 10),
+            hideMarks: this.hideMarks.value,
             results: this.resultsFile
           };
           this.data.uploadExamResults(data).subscribe(
@@ -256,6 +262,10 @@ export class UploadResultComponent implements OnInit {
 
   get allocation() {
     return this.uploadResultsForm.get('allocation');
+  }
+
+  get hideMarks() {
+    return this.uploadResultsForm.get('hideMarks');
   }
 
 }
