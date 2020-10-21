@@ -12,6 +12,14 @@
   margin-bottom: 0;
 }
 
+.card-header {
+  cursor: pointer;
+}
+
+.card-header:hover {
+  background: #efefef;
+}
+
 .filter {
   margin: 0 20px 0 10px;
   width: 250px;

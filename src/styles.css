@@ -19,25 +19,6 @@ a:focus {
   outline: none !important;
 }
 
-table {
-  width: 100%;
-}
-
-td, th {
-  padding: 10px;
-  vertical-align: center;
-}
-
-th {
-  color: rgb(120, 120, 120);
-  font-weight: normal;
-}
-
-tr {
-  border-top: 1px solid rgb(224, 224, 224);
-  border-bottom: 1px solid rgb(224, 224, 224);
-}
-
 tr:hover {
   background: rgb(245, 245, 245);
 }
