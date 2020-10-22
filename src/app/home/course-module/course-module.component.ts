@@ -6,7 +6,6 @@ import {map, startWith} from 'rxjs/operators';
 import {DataService} from '../../_services/data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {Sort} from '@angular/material/sort';
 import {ActivatedRoute, Router} from '@angular/router';
 
 export interface ResultData {

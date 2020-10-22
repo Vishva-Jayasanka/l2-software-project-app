@@ -13,6 +13,7 @@ export interface Module {
 export interface Result {
   moduleCode: string;
   type: string;
+  dateHeld: Date;
   allocation: number;
   batch: number;
   grade: string;
@@ -26,6 +27,7 @@ export interface CalculatedResult {
   grade: string;
   marks: {
     type: string;
+    dateHeld: Date;
     allocation: number;
     mark: number;
     grade: string;
@@ -66,7 +68,15 @@ export class ResultsComponent implements OnInit {
         this.getResults();
       },
       error => console.error(error)
-    ).add(() => this.progress = false);
+    ).add(() => {
+      this.progress = false;
+      setTimeout(() => {
+        try {
+          document.querySelector('[id^="collapseCM1100"]').scrollIntoView({behavior: 'smooth'});
+        } catch (exception) {
+        }
+      }, 500);
+    });
   }
 
   getResults() {
@@ -81,15 +91,16 @@ export class ResultsComponent implements OnInit {
       for (const mark of this.results.filter(result => result.moduleCode === module.moduleCode && result.batch === module.batch)) {
         temp.marks.push({
           type: mark.type,
+          dateHeld: new Date(mark.dateHeld),
           allocation: mark.allocation,
           mark: mark.mark,
           grade: mark.grade
         });
       }
+      temp.marks.sort((result1, result2) => result1.dateHeld > result2.dateHeld ? 1 : -1);
       this.calculatedResults.push(temp);
     }
     this.filteredResults = this.calculatedResults;
-    console.log(this.filteredResults);
   }
 
   applyFilter(event: Event) {

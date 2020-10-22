@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
 
 import {environment} from '../../environments/environment';
-import {ModifiedAttendance} from '../home/attendance/edit-attendance/edit-attendance.component';
 
 @Injectable({
   providedIn: 'root'
@@ -24,11 +22,7 @@ export class DataService {
   }
 
   getDetailedAttendance(moduleCode: string, type: string, batch: number) {
-    return this.http.post<any>(`${environment.apiUrl}get-detailed-attendance`, {
-      moduleCode,
-      type,
-      batch
-    });
+    return this.http.post<any>(`${environment.apiUrl}get-detailed-attendance`, {moduleCode, type, batch});
   }
 
   getLectureHours() {
@@ -81,6 +75,10 @@ export class DataService {
 
   getExamResults() {
     return this.http.post<any>(`${environment.apiUrl}get-results`, {});
+  }
+
+  getResultsOfModule(examID: number) {
+    return this.http.post<any>(`${environment.adminUrl}get-module-results`, {examID});
   }
 
 }

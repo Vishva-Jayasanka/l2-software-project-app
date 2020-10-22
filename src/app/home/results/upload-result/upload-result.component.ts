@@ -4,11 +4,13 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
 import * as XLSX from 'xlsx';
+import {ActivatedRoute} from '@angular/router';
 
 export interface Exam {
   examID: number;
   type: string;
   dateHeld: Date;
+  allocation: number;
 }
 
 export interface Result {
@@ -26,6 +28,7 @@ export class UploadResultComponent implements OnInit {
   YEARS = [2016, 2017, 2018, 2019, 2020];
   exams: Exam[] = [];
 
+  routeParams = '';
   moduleName = '';
   error = '';
   resultsFile: Result[] = [];
@@ -45,7 +48,8 @@ export class UploadResultComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private route: ActivatedRoute
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -58,8 +62,11 @@ export class UploadResultComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.routeParams = params.moduleCode;
+    });
     this.uploadResultsForm = this.formBuilder.group({
-      moduleCode: ['', [Validators.required, Validators.pattern(/^[A-za-z]{2}[0-9]{4}/)]],
+      moduleCode: [this.routeParams, [Validators.required, Validators.pattern(/^[A-za-z]{2}[0-9]{4}/)]],
       batch: [{value: '', disabled: true}, [Validators.required]],
       exam: [{value: '', disabled: true}, [Validators.required]],
       type: [{value: '', disabled: true}, [Validators.required]],
@@ -67,6 +74,9 @@ export class UploadResultComponent implements OnInit {
       allocation: [{value: '', disabled: true}, [Validators.required, Validators.pattern(/^[1-9]$|^[1-9][0-9]$|^(100)$/)]],
       hideMarks: [{value: false, disabled: true}]
     });
+    if (this.routeParams !== undefined) {
+      this.checkModule(this.routeParams);
+    }
   }
 
   checkModule(moduleCode: string) {
