@@ -5,6 +5,7 @@ import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
 import {Exam} from '../upload-result/upload-result.component';
+import {Results} from '../../course-module/course-module.component';
 
 @Component({
   selector: 'app-edit-result',
@@ -24,7 +25,9 @@ export class EditResultComponent implements OnInit, OnDestroy {
   error: string;
 
   editResultsForm: FormGroup;
+  maxDate = new Date();
   exams: Exam[] = [];
+  results = [];
   term$ = new Subject<string>();
   private searchSubscription: Subscription;
 
@@ -50,7 +53,11 @@ export class EditResultComponent implements OnInit, OnDestroy {
     this.editResultsForm = this.formBuilder.group({
       moduleCode: [this.roteParameter, [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       batch: [{value: '', disabled: true}, [Validators.required]],
-      exam: [{value: '', disabled: true}, [Validators.required]]
+      exam: [{value: '', disabled: true}, [Validators.required]],
+      type: [{value: '', disable: true}, [Validators.required]],
+      dateHeld: [{value: '', disable: true}, [Validators.required]],
+      allocation: [{value: '', disabled: true}, [Validators.required]],
+      hideMarks: [{value: true, disabled: true}]
     });
   }
 
@@ -101,7 +108,11 @@ export class EditResultComponent implements OnInit, OnDestroy {
   getResults() {
     this.data.getResultsOfModule(this.exam.value).subscribe(
       response => {
-        console.log(response);
+        this.results = response.results;
+        this.hideMarks.enable();
+        const selectedExam = this.exams.find(exam => exam.examID === this.exam.value);
+        this.allocation.setValue(selectedExam.allocation);
+        this.hideMarks.setValue(selectedExam.hideMarks);
       },
       error => {
         console.error(error);
@@ -123,6 +134,22 @@ export class EditResultComponent implements OnInit, OnDestroy {
 
   get exam() {
     return this.editResultsForm.get('exam');
+  }
+
+  get type() {
+    return this.editResultsForm.get('type');
+  }
+
+  get dateHeld() {
+    return this.editResultsForm.get('dateHeld');
+  }
+
+  get allocation() {
+    return this.editResultsForm.get('allocation');
+  }
+
+  get hideMarks() {
+    return this.editResultsForm.get('hideMarks');
   }
 
 }

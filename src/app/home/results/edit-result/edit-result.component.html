@@ -15,7 +15,7 @@
 
       <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
         <mat-label>Module Code</mat-label>
-        <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100" />
+        <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="edit_moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100" />
         <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
         <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
         <mat-error *ngIf="moduleExists">Module does not exist</mat-error>
@@ -23,7 +23,7 @@
 
       <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
         <mat-label>Batch</mat-label>
-        <mat-select (selectionChange)="getExams($event.value)" id="batch" formControlName="batch">
+        <mat-select (selectionChange)="getExams($event.value)" id="edit_batch" formControlName="batch">
           <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
         </mat-select>
         <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
@@ -31,18 +31,41 @@
 
       <mat-form-field appearance="outline" class="input-field" style="width: 33%">
         <mat-label>Exam</mat-label>
-        <mat-select id="exam" formControlName="exam">
+        <mat-select id="edit_exam" formControlName="exam">
           <mat-option value="0">New Exam</mat-option>
           <mat-option *ngFor="let exam of exams" [value]="exam.examID">{{ exam.type }} | {{ exam.dateHeld | date: 'MMMM d, y' }}</mat-option>
         </mat-select>
         <mat-error *ngIf="exam.touched && exam.errors?.required">This field is required</mat-error>
       </mat-form-field>
 
-      <button (click)="getResults()" type="button" class="btn btn-success">Add</button>
+      <div style="width: 100%; margin-bottom: 20px; margin-top: -10px">
+        <button (click)="getResults()" type="button" class="btn btn-success">Add</button>
+      </div>
 
-<!--      <section style="margin-bottom: 15px">-->
-<!--        <mat-checkbox formControlName="hideMarks" id="hide-marks">Show only the grade. (selecting this show only grade to students)</mat-checkbox>-->
-<!--      </section>-->
+      <mat-form-field appearance="outline" class="input-field" style="width: 33%; margin-right: 10px">
+        <mat-label>Type</mat-label>
+        <input type="text" matInput id="edit_type" formControlName="type" placeholder="Ex: Final Exam">
+        <mat-error *ngIf="type.touched && type.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
+        <mat-label>Date</mat-label>
+        <input matInput formControlName="dateHeld" [matDatepicker]="myDatePicker" [max]="maxDate" />
+        <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #myDatePicker></mat-datepicker>
+        <mat-error *ngIf="dateHeld.touched && dateHeld.errors?.required">This field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px)">
+        <mat-label>Allocation (%)</mat-label>
+        <input matInput type="text" formControlName="allocation" id="edit_allocation" placeholder="Ex: 35">
+        <mat-error *ngIf="allocation.touched && allocation.errors?.required">This field is required</mat-error>
+        <mat-error *ngIf="allocation.touched && allocation.errors?.pattern">Invalid input</mat-error>
+      </mat-form-field>
+
+      <section style="margin: 20px 0 15px 0">
+        <mat-checkbox formControlName="hideMarks" id="edit_hide-marks">Show only the grade. (selecting this show only grade to students)</mat-checkbox>
+      </section>
 
 <!--      <div id="preview">-->
 

@@ -11,6 +11,7 @@ export interface Exam {
   type: string;
   dateHeld: Date;
   allocation: number;
+  hideMarks: boolean;
 }
 
 export interface Result {
@@ -97,7 +98,7 @@ export class UploadResultComponent implements OnInit {
           if (this.moduleName) {
             this.batch.enable();
             this.batch.reset();
-            this.elementRef.nativeElement.querySelector('#batch').focus();
+            this.elementRef.nativeElement.querySelector('#upload_batch').focus();
           }
         },
         error => this.moduleName = ''
@@ -123,7 +124,7 @@ export class UploadResultComponent implements OnInit {
           this.exams = response.exams;
           this.exam.reset();
           this.exam.enable();
-          this.elementRef.nativeElement.querySelector('#exam').focus();
+          this.elementRef.nativeElement.querySelector('#upload_exam').focus();
         } else {
           this.error = 'Cannot allocate marks for this module.';
         }
@@ -176,12 +177,12 @@ export class UploadResultComponent implements OnInit {
       }
       if (isValid) {
         this.resultsFile.sort((a, b) => a.index > b.index ? 1 : -1);
-        this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-        setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+        this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
+        setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px white', 2000);
       } else {
         this.resultsFile = [];
-        this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px red';
-        setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(255, 200, 200)', 2000);
+        this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px red';
+        setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px rgb(255, 200, 200)', 2000);
       }
       this.fileError = !isValid;
     };
@@ -210,17 +211,17 @@ export class UploadResultComponent implements OnInit {
           this.data.uploadExamResults(data).subscribe(
             response => {
               this.success = true;
-              this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-              setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+              this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
+              setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px white', 2000);
             },
             error => this.error = error
           ).add(() => this.uploadResultsProgress = false);
         } else {
           this.uploadResultsProgress = false;
-          this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px red';
-          setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
-          this.elementRef.nativeElement.querySelector('#messages').scrollIntoView({behavior: 'smooth'});
-          this.elementRef.nativeElement.querySelector('#addFile').style.border = '2px solid black';
+          this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px red';
+          setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px white', 2000);
+          this.elementRef.nativeElement.querySelector('#upload_messages').scrollIntoView({behavior: 'smooth'});
+          this.elementRef.nativeElement.querySelector('#upload_addFile').style.border = '2px solid black';
         }
       } else {
         this.scrollToFirstInvalidControl();
@@ -243,7 +244,7 @@ export class UploadResultComponent implements OnInit {
   }
 
   openFile() {
-    this.elementRef.nativeElement.querySelector('#resultFileUpload').click();
+    this.elementRef.nativeElement.querySelector('#upload_resultFileUpload').click();
   }
 
   toggleProgress() {
