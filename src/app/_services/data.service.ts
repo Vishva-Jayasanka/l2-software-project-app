@@ -81,4 +81,13 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-module-results`, {examID});
   }
 
+  registerStudent(registrationForm) {
+    return this.http.post<any>(`${environment.adminUrl}register-student`, {registrationForm});
+  }
+
+  paymentUpload(paymentForm) {
+    return this.http.post<any>(`${environment.adminUrl}payment-upload`, {paymentForm});
+  }
+
+
 }

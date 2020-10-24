@@ -33,6 +33,8 @@ import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
 import {ViewResultComponent} from './home/results/view-result/view-result.component';
+import { UploadPaymentComponent } from './home/payment/upload-payment/upload-payment.component';
+import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
 
 
 @NgModule({
@@ -60,6 +62,8 @@ import {ViewResultComponent} from './home/results/view-result/view-result.compon
     UploadResultComponent,
     EditResultComponent,
     ViewResultComponent,
+    UploadPaymentComponent,
+    ViewPaymentComponent,
   ],
   imports: [
     BrowserModule,

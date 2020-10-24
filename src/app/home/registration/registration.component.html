@@ -240,12 +240,7 @@
         <mat-form-field appearance="outline" class="col-md-4">
           <mat-label>Registration Fees (Rs.)</mat-label>
           <input matInput type="number" class="example-right-align" formControlName="registrationFees" placeholder="Ex: 200">
-          <mat-error *ngIf="registrationFees.touched && registrationFees.errors?.required">This field is required
-          </mat-error>
-          <mat-error
-            *ngIf="registrationFees.touched && !registrationFees.errors?.required && registrationFees.errors?.pattern">
-            Invalid input
-          </mat-error>
+
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="col-md-4">
@@ -262,7 +257,7 @@
       <br>
 
       <div class="mx-3 mb-3 float-right">
-        <button mat-raised-button color="accent">SUBMIT ALL</button>
+        <button (click)="submitForm()" type="button" mat-raised-button color="accent">SUBMIT ALL</button>
       </div>
 
     </div>

@@ -1,5 +1,6 @@
 import {Component, KeyValueDiffers, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DataService} from "../../_services/data.service";
 
 export interface Course {
   courseID: number;
@@ -26,9 +27,8 @@ export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
   maxDate: Date = new Date();
   courses: Course[] = [
-    {courseID: 1, courseName: 'Pizza'},
-    {courseID: 2, courseName: 'Tacos'},
-    {courseID: 3, courseName: 'Steaks'}
+    {courseID: 1, courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY'},
+    {courseID: 2, courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY'},
   ];
   districts: District[] = [
     {code: 'D1', name: 'Ampara'},
@@ -44,7 +44,8 @@ export class RegistrationComponent implements OnInit {
   ];
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private data: DataService
   ) {
   }
 
@@ -92,6 +93,17 @@ export class RegistrationComponent implements OnInit {
         graduationDate: ['', Validators.required],
         grade: ['', [Validators.required]]
       })
+    );
+  }
+
+  submitForm() {
+    this.data.registerStudent(this.registrationForm.value).subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.error(error);
+      }
     );
   }
 
