@@ -97,4 +97,8 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}get-profile-picture`, {});
   }
 
+  uploadPayment(paymentForm) {
+    return this.http.post<any>(`${environment.adminUrl}uploadPayment`, {paymentForm});
+  }
+
 }

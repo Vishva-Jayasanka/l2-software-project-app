@@ -45,7 +45,7 @@ export class UploadPaymentComponent implements OnInit {
   }
 
   submitForm() {
-    this.data.paymentUpload(this.paymentForm.value).subscribe(
+    this.data.uploadPayment(this.paymentForm.value).subscribe(
       response => {
         console.log(response);
       },
