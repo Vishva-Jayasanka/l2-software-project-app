@@ -1,0 +1,75 @@
+<div class="container-md mb-4">
+  <form [formGroup]="paymentForm">
+
+    <div>
+
+      <mat-list>
+        <mat-list-item><b>Depositor Details</b></mat-list-item>
+        <mat-divider class="mat-divider"></mat-divider>
+      </mat-list>
+      <br/>
+
+      <div formGroupName="depositor">
+        <mat-form-field class="col-md-4" appearance="outline">
+          <mat-label>Registration Number</mat-label>
+          <input type="text" matInput formControlName="registrationNumber" placeholder="Ex: 184183R">
+          <mat-error *ngIf="registrationNumber.touched && registrationNumber.errors?.required">This field is required</mat-error>
+          <mat-error
+            *ngIf="registrationNumber.touched && !registrationNumber.errors?.required && registrationNumber.errors?.pattern">
+            Invalid input
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-md-12" appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input type="text" matInput formControlName="fullName" placeholder="full name">
+          <mat-error *ngIf="fullName.touched && fullName.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+    <div formGroupName="deposit">
+
+      <mat-list>
+        <mat-list-item><b>Payment Details</b></mat-list-item>
+        <mat-divider class="mat-divider"></mat-divider>
+      </mat-list>
+      <br>
+
+      <mat-form-field class="col-md-2" appearance="outline">
+        <mat-label>Bank</mat-label>
+        <mat-select formControlName="bankName">
+          <mat-option *ngFor="let bank of banks" [value]="bank.bankID">{{bank.bankName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-md-4" appearance="outline">
+        <mat-label>Slip Number</mat-label>
+        <input type="number" matInput formControlName="slipNumber" placeholder="slip number">
+        <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-md-3" appearance="outline">
+        <mat-label>Amount Paid (Rs.)</mat-label>
+        <input matInput type="number" class="example-right-align" formControlName="totalPaid" placeholder="Ex: 456,500.00">
+        <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-3">
+        <mat-label>Payment Date</mat-label>
+        <input matInput type="date" formControlName="paymentDate"/>
+        <mat-error *ngIf="paymentDate.touched && paymentDate.errors?.required">This field required</mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <br>
+    <div class="mx-3 mb-3 float-right">
+      <button (click)="submitForm()" type="button" mat-raised-button color="accent">SUBMIT ALL</button>
+    </div>
+  </form>
+
+</div>

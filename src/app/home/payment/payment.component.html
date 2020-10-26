@@ -1,1 +1,31 @@
-<p>payment works!</p>
+<div class="container-md">
+
+  <div class="jumbotron">
+    <h3>Payments</h3>
+    <p>You can perform any exam result related tasks</p>
+  </div>
+
+    <div class="nav flex-column nav-pills" id="payment-navigation" role="tablist" aria-orientation="vertical">
+      <a class="nav-link" id="upload-payment-tab" data-toggle="pill" href="#upload-payment" role="tab" aria-controls="upload-payment" aria-selected="true">Upload Payments</a>
+      <a class="nav-link" id="view-payment-tab" data-toggle="pill" href="#view-payment" role="tab" aria-controls="view-payment" aria-selected="false">View Payments</a>
+    </div>
+
+    <div class="tab-content" id="payment-navigation-content">
+
+      <div class="tab-pane fade" id="upload-payment" role="tabpanel" aria-labelledby="upload-payment-tab">
+
+        <app-upload-payment></app-upload-payment>
+
+      </div>
+
+      <div class="tab-pane fade" id="view-payment" role="tabpanel" aria-labelledby="view-payment-tab">
+
+        <app-view-payment></app-view-payment>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
