@@ -6,6 +6,10 @@
     <ng-template #adminBlock><p>You can perform any attendance related operations</p></ng-template>
   </div>
 
+  <div class="row px-3">
+    <div *ngIf="attendanceError" class="alert alert-danger mt-1 col">{{ attendanceError }}</div>
+  </div>
+
   <mat-form-field [hidden]="getRole === 'admin'" class="filter">
     <mat-label>Filter</mat-label>
     <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
@@ -45,13 +49,13 @@
 
     <div *ngIf="getRole === 'admin'">
 
-      <div style="margin-right: 10px !important;" class="nav flex-column nav-pills secondary-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <div class="nav flex-column nav-pills secondary-nav col-sm-3 mr-0" id="attendance-navigation" role="tablist" aria-orientation="vertical">
         <a class="nav-link active" id="upload-attendance-tab" data-toggle="pill" href="#upload-attendance" role="tab" aria-controls="upload-attendance" aria-selected="true">Upload Attendance</a>
         <a class="nav-link" id="modify-attendance-tab" data-toggle="pill" href="#modify-attendance" role="tab" aria-controls="modify-attendance" aria-selected="false">Modify Attendance</a>
         <a class="nav-link" id="view-attendance-tab" data-toggle="pill" href="#view-attendance" role="tab" aria-controls="view-attendance" aria-selected="false">View Attendance</a>
       </div>
 
-      <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-content" id="attendance-navigation-content">
 
         <div class="tab-pane fade show active" id="upload-attendance" role="tabpanel" aria-labelledby="upload-attendance-tab">
 
@@ -79,8 +83,6 @@
     </div>
 
   </div>
-
-  <div *ngIf="attendanceError" class="alert alert-danger mt-3 mb-0">Error retrieving the data..!</div>
 
   <ng-template #progressBlock>
     <mat-spinner></mat-spinner>

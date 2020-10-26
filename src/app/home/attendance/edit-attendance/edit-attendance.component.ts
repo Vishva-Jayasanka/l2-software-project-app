@@ -6,6 +6,7 @@ import {AuthenticationService} from '../../../_services/authentication.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Session} from '../attendance.component';
+import {glow} from '../../../_services/shared.service';
 
 export interface ModifiedAttendance {
   index: number;
@@ -38,6 +39,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   private searchSubscription: Subscription;
 
   editAttendanceProgress = false;
+  buttonProgress = false;
   sessionsFound = true;
   lectureHoursFound = true;
   successfullySaved = false;
@@ -167,12 +169,14 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
               modified: false
             });
             this.filteredAttendance = this.modifiedAttendance;
-            this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-            this.elementRef.nativeElement.querySelector('#preview').scrollIntoView({behavior: 'smooth'});
-            setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+            this.elementRef.nativeElement.querySelector('#attendance_preview').scrollIntoView({behavior: 'smooth'});
+            glow(this.elementRef, 'attendance_preview', 'rgb(100, 60, 180)');
           });
         },
-        error => this.error = error
+        error => {
+          glow(this.elementRef, 'attendance_preview', 'red');
+          this.error = error;
+        }
       ).add(() => this.editAttendanceProgress = false);
     }
   }
@@ -205,6 +209,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
 
   saveChanges() {
     this.editAttendanceProgress = true;
+    this.buttonProgress = true;
     if (confirm('Are you sure you wand to save changes')) {
       const updatedAttendance = [];
       this.modifiedAttendance.forEach(record => {
@@ -218,12 +223,14 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
           this.successfullySaved = true;
           this.modifiedAttendance.forEach(record => record.modified = false);
           this.updated = false;
-          this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-          setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
-          this.elementRef.nativeElement.querySelector('#messages').scrollIntoView({behavior: 'smooth'});
+          glow(this.elementRef, 'attendance_preview', 'rgb(100, 60, 180)');
         },
         error => this.error = error
-      ).add(() => this.editAttendanceProgress = false);
+      ).add(() => {
+        glow(this.elementRef, 'attendance_preview', 'red');
+        this.editAttendanceProgress = false;
+        this.buttonProgress = false;
+      });
     }
   }
 

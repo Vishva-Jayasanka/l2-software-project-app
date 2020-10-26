@@ -5,6 +5,7 @@ import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
 import * as XLSX from 'xlsx';
 import {ActivatedRoute} from '@angular/router';
+import {YEARS, glow} from '../../../_services/shared.service';
 
 export interface Exam {
   examID: number;
@@ -24,9 +25,10 @@ export interface Result {
   templateUrl: './upload-result.component.html',
   styleUrls: ['./upload-result.component.css', '../results.component.css']
 })
+
 export class UploadResultComponent implements OnInit {
 
-  YEARS = [2016, 2017, 2018, 2019, 2020];
+  years = YEARS;
   exams: Exam[] = [];
 
   routeParams = '';
@@ -43,6 +45,7 @@ export class UploadResultComponent implements OnInit {
 
   uploadResultsProgress = false;
   moduleExists = false;
+  cannotAllocate = false;
   fileError = false;
   success = false;
 
@@ -90,6 +93,7 @@ export class UploadResultComponent implements OnInit {
     this.error = '';
     this.success = false;
     this.moduleExists = false;
+    this.cannotAllocate = false;
     if (moduleCode !== '') {
       this.data.checkIfModuleExists(moduleCode).subscribe(
         response => {
@@ -111,6 +115,7 @@ export class UploadResultComponent implements OnInit {
   getExams(batch: number) {
     this.error = '';
     this.success = false;
+    this.cannotAllocate = false;
     this.uploadResultsProgress = true;
     this.exam.disable();
     this.type.disable();
@@ -126,10 +131,10 @@ export class UploadResultComponent implements OnInit {
           this.exam.enable();
           this.elementRef.nativeElement.querySelector('#upload_exam').focus();
         } else {
-          this.error = 'Cannot allocate marks for this module.';
+          this.cannotAllocate = true;
         }
       },
-      error => this.error = error
+      error => this.cannotAllocate = true
     ).add(() => this.uploadResultsProgress = false);
   }
 
@@ -177,12 +182,10 @@ export class UploadResultComponent implements OnInit {
       }
       if (isValid) {
         this.resultsFile.sort((a, b) => a.index > b.index ? 1 : -1);
-        this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-        setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px white', 2000);
+        glow(this.elementRef, 'upload_preview', 'rgb(100, 60, 180)');
       } else {
         this.resultsFile = [];
-        this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px red';
-        setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px rgb(255, 200, 200)', 2000);
+        glow(this.elementRef, 'upload_result', 'red');
       }
       this.fileError = !isValid;
     };
@@ -211,17 +214,14 @@ export class UploadResultComponent implements OnInit {
           this.data.uploadExamResults(data).subscribe(
             response => {
               this.success = true;
-              this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-              setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px white', 2000);
+              glow(this.elementRef, 'upload_preview', 'rgb(100, 60, 180)');
             },
             error => this.error = error
           ).add(() => this.uploadResultsProgress = false);
         } else {
           this.uploadResultsProgress = false;
-          this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px red';
-          setTimeout(() => this.elementRef.nativeElement.querySelector('#upload_preview').style.boxShadow = '0 0 0 2px white', 2000);
+          glow(this.elementRef, 'upload_preview', 'red');
           this.elementRef.nativeElement.querySelector('#upload_messages').scrollIntoView({behavior: 'smooth'});
-          this.elementRef.nativeElement.querySelector('#upload_addFile').style.border = '2px solid black';
         }
       } else {
         this.scrollToFirstInvalidControl();
@@ -244,7 +244,7 @@ export class UploadResultComponent implements OnInit {
   }
 
   openFile() {
-    this.elementRef.nativeElement.querySelector('#upload_resultFileUpload').click();
+    this.elementRef.nativeElement.querySelector('#resultFileUpload').click();
   }
 
   toggleProgress() {

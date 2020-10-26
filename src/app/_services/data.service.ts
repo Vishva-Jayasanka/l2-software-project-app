@@ -81,4 +81,20 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-module-results`, {examID});
   }
 
+  editResults(results) {
+    return this.http.post<any>(`${environment.adminUrl}edit-results`, {results});
+  }
+
+  deleteExam(examID: number) {
+    return this.http.post<any>(`${environment.adminUrl}delete-exam`, {examID});
+  }
+
+  uploadProfilePicture(profilePicture) {
+    return this.http.post<any>(`${environment.apiUrl}upload-profile-picture`, {profilePicture});
+  }
+
+  getProfilePicture() {
+    return this.http.post<any>(`${environment.apiUrl}get-profile-picture`, {});
+  }
+
 }

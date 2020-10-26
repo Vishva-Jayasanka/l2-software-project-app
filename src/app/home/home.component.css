@@ -3,9 +3,16 @@
 }
 
 .avatar {
-  background-image: url('https://scontent.fcmb3-1.fna.fbcdn.net/v/t1.0-9/76197820_2182161368551954_4217311061767880704_n.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_ohc=CCyoygUv-icAX82AevN&_nc_ht=scontent.fcmb3-1.fna&oh=f073cba099c91749cbf178d630b9e905&oe=5F41CA63');
-  background-size: cover;
-  margin-left: 10px;
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.avatar:hover {
+  opacity: 0.8;
+  box-shadow: 0 0 0 2px lightgray;
+  cursor: pointer;
 }
 
 .toolbar {
@@ -60,6 +67,10 @@
   background-color: rgb(220, 220, 240);
   font-weight: bold;
   color: rgb(100, 60, 180);
+}
+
+.custom-dialog-container {
+  padding: -20px !important
 }
 
 button:focus {

@@ -7,126 +7,148 @@
 
   <div class="card-body">
 
-    <div style="height: 25px">
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
       <mat-progress-bar [hidden]="!editResultsProgress" mode="query"></mat-progress-bar>
     </div>
 
     <form [formGroup]="editResultsForm">
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
-        <mat-label>Module Code</mat-label>
-        <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="edit_moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100" />
-        <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
-        <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
-        <mat-error *ngIf="moduleExists">Module does not exist</mat-error>
-      </mat-form-field>
+      <div class="row">
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
-        <mat-label>Batch</mat-label>
-        <mat-select (selectionChange)="getExams($event.value)" id="edit_batch" formControlName="batch">
-          <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
+          <mat-label>Module Code</mat-label>
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="edit_moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100"/>
+          <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid
+            module code
+          </mat-error>
+          <mat-error *ngIf="moduleExists">Module does not exist</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: 33%">
-        <mat-label>Exam</mat-label>
-        <mat-select id="edit_exam" formControlName="exam">
-          <mat-option value="0">New Exam</mat-option>
-          <mat-option *ngFor="let exam of exams" [value]="exam.examID">{{ exam.type }} | {{ exam.dateHeld | date: 'MMMM d, y' }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="exam.touched && exam.errors?.required">This field is required</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
+          <mat-label>Batch</mat-label>
+          <mat-select (selectionChange)="getExams($event.value)" id="edit_batch" formControlName="batch">
+            <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
+        </mat-form-field>
 
-      <div style="width: 100%; margin-bottom: 20px; margin-top: -10px">
-        <button (click)="getResults()" type="button" class="btn btn-success">Add</button>
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
+          <mat-label>Exam</mat-label>
+          <mat-select id="edit_exam" formControlName="exam">
+            <mat-option *ngFor="let exam of exams" [value]="exam.examID">{{ exam.type }}
+              | {{ exam.dateHeld | date: 'MMMM d, y' }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="exam.touched && exam.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
       </div>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: 33%; margin-right: 10px">
-        <mat-label>Type</mat-label>
-        <input type="text" matInput id="edit_type" formControlName="type" placeholder="Ex: Final Exam">
-        <mat-error *ngIf="type.touched && type.errors?.required">This field is required</mat-error>
-      </mat-form-field>
+      <div class="row px-1 mb-4">
+        <button [disabled]="moduleCode.invalid" (click)="getResults()" mat-raised-button color="primary" class="mx-2" type="button">Add</button>
+      </div>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px); margin-right: 10px">
-        <mat-label>Date</mat-label>
-        <input matInput formControlName="dateHeld" [matDatepicker]="myDatePicker" [max]="maxDate" />
-        <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #myDatePicker></mat-datepicker>
-        <mat-error *ngIf="dateHeld.touched && dateHeld.errors?.required">This field required</mat-error>
-      </mat-form-field>
+      <div class="row px-1">
+        <div *ngIf="examsNotFound" class="alert alert-warning col">No exams found for this module</div>
+      </div>
 
-      <mat-form-field appearance="outline" class="input-field" style="width: calc(33% - 10px)">
-        <mat-label>Allocation (%)</mat-label>
-        <input matInput type="text" formControlName="allocation" id="edit_allocation" placeholder="Ex: 35">
-        <mat-error *ngIf="allocation.touched && allocation.errors?.required">This field is required</mat-error>
-        <mat-error *ngIf="allocation.touched && allocation.errors?.pattern">Invalid input</mat-error>
-      </mat-form-field>
+      <div class="row px-1">
+        <div *ngIf="resultsNotFound" class="alert alert-warning col">No results found for this module</div>
+      </div>
 
-      <section style="margin: 20px 0 15px 0">
+      <div class="row">
+
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
+          <mat-label>Type</mat-label>
+          <input type="text" matInput id="edit_type" formControlName="type">
+          <mat-error *ngIf="type.touched && type.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
+          <mat-label>Date</mat-label>
+          <input matInput formControlName="dateHeld" [matDatepicker]="myDatePicker" [max]="maxDate"/>
+          <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #myDatePicker></mat-datepicker>
+          <mat-error *ngIf="dateHeld.touched && dateHeld.errors?.required">This field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
+          <mat-label>Allocation (%)</mat-label>
+          <input (change)="invalidAllocation = false" matInput type="text" formControlName="allocation" id="edit_allocation" placeholder="Ex: 35">
+          <mat-hint *ngIf="allocationAvailable.value">{{ allocationAvailable.value }} Available</mat-hint>
+          <mat-error *ngIf="allocation.touched && allocation.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="allocation.touched && !allocation.errors?.required && allocation.errors?.pattern">Invalid input</mat-error>
+          <mat-error *ngIf="allocation.touched && !allocation.errors?.required && !allocation.errors?.pattern && editResultsForm.errors?.invalidAllocation">Allocation exceed available</mat-error>
+        </mat-form-field>
+
+        <mat-form-field hidden="hidden">
+          <input type="text" matInput formControlName="allocationAvailable" />
+        </mat-form-field>
+
+      </div>
+
+      <section class="row px-3">
         <mat-checkbox formControlName="hideMarks" id="edit_hide-marks">Show only the grade. (selecting this show only grade to students)</mat-checkbox>
       </section>
 
-<!--      <div id="preview">-->
+      <div id="upload_preview" style="margin: 15px -10px 0 -10px">
 
-<!--        <p>Preview of the attendance</p>-->
+        <p>Preview of the Results</p>
 
-<!--        <p *ngIf="moduleName">Module Name:<span style="font-weight: 570"> {{moduleName}}</span></p>-->
-<!--        <p *ngIf="moduleName && allocationAvailable > 0" style="margin-top: -10px">Allocation Available:<span style="font-weight: 570"> {{ allocationAvailable }}</span> </p>-->
+        <p *ngIf="moduleName; else notAvailableBlock">Module Name:<span style="font-weight: 570"> {{moduleName}}</span></p>
+        <ng-template #notAvailableBlock><p><i>Results will appear here once you select required inputs.</i></p></ng-template>
 
-<!--        <div *ngIf="resultsFile.length !== 0; else elseBlock">-->
+        <div *ngIf="results.length !== 0">
 
-<!--          <ul>-->
-<!--            <li><span>File Name:</span> {{file.name}}</li>-->
-<!--            <li><span>File Size:</span> {{(file.size / 1024) | number: '1.2-2'}} Kb</li>-->
-<!--          </ul>-->
+          <mat-form-field class="filter">
+            <mat-label>Filter</mat-label>
+            <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
+          </mat-form-field>
 
-<!--          <table class="table table-sm">-->
+          <table class="table table-sm">
 
-<!--            <thead>-->
-<!--            <tr>-->
-<!--              <th scope="col">#</th>-->
-<!--              <th scope="col">Index Number</th>-->
-<!--              <th scope="col">Marks</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Index Number</th>
+              <th scope="col">Marks</th>
+            </tr>
+            </thead>
 
-<!--            <tbody>-->
-<!--            <tr *ngFor="let result of resultsFile; let i = index">-->
-<!--              <td>{{ i + 1 }}</td>-->
-<!--              <td>{{ result.index }}</td>-->
-<!--              <td>{{ result.mark }}</td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
+            <tbody>
+            <tr *ngFor="let result of filteredResults; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ result.studentID }}</td>
+              <td><input (keyup)="onChange(i, $event.target.value)" [value]="result.mark"  [attr.id]="'result_' + i" type="number" /></td>
+            </tr>
+            </tbody>
 
-<!--          </table>-->
+          </table>
 
-<!--        </div>-->
+        </div>
 
-<!--        <ng-template #elseBlock>-->
-<!--          <p *ngIf="!fileError; else fileErrorBlock">-->
-<!--            <i>Preview not available. Please select a file.</i>-->
-<!--          </p>-->
-<!--          <ng-template #fileErrorBlock>-->
-<!--            <p class="text-danger">File uploaded contains errors. Please check the file.</p>-->
-<!--          </ng-template>-->
-<!--        </ng-template>-->
+      </div>
 
-<!--        <div style="overflow: hidden">-->
-<!--          <button (click)="openFile()" type="button" class="btn btn-success" id="add-button" style="margin: 10px">Add Results</button>-->
-<!--          <input (change)="onFileChange($event)" type="file" id="resultFileUpload" hidden/>-->
-<!--        </div>-->
+      <div class="row px-1 mt-2 mb-0" id="success_message">
+        <div *ngIf="success" class="alert alert-success col">Exam results successfully uploaded.</div>
+      </div>
 
-<!--      </div>-->
+      <div class="row px-1 mt-2 mb-0" id="delete_message">
+        <div *ngIf="successfullyDeleted" class="alert alert-success col">Exam Deleted successfully.</div>
+      </div>
 
-<!--      <div *ngIf="moduleExists" class="alert alert-dark" style="margin-top: 10px">Module does not exist</div>-->
+      <div class="row px-1 mt-2 mb-0" id="error_message">
+        <div *ngIf="error" class="alert alert-danger col">{{ error }}</div>
+      </div>
 
-<!--      <div *ngIf="success" class="alert alert-success" style="margin-top: 10px">Exam results successfully uploaded.</div>-->
-
-<!--      <div *ngIf="error" class="alert alert-warning" style="margin-top: 10px">{{ error }}</div>-->
-
-<!--      <button [disabled]="uploadResultsProgress" (click)="resetForm()" type="reset" mat-flat-button style="float: right; margin-top: 10px">Reset</button>-->
-<!--      <button [disabled]="uploadResultsForm.invalid || uploadResultsProgress || resultsFile.length === 0" (click)="uploadResults()" type="button" mat-raised-button color="primary" style="margin: 10px 10px 0 0; float: right">Upload</button>-->
+      <div class="d-flex flex-row-reverse my-0">
+        <button (click)="modifyResults()" type="button" mat-raised-button color="primary" class="mx-1" id="add-button">
+          <span *ngIf="buttonProgress" class="spinner-border spinner-border-sm mr-1"></span>
+          Save Changes
+        </button>
+        <button (click)="deleteExam()" type="button" mat-button color="warn" class="mx-1" id="delete-button">Delete</button>
+        <button (click)="getResults()" type="button" mat-button class="mx-1" id="reset-button">Reset</button>
+      </div>
 
     </form>
 

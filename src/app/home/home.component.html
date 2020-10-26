@@ -12,7 +12,9 @@
     <mat-icon>notifications</mat-icon>
   </button>
 
-  <button mat-mini-fab class="avatar" [matMenuTriggerFor]="settings"></button>
+  <a [matMenuTriggerFor]="settings">
+    <img [src]="userData.profilePicture" class="avatar" />
+  </a>
 
 </mat-toolbar>
 
@@ -43,12 +45,25 @@
 
 <mat-menu #settings="matMenu">
 
-  <div class="avatar settings-menu-avatar"></div>
+  <div style="height: 180px; width: 180px; position: relative; margin: 15px 0 15px 20px;">
+
+    <div>
+      <img [src]="userData.profilePicture" style="border-radius: 50%; overflow: hidden; height: 100%; width: 100%"/>
+    </div>
+
+    <div style="position: absolute; right: 0; bottom: 0">
+      <a mat-mini-fab color="warn" (click)="openDialog()">
+        <mat-icon>photo</mat-icon>
+      </a>
+    </div>
+
+  </div>
 
   <div style="margin: 20px; text-align: center">
     <h5 style="margin-bottom: 0">{{ user.firstName }} {{ user.lastName }}</h5>
     <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
   </div>
+
   <mat-divider></mat-divider>
 
   <button mat-menu-item>

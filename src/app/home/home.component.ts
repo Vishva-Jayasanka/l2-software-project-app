@@ -1,5 +1,9 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, Sanitizer} from '@angular/core';
 import {AuthenticationService} from '../_services/authentication.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ProfilePictureComponent} from './profile/profile-picture/profile-picture.component';
+import {DataService} from '../_services/data.service';
+import {UserDataService} from '../_services/user-data.service';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +33,10 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
-    private authentication: AuthenticationService
+    private authentication: AuthenticationService,
+    public dialog: MatDialog,
+    private data: DataService,
+    public userData: UserDataService,
   ) {
     this.widthSidenav = (window.innerWidth) < 850;
     this.widthNotification = (window.innerWidth) < 1170;
@@ -37,6 +44,23 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authentication.details;
+    this.data.getProfilePicture().subscribe(
+      response => {
+        this.userData.changeProfilePicture('data:image/jpeg;base64,' + response.profilePicture);
+      },
+      error => console.log(error)
+    );
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(ProfilePictureComponent, {
+      panelClass: 'custom-dialog-container',
+      width: '500px',
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
   }
 
   getRoute(event: any) {

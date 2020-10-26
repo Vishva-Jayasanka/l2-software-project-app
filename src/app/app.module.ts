@@ -33,6 +33,9 @@ import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
 import {ViewResultComponent} from './home/results/view-result/view-result.component';
+import { ProfileComponent } from './home/profile/profile.component';
+import { ProfilePictureComponent } from './home/profile/profile-picture/profile-picture.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
 
 
 @NgModule({
@@ -60,6 +63,8 @@ import {ViewResultComponent} from './home/results/view-result/view-result.compon
     UploadResultComponent,
     EditResultComponent,
     ViewResultComponent,
+    ProfileComponent,
+    ProfilePictureComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,7 +75,8 @@ import {ViewResultComponent} from './home/results/view-result/view-result.compon
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    ImageCropperModule
   ],
   providers: [
     AuthenticationGuard,

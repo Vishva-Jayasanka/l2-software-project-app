@@ -8,6 +8,7 @@ import {AuthenticationService} from '../../../_services/authentication.service';
 import * as XLSX from 'xlsx';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {glow} from '../../../_services/shared.service';
 
 @Component({
   selector: 'app-upload-attendance',
@@ -183,12 +184,10 @@ export class UploadAttendanceComponent implements OnInit {
       }
       if (isValid) {
         this.attendanceFile.sort((a, b) => a.index > b.index ? 1 : -1);
-        this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-        setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+        glow(this.elementRef, 'attendance_preview', 'rgb(100, 60, 180)');
       } else {
         this.attendanceFile = '';
-        this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px red';
-        setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(255, 200, 200)', 2000);
+        glow(this.elementRef, 'attendance_preview', 'red');
       }
       this.fileError = !isValid;
     };
@@ -214,19 +213,16 @@ export class UploadAttendanceComponent implements OnInit {
           this.data.uploadAttendance(data).subscribe(
             response => {
               this.successfullySaved = true;
-              this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px rgb(100, 60, 180)';
-              setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
-            },
+              glow(this.elementRef, 'attendance_preview', 'rgb(100, 60, 180)');
+              },
             error => {
               this.successfullySaved = false;
               this.error = error;
             }
           ).add(() => this.uploadAttendanceProgress = false);
         } else {
-          this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px red';
-          setTimeout(() => this.elementRef.nativeElement.querySelector('#preview').style.boxShadow = '0 0 0 2px white', 2000);
+          glow(this.elementRef, 'attendance_preview', 'red');
           this.elementRef.nativeElement.querySelector('#messages').scrollIntoView({behavior: 'smooth'});
-          this.elementRef.nativeElement.querySelector('#addFile').style.border = '2px solid black';
         }
       } else {
         this.scrollToFirstInvalidControl();

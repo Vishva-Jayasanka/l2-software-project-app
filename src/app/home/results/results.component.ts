@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {DataService} from '../../_services/data.service';
@@ -42,6 +42,7 @@ export interface CalculatedResult {
 export class ResultsComponent implements OnInit {
 
   moduleCode: string;
+  resultsError = '';
   modules: Module[];
   results: Result[];
   calculatedResults: CalculatedResult[] = [];
@@ -52,7 +53,8 @@ export class ResultsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private authentication: AuthenticationService,
-    private data: DataService
+    private data: DataService,
+    private elementRef: ElementRef
   ) {
   }
 
@@ -67,12 +69,12 @@ export class ResultsComponent implements OnInit {
         this.results = response.results;
         this.getResults();
       },
-      error => console.error(error)
+      error => this.resultsError = error
     ).add(() => {
       this.progress = false;
       setTimeout(() => {
         try {
-          document.querySelector('[id^="collapseCM1100"]').scrollIntoView({behavior: 'smooth'});
+          this.elementRef.nativeElement.querySelector('#collapse' + this.moduleCode).scrollIntoView({behavior: 'smooth'});
         } catch (exception) {
         }
       }, 500);

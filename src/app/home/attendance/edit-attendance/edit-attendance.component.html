@@ -7,15 +7,15 @@
 
   <div class="card-body">
 
-    <div style="height: 25px">
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
       <mat-progress-bar [hidden]="!editAttendanceProgress" mode="query"></mat-progress-bar>
     </div>
 
-    <div>
+    <form [formGroup]="editAttendanceForm">
 
-      <form [formGroup]="editAttendanceForm">
+      <div class="row mb-1">
 
-        <mat-form-field appearance="outline" class="input-field" style="width: calc(25% - 10px); margin-right: 10px">
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
           <mat-label>Module Code</mat-label>
           <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100"/>
           <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
@@ -23,7 +23,7 @@
           <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && !moduleName">Module does not exist</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="input-field" style="width: calc(25% - 10px); margin-right: 10px">
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
           <mat-label>Lecture Hour</mat-label>
           <mat-select (selectionChange)="getBatch()" id="lectureHour" formControlName="lectureHour">
             <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
@@ -31,7 +31,7 @@
           <mat-error *ngIf="lectureHour.touched && lectureHour.errors?.required">This field is required</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="input-field" style="width: calc(25% - 10px); margin-right: 10px">
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
           <mat-label>Batch</mat-label>
           <mat-select (selectionChange)="getSession()" id="batch" formControlName="batch">
             <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
@@ -39,7 +39,7 @@
           <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="input-field" style="width: 25%">
+        <mat-form-field appearance="outline" class="col mx-0 px-1">
           <mat-label>Session</mat-label>
           <mat-select id="session" formControlName="session">
             <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a' }}</mat-option>
@@ -47,83 +47,89 @@
           <mat-error *ngIf="session.touched && session.errors?.required">This field is required</mat-error>
         </mat-form-field>
 
-        <button [disabled]="moduleCode.invalid" (click)="getAttendance()" type="button" class="btn btn-success" style="margin: -10px 0 10px 0">
-          Add
-        </button>
+      </div>
 
-      </form>
+      <div class="row px-1 mb-4">
+        <button [disabled]="moduleCode.invalid" (click)="getAttendance()" mat-raised-button type="button" class="mx-2">Add</button>
+      </div>
 
-      <div *ngIf="!lectureHoursFound" class="alert alert-dark mt-3 mb-0">No lecture hours found for this module!</div>
+      <div class="row px-1">
+        <div *ngIf="!lectureHoursFound" class="alert alert-warning col">No lecture hours found for this module!</div>
+      </div>
 
-      <div *ngIf="!sessionsFound" class="alert alert-dark mt-3 mb-0">No sessions found for this lecture hour!</div>
+      <div class="row px-1">
+        <div *ngIf="!sessionsFound" class="alert alert-warning col">No sessions found for this lecture hour!</div>
+      </div>
 
-    </div>
+      <div id="attendance_preview" style="margin: 15px -10px 0 -10px">
 
-    <div id="preview" style="transition: box-shadow 1s">
+        <p>Preview of the attendance</p>
 
-      <p>Preview of the attendance</p>
+        <ul *ngIf="moduleName">
+          <li>Module Name: <span style="font-weight: 570">{{ moduleName }}</span></li>
+        </ul>
 
-      <ul *ngIf="moduleName">
-        <li>Module Name: <span style="font-weight: 570">{{ moduleName }}</span></li>
-      </ul>
+        <p *ngIf="attendance.length === 0; else attendanceBlock" style="color: #888888"><i>Attendance will appear here once selected the required inputs</i></p>
 
-      <p *ngIf="attendance.length === 0; else attendanceBlock" style="color: #888888"><i>Attendance will appear here once selected the required inputs</i></p>
+        <ng-template #attendanceBlock>
 
-      <ng-template #attendanceBlock>
+          <mat-form-field class="filter">
+            <mat-label>Filter</mat-label>
+            <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
+          </mat-form-field>
 
-        <mat-form-field class="filter">
-          <mat-label>Filter</mat-label>
-          <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
-        </mat-form-field>
+          <div *ngIf="filteredAttendance.length === 0; else attendanceTable" style="color: darkgray"><i>No records found!</i></div>
 
-        <div *ngIf="filteredAttendance.length === 0; else attendanceTable" style="color: darkgray"><i>No records found!</i></div>
+          <ng-template #attendanceTable>
 
-        <ng-template #attendanceTable>
+            <table class="table table-sm">
 
-          <table class="table table-sm">
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Index Number</th>
+                <th scope="col">Status</th>
+              </tr>
+              </thead>
 
-            <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Index Number</th>
-              <th scope="col">Status</th>
-            </tr>
-            </thead>
+              <tbody>
+              <tr *ngFor="let record of filteredAttendance; let i = index" [attr.id]="'tr' + (i + 1)" [class.changed]="record.modified">
+                <td>{{ i + 1 }}</td>
+                <td>{{ record.studentID }}</td>
+                <td>
+                  <select [attr.id]="'sel' + (i + 1)" (change)="updateAttendanceRecord($event)">
+                    <option [selected]="record.status" value="0">Absent</option>
+                    <option [selected]="record.status" value="1">Present</option>
+                  </select>
+                </td>
+              </tr>
+              </tbody>
 
-            <tbody>
-            <tr *ngFor="let record of filteredAttendance; let i = index" [attr.id]="'tr' + (i + 1)" [class.changed]="record.modified">
-              <td>{{ i + 1 }}</td>
-              <td>{{ record.studentID }}</td>
-              <td>
-                <select [attr.id]="'sel' + (i + 1)" (change)="updateAttendanceRecord($event)">
-                  <option [selected]="record.status" value="0">Absent</option>
-                  <option [selected]="record.status" value="1">Present</option>
-                </select>
-              </td>
-            </tr>
-            </tbody>
+            </table>
 
-          </table>
+          </ng-template>
 
         </ng-template>
 
-      </ng-template>
-      <div style="padding: 10px; overflow: hidden !important;">
-
-        <div *ngIf="successfullySaved" class="alert alert-success">Attendance saved successfully!</div>
-
-        <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" style="float: right; margin: 0 0 0 10px">Reset</button>
-        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" style="float: right; margin: 0 0 0 0">Save</button>
-
       </div>
 
-    </div>
+      <div class="row px-1 mt-2 mb-0">
+        <div *ngIf="successfullySaved" class="alert alert-success col">Attendance saved successfully!</div>
+      </div>
 
-    <div id="messages">
+      <div class="row px-1 mt-2 mb-0">
+        <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
+      </div>
 
-    </div>
+      <div class="d-flex flex-row-reverse my-0">
+        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" class="mx-1">Reset</button>
+        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" class="mx-1">
+          <span *ngIf="buttonProgress" class="spinner-border spinner-border-sm mr-1"></span>
+          Save
+        </button>
+      </div>
+
+    </form>
 
   </div>
 
