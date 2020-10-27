@@ -17,8 +17,8 @@ import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-at
 import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
-import {UploadPaymentComponent} from "./home/payment/upload-payment/upload-payment.component";
-import {ViewPaymentComponent} from "./home/payment/view-payment/view-payment.component";
+import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
+import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 
 const routes: Routes = [
   {

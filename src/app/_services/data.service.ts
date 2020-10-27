@@ -101,4 +101,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}uploadPayment`, {paymentForm});
   }
 
+  registerStudent(studentDetails) {
+    return this.http.post<any>(`${environment.adminUrl}register-student`, {studentDetails});
+  }
+
 }
