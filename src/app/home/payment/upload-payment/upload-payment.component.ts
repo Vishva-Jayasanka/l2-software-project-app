@@ -18,6 +18,7 @@ export class UploadPaymentComponent implements OnInit {
 
   uploadAPaymentProgress = false;
   studentIDNotFound = false;
+  success = false;
 
   error = '';
 
@@ -39,6 +40,7 @@ export class UploadPaymentComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(studentID => {
         this.error = '';
+        this.success = false;
         this.studentIDNotFound = false;
         this.checkStudentID(studentID);
         return EMPTY;
@@ -74,6 +76,7 @@ export class UploadPaymentComponent implements OnInit {
   }
 
   checkStudentID(studentID) {
+    this.success = false;
     this.error = '';
     this.studentIDNotFound = false;
     if (studentID) {
