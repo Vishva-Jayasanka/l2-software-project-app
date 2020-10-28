@@ -17,6 +17,11 @@ export interface Province {
   name: string;
 }
 
+export const COURSES: Course[] = [
+  {courseID: 1, courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY'},
+  {courseID: 2, courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY'},
+];
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -27,10 +32,8 @@ export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
   registerStudentProgress = false;
   maxDate: Date = new Date();
-  courses: Course[] = [
-    {courseID: 1, courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY'},
-    {courseID: 2, courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY'},
-  ];
+  courses: Course[] = COURSES;
+
   districts: District[] = [
     {code: 'LK-52', name: 'Ampara'},
     {code: 'LK-71', name: 'Anuradhapura'},
@@ -141,6 +144,7 @@ export class RegistrationComponent implements OnInit {
       this.scrollToFirstInvalidControl();
     }
   }
+
   toggleRegistrationFeesPaid() {
     console.log(!this.registrationFeesPaid.value);
     this.registrationFeesPaid.setValue(!this.registrationFeesPaid.value);

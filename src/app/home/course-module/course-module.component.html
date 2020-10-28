@@ -17,6 +17,8 @@
 
     <button mat-raised-button color="accent" style="margin: 5px 10px 20px 0" *ngIf="getRole === 'admin'" (click)="openAddNewModuleDialog()">Add New Module</button>
 
+    <h1 *ngIf="getRole === 'student'" class="mat-h2">{{ courseName }}</h1>
+
     <div *ngFor="let semester of semesters | keyvalue">
       <div *ngIf="semester.value.length !== 0" class="mat-semester-group">
 
@@ -62,6 +64,12 @@
                       <ng-template #creditsBlock>{{ module.credits }}</ng-template>
                     </div>
                   </li>
+
+                  <li class="list-group-item list-group-item-action d-flex">
+                    <div class="type">YEAR</div>
+                    <div class="content">{{ module.moduleYear }}</div>
+                  </li>
+
 
                   <li class="list-group-item list-group-item-action d-flex">
                     <div class="type">

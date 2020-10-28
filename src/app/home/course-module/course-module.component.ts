@@ -7,6 +7,8 @@ import {DataService} from '../../_services/data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Course, COURSES} from '../registration/registration.component';
+import {YEARS} from '../../_services/shared.service';
 
 export interface ResultData {
   module;
@@ -16,9 +18,12 @@ export interface ResultData {
 export interface ModuleData {
   moduleCode: string;
   moduleName: string;
+  moduleYear: number;
+  year: number;
   description: string;
   credits: number;
   semester: number;
+  disabled: boolean;
   teachers: Teacher[];
   lectureHours: LectureHour[];
   new: boolean;
@@ -70,6 +75,8 @@ export class CourseModuleComponent implements OnInit {
   currentModules;
   routeParameter;
 
+  courseName = '';
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -91,9 +98,11 @@ export class CourseModuleComponent implements OnInit {
   getData() {
     this.data.getModules().subscribe(
       response => {
+        console.log(response);
         this.modules = response.modules;
         this.lectureHours = response.lectureHours;
         this.teachers = response.teachers;
+        this.courseName = response.course;
         this.getModules();
       },
       error => {
@@ -121,9 +130,12 @@ export class CourseModuleComponent implements OnInit {
         const tempModule: ModuleData = {
           moduleCode: module.moduleCode,
           moduleName: module.moduleName,
+          moduleYear: module.moduleYear,
+          year: module.year,
           description: module.description,
           credits: module.credits,
           semester: module.semester,
+          disabled: module.disabled,
           teachers: this.getTeachers(module.moduleCode),
           lectureHours: this.getLectureHours(module.moduleCode),
           new: false
@@ -150,9 +162,12 @@ export class CourseModuleComponent implements OnInit {
     const moduleData = {
       moduleCode: '',
       moduleName: '',
+      moduleYear: 0,
+      year: 0,
       credits: null,
       description: '',
       semester: 1,
+      disabled: false,
       teachers: [],
       lectureHours: [],
       new: true
@@ -228,6 +243,8 @@ export class EditModuleDialogComponent implements OnInit {
   filteredTeachers: Observable<Teacher[]>;
   teachers: Teacher[] = [];
   allTeachers: Teacher[] = [];
+  courses: Course[] = COURSES;
+  years = YEARS;
 
   LECTURE_TYPES: string[] = ['Lecture', 'Lab Session', 'Tutorial'];
   LECTURE_HALLS: string[] = ['New Auditorium', 'Phase 1 Auditorium', 'L1H01', 'L2H02', 'Lab 1', 'Lab 2', 'Lab 3'];
@@ -252,18 +269,20 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.years);
     this.progress = true;
     this.teachers = this.data.teachers;
     this.editModuleForm = this.formBuilder.group({
       moduleCode: [this.data.moduleCode, [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [this.data.moduleName, [Validators.required, Validators.minLength(6)]],
+      batch: [this.data.moduleYear, [Validators.required]],
       description: [this.data.description, [Validators.required, Validators.minLength(6)]],
       credits: [this.data.credits, [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
       semester: [this.data.semester.toString()],
       teacher: [''],
       lectureHours: this.formBuilder.array([]),
       newLectureHours: this.formBuilder.array([]),
-      enabled: [false]
+      disabled: [this.data.disabled]
     });
     this.teacher.markAsTouched();
     for (const lectureHour of this.data.lectureHours) {
@@ -397,7 +416,7 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   checkbox() {
-    if (this.enabled.value) {
+    if (this.disabled.value) {
       this.teacher.setErrors(null);
     }
   }
@@ -411,6 +430,10 @@ export class EditModuleDialogComponent implements OnInit {
 
   get moduleName() {
     return this.editModuleForm.get('moduleName');
+  }
+
+  get batch() {
+    return this.editModuleForm.get('batch');
   }
 
   get moduleCode() {
@@ -441,8 +464,8 @@ export class EditModuleDialogComponent implements OnInit {
     return this.editModuleForm.get('newLectureHours') as FormArray;
   }
 
-  get enabled() {
-    return this.editModuleForm.get('enabled');
+  get disabled() {
+    return this.editModuleForm.get('disabled');
   }
 
   get daysOfWeek() {
