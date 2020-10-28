@@ -58,24 +58,19 @@
       <div class="tab-content" id="attendance-navigation-content">
 
         <div class="tab-pane fade show active" id="upload-attendance" role="tabpanel" aria-labelledby="upload-attendance-tab">
-
           <app-upload-attendance></app-upload-attendance>
-
         </div>
 
         <div class="tab-pane fade" id="modify-attendance" role="tabpanel" aria-labelledby="modify-attendance-tab">
-
           <app-edit-attendance></app-edit-attendance>
-
         </div>
 
         <div class="tab-pane fade" id="view-attendance" role="tabpanel" aria-labelledby="view-attendance-tab">
-
           <app-view-attendance></app-view-attendance>
-
         </div>
 
       </div>
+
     </div>
 
     <div *ngIf="filteredAttendance.length === 0 && getRole !== 'admin'" class="alert alert-dark mt-3 mb-0">

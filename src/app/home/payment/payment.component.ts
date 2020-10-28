@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {AuthenticationService} from '../../_services/authentication.service';
 
 @Component({
   selector: 'app-payment',
@@ -7,10 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentComponent implements OnInit {
 
+  progress = false;
 
-  constructor() { }
+  constructor(
+    private authentication: AuthenticationService
+  ) {
+  }
 
   ngOnInit(): void {
+  }
+
+  get getRole() {
+    return this.authentication.details.role;
   }
 
 }

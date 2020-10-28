@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Course} from "../../registration/registration.component";
+import {Component, OnInit} from '@angular/core';
+
 
 @Component({
   selector: 'app-view-payment',
@@ -8,10 +7,9 @@ import {Course} from "../../registration/registration.component";
   styleUrls: ['./view-payment.component.css']
 })
 export class ViewPaymentComponent implements OnInit {
-  paymentForm: FormGroup;
-  constructor(
-    private formBuilder: FormBuilder
-  )  { }
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

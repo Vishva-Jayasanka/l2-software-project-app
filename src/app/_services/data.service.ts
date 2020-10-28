@@ -105,4 +105,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}register-student`, {studentDetails});
   }
 
+  checkStudentID(studentID) {
+    return this.http.post<any>(`${environment.adminUrl}check-student-id`, {studentID});
+  }
+
 }
