@@ -19,6 +19,7 @@ import {RegistrationComponent} from './home/registration/registration.component'
 import {ResultsComponent} from './home/results/results.component';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
 import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
+import {ProfileComponent} from './home/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -84,6 +85,10 @@ const routes: Routes = [
       {
         path: 'registration',
         component: RegistrationComponent
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent
       },
       {
         path: '',

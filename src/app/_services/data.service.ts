@@ -109,4 +109,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}check-student-id`, {studentID});
   }
 
+  getTimetable() {
+    return this.http.post<any>(`${environment.apiUrl}get-timetable`, {});
+  }
+
 }

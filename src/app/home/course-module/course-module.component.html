@@ -35,7 +35,7 @@
             </h5>
 
             <div [attr.id]="'collapse' + module.moduleCode" class="collapse"
-                 [class.show]="module.moduleCode === routeParameter.id"
+                 [class.show]="module.moduleCode === routeParameter.moduleCode"
                  [attr.aria-labelledby]="'heading' + module.moduleCode"
                  [attr.data-parent]="'#accordion' + semester.value[0].moduleCode">
               <div class="card-body" style="padding: 0">
@@ -80,7 +80,7 @@
                       <ng-template #lectureHourBlock>
                         <span *ngFor="let lectureHour of module.lectureHours">
                           <span class="highlight">{{ lectureHour.type }}</span>:
-                          <span class="highlight">{{ daysOfWeek[lectureHour.day] }}</span> from <span
+                          <span class="highlight">{{ daysOfWeek[lectureHour.day - 1] }}</span> from <span
                           class="highlight">{{ lectureHour.startingTime }}</span> to
                           <span class="highlight">{{ lectureHour.endingTime }}</span> at <span
                           class="highlight">{{ lectureHour.lectureHall }}</span><br/>

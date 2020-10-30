@@ -1,51 +1,50 @@
-table {
-  margin-top: 30px;
+.scale-left {
+  background-color: #e3e3e3 !important;
+  transition: 0.2s;
+  transform-origin: left;
+  z-index: 2;
 }
 
-th {
-  color: rgb(120, 120, 120);
-  font-weight: normal;
-  text-align: center;
-  border-bottom: 1px solid rgb(220, 220, 220);
-  border-top: 1px solid rgb(220, 220, 220);
+.scale-center {
+  background-color: #e3e3e3 !important;
+  transition: 0.2s;
+  z-index: 2;
 }
 
-td {
-  vertical-align: top;
-  position: relative;
-  width: 20%;
-  height: 600px;
+.scale-right {
+  background-color: #e3e3e3 !important;
+  transition: 0.2s;
+  transform-origin: right;
+  z-index: 2;
 }
 
-tr {
-  border: none !important;
+.hidden {
+  display: none;
 }
 
-tr:hover {
-  background: none;
-}
-
-.time-slot {
-  cursor: pointer;
-  font-size: 15px;
-  position: absolute;
-  width: calc(100% - 2px);
-  padding: 10px;
-  border-radius: 5px;
-  overflow: hidden;
+.scale-left:hover, .scale-center:hover, .scale-right:hover {
+  z-index: 99999;
+  transform: scale(1.2);
+  opacity: 0.8;
+  background-color: black !important;
   color: white;
+  font-size: 12px;
+  box-shadow:  0 20px 20px 0  rgba(0, 0, 0, 0.4);
 }
 
-.time-slot:hover {
-  -webkit-filter: brightness(90%);
+.scale-left:hover .hidden {
+  display: block;
 }
 
-.tooltip {
-  height: 55px;
-  width: 150px;
+.scale-center:hover .hidden {
+  display: block;
 }
 
-.tab-group {
-  border: 1px solid rgb(220, 220, 220);
+.scale-right:hover .hidden {
+  display: block;
 }
+
+
+
+
 

@@ -98,7 +98,6 @@ export class CourseModuleComponent implements OnInit {
   getData() {
     this.data.getModules().subscribe(
       response => {
-        console.log(response);
         this.modules = response.modules;
         this.lectureHours = response.lectureHours;
         this.teachers = response.teachers;
@@ -114,7 +113,7 @@ export class CourseModuleComponent implements OnInit {
         if (!this.error) {
           setTimeout(() => {
             try {
-              document.querySelector(`#${this.routeParameter.id}`).scrollIntoView({behavior: 'smooth'});
+              document.querySelector(`#${this.routeParameter.moduleCode}`).scrollIntoView({behavior: 'smooth'});
             } catch (exeption) {
             }
           }, 200);
@@ -269,7 +268,6 @@ export class EditModuleDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.years);
     this.progress = true;
     this.teachers = this.data.teachers;
     this.editModuleForm = this.formBuilder.group({
@@ -317,7 +315,7 @@ export class EditModuleDialogComponent implements OnInit {
           this.moduleExists = true;
         }
       },
-      error => console.error(error)
+      error => this.error = error
     );
   }
 

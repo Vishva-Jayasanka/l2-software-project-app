@@ -1,17 +1,17 @@
 import {Component, enableProdMode, OnInit} from '@angular/core';
 import {DataService} from '../../_services/data.service';
 import {Router} from '@angular/router';
+import {AuthenticationService} from '../../_services/authentication.service';
+import {Time} from '@angular/common';
 
 export interface TimeSlot {
   moduleCode: string;
   moduleName: string;
   type: string;
-  semester: number;
-  start: number;
-  end: number;
-  day: string;
+  startingTime: string;
+  endingTime: string;
+  day: number;
   lectureHall: string;
-  color: string;
 }
 
 @Component({
@@ -21,80 +21,68 @@ export interface TimeSlot {
 })
 export class TimetableComponent implements OnInit {
 
-  weekdays: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  times = new Map([['08:15', 495], ['09:15', 555], ['10:15', 615], ['10:30', 630], ['11:30', 690],
-    ['12:30', 750], ['13:15', 795], ['14:15', 855], ['15:15', 915], ['15:30', 930], ['16:30', 990], ['17:30', 1050]
-  ]);
+  weekdays = [
+    {index: 2, day: 'Monday'},
+    {index: 3, day: 'Tuesday'},
+    {index: 4, day: 'Wednesday'},
+    {index: 5, day: 'Thursday'},
+    {index: 6, day: 'Friday'}
+  ];
 
-  timeSlots = [];
-  timeTables = [];
-  modules = [];
-  lectureHours = [];
   progress = false;
+  times: TimeSlot[] = [];
+
   error = '';
 
   constructor(
-    private router: Router,
-    private data: DataService
+    public router: Router,
+    private data: DataService,
+    private authentication: AuthenticationService
   ) {
   }
 
   ngOnInit(): void {
     this.progress = true;
-    this.data.getLectureHours().subscribe(
+    this.data.getTimetable().subscribe(
       response => {
-        this.modules = response.modules;
-        this.lectureHours = response.lectureHours;
-        this.createTimetable();
+        response.times.forEach(timeSlot => {
+          this.times.push({
+            moduleCode: timeSlot.moduleCode,
+            moduleName: timeSlot.moduleName,
+            type: timeSlot.type,
+            startingTime: this.getTime(timeSlot.startingTime),
+            endingTime: this.getTime(timeSlot.endingTime),
+            day: timeSlot.day,
+            lectureHall: timeSlot.lectureHall
+          });
+        });
       },
       error => {
         this.error = error;
       }
-    ).add(
-      () => this.progress = false
-    );
+    ).add(() => this.progress = false);
   }
 
-  createTimetable() {
-    for (const lecture of this.lectureHours) {
-      const module = this.modules.find(obj => obj.moduleCode === lecture.moduleCode);
-      const timeSlot: TimeSlot = {
-        moduleCode: lecture.moduleCode,
-        moduleName: module.moduleName,
-        type: lecture.type,
-        semester: module.semester,
-        start: lecture.startingTime,
-        end: lecture.endingTime,
-        day: lecture.day,
-        lectureHall: lecture.lectureHall,
-        color: module.colorCode
-      };
-      this.timeSlots.push(timeSlot);
-    }
+  getTime(time: string): string {
+    return new Date(time).toLocaleTimeString('ISO', {timeZone: 'UTC'});
   }
 
-  getTime(value): string {
-    const hours = Math.round(value / 60);
-    const minutes = value % 60;
-    return ((hours < 10) ? '0' : '') + hours + ':' + ((minutes < 10) ? '0' : '') + minutes;
+  getTimeSlots(day: number) {
+    return this.times.filter(time => time.day === day);
   }
 
-  getLevel(val) {
-    const sem = (val - 1) % 2 + 1;
-    const level = Math.floor((val - 1) / 2) + 1;
-    return 'L0' + level + 'S0' + sem;
+  getRole() {
+    return this.authentication.details.role;
   }
 
-  getTimeSlots(semester: number, day: string) {
-    return this.timeSlots.filter(obj => obj.semester === semester && obj.day === day);
+  convertTime(time: string): string {
+    const components = time.split(/[\s:]/);
+    return components[0] + ':' + components[1] + ' ' + components[3];
   }
 
-  hasRecords(sem: number) {
-    return this.timeSlots.filter(obj => obj.semester === sem).length !== 0;
-  }
-
-  iterate() {
-    return [1, 2, 3, 4];
+  getPosition(time: string): number {
+    const components = time.split(/[\s:]/);
+    return parseInt(components[0], 10) * 60 + parseInt(components[1], 10) + ((components[3] === 'PM' && components[0] !== '12') ? 720 : 0) - 495;
   }
 
 }
