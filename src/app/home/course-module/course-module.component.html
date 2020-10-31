@@ -2,7 +2,9 @@
 
   <div class="jumbotron">
     <h3 style="margin-top: 0">Course Modules</h3>
-    <p>All the modules you registered so far appear here</p>
+    <p *ngIf="getRole === 'student'">All the modules you registered so far appear here</p>
+    <p *ngIf="getRole === 'teacher'">All the modules you assigned to</p>
+    <p *ngIf="getRole === 'admin'">You can add new modules or modify existing modules</p>
   </div>
 
   <mat-spinner [hidden]="!progress" style="  margin: 100px auto auto"></mat-spinner>

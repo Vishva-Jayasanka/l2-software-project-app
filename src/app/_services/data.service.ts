@@ -17,6 +17,10 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}get-modules`, {});
   }
 
+  getAssignments() {
+    return this.http.post<any>(`${environment.teacherUrl}get-assignments`, {});
+  }
+
   getAttendance() {
     return this.http.post<any>(`${environment.apiUrl}get-attendance`, {});
   }

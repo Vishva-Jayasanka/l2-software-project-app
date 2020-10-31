@@ -96,12 +96,13 @@ export class CourseModuleComponent implements OnInit {
   }
 
   getData() {
-    this.data.getModules().subscribe(
+    const route = (this.getRole === 'teacher') ? this.data.getAssignments() : this.data.getModules();
+    route.subscribe(
       response => {
         this.modules = response.modules;
         this.lectureHours = response.lectureHours;
         this.teachers = response.teachers;
-        this.courseName = response.course;
+        this.courseName = response.course || '';
         this.getModules();
       },
       error => {

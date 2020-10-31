@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {DataService} from '../../_services/data.service';
 import {UserDataService} from '../../_services/user-data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {COURSES} from '../registration/registration.component';

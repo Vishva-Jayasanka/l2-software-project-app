@@ -18,6 +18,20 @@
 
 </mat-toolbar>
 
+
+<div class="card composer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'">
+
+  <div class="card-header bg-primary text-white pb-0 px-2 d-flex justify-content-between">
+    <h6 class="mb-0">Write your message</h6>
+    <a><mat-icon class="mb-0 mr-0">close</mat-icon></a>
+  </div>
+
+  <div class="card-body">
+
+  </div>
+
+</div>
+
 <mat-sidenav-container class="sidenav-container">
 
   <mat-sidenav #sidenav [mode]="widthSidenav ? 'over' : 'side'" [opened]="!widthSidenav" class="sidenav">
@@ -38,7 +52,11 @@
 
   </mat-sidenav>
 
-  <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthNotification" class="notification-bar">
+<!--  <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthNotification" class="notification-bar">-->
+<!--    <app-notification></app-notification>-->
+<!--  </mat-sidenav>-->
+
+  <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthSidenav" class="notification-bar">
     <app-notification></app-notification>
   </mat-sidenav>
 

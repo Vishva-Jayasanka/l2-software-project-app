@@ -1,26 +1,32 @@
-<div class="list-group">
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">Notification Heading 1</h5>
-      <small>3 days ago</small>
-    </div>
-    <p class="mb-1">Notification content appears here.</p>
-    <small>Notification Origin</small>
-  </a>
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">Notification Heading 2</h5>
-      <small class="text-muted">3 days ago</small>
-    </div>
-    <p class="mb-1">Notification content appears here.</p>
-    <small class="text-muted">Notification Origin</small>
-  </a>
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">Notification Heading 3</h5>
-      <small class="text-muted">3 days ago</small>
-    </div>
-    <p class="mb-1">Notification content appears here.</p>
-    <small class="text-muted">Notification Origin</small>
-  </a>
+<div style="height: 100%; position: relative">
+
+  <div class="list-group">
+    <a *ngFor="let message of notification.messages" href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+      <h5 class="mb-1">Notification Heading</h5>
+      <p class="mb-1">{{ message.message }}</p>
+      <div class="d-flex w-100 justify-content-between">
+        <small>{{ message.username }}</small>
+        <small>{{ message.timeSent | date: 'h:mm a, M/d/yy' }}</small>
+      </div>
+    </a>
+  </div>
+
+  <div *ngIf="getRole === 'teacher'" class="row p-0 pb-3 m-0" style="width: 100%; position: absolute; bottom: -15px; height: fit-content">
+
+    <button mat-raised-button class="rounded-pill w-75 mx-auto my-3"><mat-icon>add</mat-icon> Send a message</button>
+
+  </div>
+
 </div>
+
+<!--    <div class="form-group col-10 mr-0 pr-0">-->
+<!--      <textarea [value]="messageText.value" id="message1" rows="1" class="form-control" style="visibility: hidden; resize: none; overflow: hidden; border-radius: 18px" placeholder="type a message"></textarea>-->
+<!--    </div>-->
+
+<!--    <div class="form-group col-10 mr-0 pr-0">-->
+<!--      <textarea (keydown)="countLineBreaks()" [attr.rows]="scrollHeight" [formControl]="messageText" id="message0" class="form-control" style="resize: none; overflow: hidden; border-radius: 18px" placeholder="Type a message"></textarea>-->
+<!--    </div>-->
+
+<!--    <div class="col-2 pl-2" style="position: absolute; bottom: 28px; right: 0">-->
+<!--      <a (click)="sendMessage()"><mat-icon style="font-size: 35px; cursor: pointer">send</mat-icon></a>-->
+<!--    </div>-->

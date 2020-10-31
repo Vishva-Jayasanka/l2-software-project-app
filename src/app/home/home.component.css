@@ -76,3 +76,12 @@
 button:focus {
   outline: none !important;
 }
+
+.composer {
+  height: 400px;
+  width: 400px;
+  position: absolute;
+  bottom: 0;
+  z-index: 99999;
+  transition: right 0.2s;
+}
