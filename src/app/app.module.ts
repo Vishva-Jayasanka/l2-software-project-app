@@ -38,6 +38,7 @@ import { ProfilePictureComponent } from './home/profile/profile-picture/profile-
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
 import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
+import { ComposerComponent } from './home/notification/composer/composer.component';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.com
     ProfileComponent,
     ProfilePictureComponent,
     UploadPaymentComponent,
-    ViewPaymentComponent
+    ViewPaymentComponent,
+    ComposerComponent
   ],
   imports: [
     BrowserModule,

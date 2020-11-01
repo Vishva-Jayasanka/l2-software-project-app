@@ -1,7 +1,8 @@
 import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {Message, NotificationService} from '../../_services/notification.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../_services/authentication.service';
+import {UserDataService} from '../../_services/user-data.service';
 
 @Component({
   selector: 'app-notification',
@@ -18,7 +19,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
     public notification: NotificationService,
     private elementRef: ElementRef,
     private formBuilder: FormBuilder,
-    private authentication: AuthenticationService
+    private authentication: AuthenticationService,
+    public userData: UserDataService
   ) {
   }
 

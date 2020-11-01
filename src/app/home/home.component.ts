@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   widthSidenav: boolean;
   widthNotification: boolean;
   activeRoute: string;
+  hidden = false;
   user;
   ROUTS = [
     {component: 'CourseModuleComponent', route: 'course-modules', icon: 'grade', label: 'Course Modules'},
@@ -38,7 +39,7 @@ export class HomeComponent implements OnInit {
     private authentication: AuthenticationService,
     public dialog: MatDialog,
     private data: DataService,
-    public userData: UserDataService,
+    public userData: UserDataService
   ) {
     this.widthSidenav = (window.innerWidth) < 850;
     this.widthNotification = (window.innerWidth) < 1170;

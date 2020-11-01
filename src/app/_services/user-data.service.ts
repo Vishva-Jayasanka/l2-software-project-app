@@ -11,16 +11,24 @@ import {environment} from '../../environments/environment';
 export class UserDataService {
 
   profilePicture: string;
-  profilePictureChange: Subject<string> = new Subject<string>();
+  openComposer: boolean;
+  private profilePictureChange: Subject<string> = new Subject<string>();
+  private composerToggle: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private http: HttpClient
   ) {
+    this.composerToggle.next(false);
+    this.composerToggle.subscribe(value => this.openComposer = value);
     this.profilePictureChange.subscribe(value => this.profilePicture = value);
   }
 
   changeProfilePicture(profilePicture: string) {
     this.profilePictureChange.next(profilePicture);
+  }
+
+  toggleComposer() {
+    this.composerToggle.next(!this.openComposer);
   }
 
   getUserDetails() {
