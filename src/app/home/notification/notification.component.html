@@ -12,21 +12,8 @@
   </div>
 
   <div *ngIf="getRole === 'teacher'" class="row p-0 pb-3 m-0" style="width: 100%; position: absolute; bottom: -15px; height: fit-content">
-
     <button (click)="userData.toggleComposer()" mat-raised-button class="rounded-pill w-75 mx-auto my-3"><mat-icon>add</mat-icon> Send a message</button>
-
   </div>
 
 </div>
 
-<!--    <div class="form-group col-10 mr-0 pr-0">-->
-<!--      <textarea [value]="messageText.value" id="message1" rows="1" class="form-control" style="visibility: hidden; resize: none; overflow: hidden; border-radius: 18px" placeholder="type a message"></textarea>-->
-<!--    </div>-->
-
-<!--    <div class="form-group col-10 mr-0 pr-0">-->
-<!--      <textarea (keydown)="countLineBreaks()" [attr.rows]="scrollHeight" [formControl]="messageText" id="message0" class="form-control" style="resize: none; overflow: hidden; border-radius: 18px" placeholder="Type a message"></textarea>-->
-<!--    </div>-->
-
-<!--    <div class="col-2 pl-2" style="position: absolute; bottom: 28px; right: 0">-->
-<!--      <a (click)="sendMessage()"><mat-icon style="font-size: 35px; cursor: pointer">send</mat-icon></a>-->
-<!--    </div>-->

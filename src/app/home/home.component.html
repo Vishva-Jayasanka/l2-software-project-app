@@ -18,7 +18,8 @@
 
 </mat-toolbar>
 
-<div class="composer" *ngIf="userData.openComposer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'">
+<!--*ngIf="userData.openComposer"-->
+<div *ngIf="userData.openComposer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'" class="composer" >
   <app-composer></app-composer>
 </div>
 

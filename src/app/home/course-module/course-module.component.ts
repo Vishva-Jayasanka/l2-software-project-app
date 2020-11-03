@@ -256,7 +256,6 @@ export class EditModuleDialogComponent implements OnInit {
   moduleExists = false;
   error = '';
 
-  @ViewChild('teacherInput') teacherInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(

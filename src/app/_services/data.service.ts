@@ -117,4 +117,8 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}get-timetable`, {});
   }
 
+  getStudents() {
+    return this.http.post<any>(`${environment.teacherUrl}get-students`, {});
+  }
+
 }

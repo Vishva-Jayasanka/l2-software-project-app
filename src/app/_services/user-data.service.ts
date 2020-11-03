@@ -18,7 +18,7 @@ export class UserDataService {
   constructor(
     private http: HttpClient
   ) {
-    this.composerToggle.next(false);
+    this.composerToggle.next(true);
     this.composerToggle.subscribe(value => this.openComposer = value);
     this.profilePictureChange.subscribe(value => this.profilePicture = value);
   }
