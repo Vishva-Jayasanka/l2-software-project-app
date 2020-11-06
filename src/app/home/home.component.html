@@ -19,7 +19,7 @@
 </mat-toolbar>
 
 <!--*ngIf="userData.openComposer"-->
-<div *ngIf="userData.openComposer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'" class="composer" >
+<div *ngIf="getRole !== 'student' && userData.openComposer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'" class="composer" >
   <app-composer></app-composer>
 </div>
 

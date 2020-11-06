@@ -1,8 +1,9 @@
 import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
-import {Message, NotificationService} from '../../_services/notification.service';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import {NotificationService} from '../../_services/notification.service';
+import {FormBuilder} from '@angular/forms';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {UserDataService} from '../../_services/user-data.service';
+import {DataService} from '../../_services/data.service';
 
 @Component({
   selector: 'app-notification',
@@ -11,52 +12,58 @@ import {UserDataService} from '../../_services/user-data.service';
 })
 export class NotificationComponent implements OnInit, OnDestroy {
 
-  scrollHeight = 1;
-  messageText: FormControl;
-  message: Message;
-
   constructor(
     public notification: NotificationService,
     private elementRef: ElementRef,
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
-    public userData: UserDataService
+    public userData: UserDataService,
+    private data: DataService
   ) {
   }
 
   ngOnInit(): void {
     this.notification.openWebSocket();
-    this.messageText = new FormControl('', [Validators.required]);
+    this.data.getNotifications().subscribe(
+      response => {
+        this.notification.messages = response.notifications.map(notification => {
+          return {
+            notificationID: notification.notificationID,
+            recipients: [],
+            username: notification.sentBy,
+            subject: notification.subject,
+            message: notification.message,
+            timeSent: new Date(notification.timeSent),
+            received: notification.received,
+            sent: true
+          };
+        });
+        this.notification.messages.sort((t1, t2) => t1 > t2 ? 1 : -1);
+        const received: string[] = response.notifications.filter(notification => !notification.received)
+          .map(notification => notification.notificationID);
+        if (received.length !== 0) {
+          this.data.updateNotificationStatus(received).subscribe();
+        }
+      },
+      error => console.log(error)
+    );
   }
 
   ngOnDestroy() {
     this.notification.closeConnection();
   }
 
-  sendMessage() {
-    if (this.messageText.valid) {
-      this.message = {
-        username: this.username,
-        message: this.messageText.value,
-        timeSent: new Date()
-      };
-      this.notification.sendMessage(this.message);
-      console.log(this.notification.messages);
-      this.messageText.setValue('');
-    }
-  }
-
-  countLineBreaks() {
-    const height = (this.elementRef.nativeElement.querySelector('#message1').scrollHeight - 12) / 24;
-    this.scrollHeight = height > 4 ? 4 : height;
+  get getRole() {
+    return this.authentication.details.role;
   }
 
   get username() {
     return this.authentication.details.username;
   }
 
-  get getRole() {
-    return this.authentication.details.role;
+  get fullName() {
+    const details = this.authentication.details;
+    return details.firstName + ' ' + details.lastName;
   }
 
 }

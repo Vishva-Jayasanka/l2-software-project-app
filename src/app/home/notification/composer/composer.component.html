@@ -7,49 +7,40 @@
 
   <div class="card-body p-1">
 
-    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+    <div class="row" style="margin: -4px -4px 4px -34px; height: 5px">
       <mat-progress-bar [hidden]="!composerProgress" mode="query"></mat-progress-bar>
     </div>
 
-    <form [formGroup]="notification">
+    <form>
 
-      <mat-form-field class="col-12 m-0 p-1">
+      <div class="col-12 m-0 p-1">
+
         <mat-chip-list #recipientsList aria-label="Recipients">
-          <mat-chip *ngFor="let recipient of recipients" [selectable]="true" [removable]="true" (removed)="remove(recipient.username)">
-            <span style="font-size: 12px">{{ recipient.nameWithInitials }}</span>
+          <mat-chip *ngFor="let recipient of recipients" [selectable]="true" [removable]="true" (removed)="remove(recipient.username)" class="mat-chip-recipient" [style.color]="(recipient.nameWithInitials ? 'black' : 'red')">
+            <span style="font-size: 12px">{{ recipient.nameWithInitials ? recipient.nameWithInitials : recipient.username}}</span>
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip>
-          <input #recipientInput
-                 formControlName="recipients"
-                 [matAutocomplete]="auto"
-                 [matChipInputFor]="recipientsList"
-                 [matChipInputSeparatorKeyCodes]="separatorCodes"
-                 (matChipInputTokenEnd)="add($event)"
-                 placeholder="Recipients">
+          <input #recipientInput [formControl]="recipient" [matAutocomplete]="auto" [matChipInputFor]="recipientsList" [matChipInputSeparatorKeyCodes]="separatorCodes" (matChipInputTokenEnd)="add($event)" class="composer-input"  placeholder="Recipients">
         </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete"
-                          (optionSelected)="selected($event)">
-          <mat-option *ngFor="let recipient of filteredRecipients | async"
-                      [value]="recipient.username">
+
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let recipient of filteredRecipients | async" [value]="recipient.username">
             {{ recipient.username}} | {{ recipient.nameWithInitials }}
           </mat-option>
         </mat-autocomplete>
-      </mat-form-field>
 
-      <div *ngIf="invalidRecipient" class="col py-0 px-1" style="margin-top: -20px">
-        <small class="text-danger">Invalid recipient</small>
       </div>
 
-      <mat-form-field class="col-12 m-0 p-1">
-        <input matInput type="text" formControlName="subject" placeholder="subject"/>
-      </mat-form-field>
+      <div class="col-12 m-0 p-1">
+        <input [formControl]="subject" class="composer-input w-100" placeholder="Subject">
+      </div>
 
-      <mat-form-field class="col-12 m-0 p-1 h-100">
-        <textarea style="resize: none;" rows="5" matInput formControlName="message" placeholder="Type your message"></textarea>
-      </mat-form-field>
+      <div class="col-12 m-0 p-1 w-100" style="height: 230px">
+        <textarea [formControl]="messageText" class="composer-message h-100 w-100" placeholder="Type your message"></textarea>
+      </div>
 
       <div class="col-12" style="position: absolute; bottom: 10px; left: 0">
-        <button (click)="sendNotification()" [disabled]="!message.value || recipients.length === 0" type="button" mat-raised-button color="primary">Send</button>
+        <button (click)="sendNotification()" [disabled]="!messageText.value || recipients.length === 0" type="button" mat-raised-button color="primary">Send</button>
       </div>
 
     </form>

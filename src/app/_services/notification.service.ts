@@ -2,9 +2,19 @@ import {Injectable} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
 
 export interface Message {
+  messageType: string;
+  messageBody: MessageBody | number;
+}
+
+export interface MessageBody {
+  notificationID: number;
+  recipients: string[];
   username: string;
+  subject: string;
   message: string;
   timeSent: Date;
+  received: boolean;
+  sent: boolean;
 }
 
 @Injectable({
@@ -14,8 +24,10 @@ export class NotificationService {
 
   url = 'ws://localhost:3000';
   webSocket: WebSocket;
-  messages: Message[] = [];
+  messages: MessageBody[] = [];
   token;
+
+  connected = true;
 
   constructor(
     private authentication: AuthenticationService
@@ -27,25 +39,60 @@ export class NotificationService {
 
     this.webSocket = new WebSocket('ws://localhost:3000', this.token);
     this.webSocket.onopen = (event) => {
-      console.log('Open: ', event);
+      this.connected = true;
     };
 
     this.webSocket.onmessage = (event) => {
-      this.messages.push(JSON.parse(event.data));
+      const message = JSON.parse(event.data);
+      if (message.messageType === 'notification') {
+        message.messageBody.sent = true;
+        this.messages.unshift(message.messageBody);
+        this.acknowledgement(message.messageBody.notificationID);
+      } else {
+      }
+    };
+
+    this.webSocket.onerror = (error) => {
+      if (this.webSocket.readyState === 1) {
+        console.log(error);
+      }
     };
 
     this.webSocket.onclose = (event) => {
-      console.log('Close: ', event);
+      this.connected = false;
+      setTimeout(() => this.openWebSocket(), 2000);
     };
 
   }
 
-  public sendMessage(message: Message) {
-    this.webSocket.send(JSON.stringify(message));
+  public sendMessage(message: MessageBody) {
+    const msg: Message = {
+      messageType: 'notification',
+      messageBody: message
+    };
+    this.messages.unshift(message);
+    if (this.connected) {
+      message.sent = true;
+      this.webSocket.send(JSON.stringify(msg));
+    }
+    console.log(message);
+  }
+
+  private acknowledgement(messageID: number) {
+    const acknowledgement: Message = {
+      messageType: 'acknowledgement',
+      messageBody: messageID
+    };
+    console.log(JSON.stringify(acknowledgement));
+    this.webSocket.send(JSON.stringify(acknowledgement));
   }
 
   public closeConnection() {
     this.webSocket.close();
+  }
+
+  get username() {
+    return this.authentication.details.username;
   }
 
 }

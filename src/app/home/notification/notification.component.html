@@ -1,18 +1,18 @@
-<div style="height: 100%; position: relative">
+<div style="height: 100%">
 
-  <div class="list-group">
-    <a *ngFor="let message of notification.messages" href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-      <h5 class="mb-1">Notification Heading</h5>
+  <div class="list-group" style="margin-bottom: 70px">
+    <div *ngFor="let message of notification.messages; let i = index" class="list-group-item list-group-item-action flex-column align-items-start" [ngClass]="{'bg-primary': !message.received && message.sent, 'text-white': !message.received || !message.sent, 'bg-danger': !message.sent}">
+      <h5 class="mb-1">{{ message.subject }}</h5>
       <p class="mb-1">{{ message.message }}</p>
       <div class="d-flex w-100 justify-content-between">
-        <small>{{ message.username }}</small>
+        <small>Sent by: {{ username === message.username || fullName === message.username ? 'You' : message.username }}</small>
         <small>{{ message.timeSent | date: 'h:mm a, M/d/yy' }}</small>
       </div>
-    </a>
+    </div>
   </div>
 
-  <div *ngIf="getRole === 'teacher'" class="row p-0 pb-3 m-0" style="width: 100%; position: absolute; bottom: -15px; height: fit-content">
-    <button (click)="userData.toggleComposer()" mat-raised-button class="rounded-pill w-75 mx-auto my-3"><mat-icon>add</mat-icon> Send a message</button>
+  <div *ngIf="getRole === 'teacher' || getRole === 'admin'" class="row p-0 pb-3 m-0" style="z-index: 3; width: 100%; position: absolute; bottom: 0; height: fit-content">
+    <button (click)="userData.toggleComposer()" mat-raised-button class="rounded-pill w-75 mx-auto mt-3 mb-2"><mat-icon>add</mat-icon> Send a message</button>
   </div>
 
 </div>

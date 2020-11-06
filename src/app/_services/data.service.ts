@@ -121,4 +121,12 @@ export class DataService {
     return this.http.post<any>(`${environment.teacherUrl}get-students`, {});
   }
 
+  getNotifications() {
+    return this.http.post<any>(`${environment.apiUrl}get-notifications`, {});
+  }
+
+  updateNotificationStatus(received: string[]) {
+    return this.http.post<any>(`${environment.apiUrl}update-notification-status`, {received});
+  }
+
 }
