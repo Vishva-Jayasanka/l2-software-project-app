@@ -217,7 +217,6 @@
                 <input matInput formControlName="graduationDate" [matDatepicker]="graduation_date" [max]="maxDate"/>
                 <mat-datepicker-toggle matSuffix [for]="graduation_date"></mat-datepicker-toggle>
                 <mat-datepicker #graduation_date></mat-datepicker>
-                <mat-error *ngIf="dateOfBirth.touched && dateOfBirth.errors?.required">This field required</mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="col-2 px-1">

@@ -39,6 +39,9 @@ import {ImageCropperModule} from 'ngx-image-cropper';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
 import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import { ComposerComponent } from './home/notification/composer/composer.component';
+import { RequestComponent } from './home/request/request.component';
+import { AddRequestComponent } from './home/request/add-request/add-request.component';
+import { UpdateStatusComponent } from './home/request/update-status/update-status.component';
 
 
 @NgModule({
@@ -70,7 +73,10 @@ import { ComposerComponent } from './home/notification/composer/composer.compone
     ProfilePictureComponent,
     UploadPaymentComponent,
     ViewPaymentComponent,
-    ComposerComponent
+    ComposerComponent,
+    RequestComponent,
+    AddRequestComponent,
+    UpdateStatusComponent
   ],
   imports: [
     BrowserModule,

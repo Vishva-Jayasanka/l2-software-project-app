@@ -1,0 +1,128 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5>Add Request</h5>
+    <p class="sub-header">Add request made by a student to the system.</p>
+  </div>
+
+  <div class="card-body">
+
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+      <mat-progress-bar [hidden]="!addRequestProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="requestForm">
+
+      <div class="row">
+
+        <mat-form-field class="col-3 mx-0 px-1" appearance="outline">
+          <mat-label>Student ID</mat-label>
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="studentID" placeholder="Ex: 184183R" />
+          <mat-error *ngIf="studentID.touched && studentID.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid student ID</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && !studentID.errors?.pattern && studentDoesNotExist">Student does not exist</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-9 mx-0 px-1" appearance="outline">
+          <mat-label>Student Name</mat-label>
+          <input matInput type="text" formControlName="studentName" readonly/>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="studentDoesNotExist" class="alert alert-warning col">No student found with this ID</div>
+      </div>
+
+      <div class="row">
+
+        <mat-form-field class="col-8 mx-0 px-1" appearance="outline">
+          <mat-label>Course</mat-label>
+          <input matInput type="text" formControlName="course" readonly/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col px-1">
+          <mat-label>Date</mat-label>
+          <input matInput formControlName="requestDate" [matDatepicker]="request_date" [max]="maxDate"/>
+          <mat-datepicker-toggle matSuffix [for]="request_date"></mat-datepicker-toggle>
+          <mat-datepicker #request_date></mat-datepicker>
+          <mat-error *ngIf="requestDate.touched && requestDate.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row">
+
+        <mat-form-field class="col-12 mx-0 px-1" appearance="fill">
+          <mat-label>Request</mat-label>
+          <mat-select formControlName="request" multiple>
+            <mat-option *ngFor="let request of requests" [value]="request.requestTypeID">{{request.requestType}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+      <div class="mt-3">
+
+        <h6>Reasons for request</h6>
+
+        <div formArrayName="reasons" *ngFor="let reason of reasons.controls; let i = index">
+
+          <div class="row" [formGroupName]="i">
+
+            <mat-form-field appearance="outline" class="col-11 mx-0 px-1">
+              <mat-label>Reason</mat-label>
+              <input formControlName="reason" type="text" matInput />
+            </mat-form-field>
+
+            <div class="col-1">
+              <button (click)="removeReason(i)" [disabled]="reasons.controls.length <= 1" type="button" color="warn" mat-mini-fab style="margin-top: 10px; margin-left: -10px">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="row px-1" style="margin-top: -10px">
+          <button (click)="addReason()" type="button" mat-raised-button color="primary">Add</button>
+        </div>
+
+      </div>
+
+      <div class="row mt-3">
+        <mat-form-field class="col-12 mx-0 px-1" appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <textarea matInput style="resize: none" rows="5" formControlName></textarea>
+        </mat-form-field>
+      </div>
+
+      <section class="row px-3">
+        <label>
+          <mat-checkbox formControlName="recordBookAttached" color="primary">
+            Relevant pages of the record book to indicate the registration number and the date of registration are attached?</mat-checkbox>
+        </label>
+        <label>
+          <mat-checkbox formControlName="documentsAttached" color="primary">Relevant documents attached (Ex: Medical Certification, Letter of Offer, etc)?</mat-checkbox>
+        </label>
+      </section>
+
+      <div class="row px-1">
+        <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="success" class="alert alert-warning col">Payment details uploaded successfully</div>
+      </div>
+
+      <div class="d-flex flex-row-reverse">
+        <button (click)="submitForm()" type="button" mat-raised-button color="primary" class="mx-1">Submit</button>
+      </div>
+
+
+    </form>
+
+  </div>
+
+</div>

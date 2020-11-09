@@ -1,0 +1,41 @@
+<div class="container-md">
+
+  <div class="jumbotron">
+    <h3>Requests</h3>
+    <p>You can view status of submitted requests.</p>
+  </div>
+
+  <div *ngIf="!progress; else progressBlock">
+
+    <div *ngIf="role === 'student'">
+      Your submissions.
+    </div>
+
+    <div *ngIf="role === 'admin'">
+
+      <div class="nav flex-column nav-pills secondary-nav col-sm-3 mr-0" id="request-navigation" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="upload-request-tab" data-toggle="pill" href="#upload-request" role="tab" aria-controls="upload-request" aria-selected="true">Add Request</a>
+        <a class="nav-link" id="update-status-tab" data-toggle="pill" href="#update-status" role="tab" aria-controls="update-status" aria-selected="false">Update Status</a>
+      </div>
+
+      <div class="tab-content" id="payment-navigation-content">
+
+        <div class="tab-pane fade show active" id="upload-request" role="tabpanel" aria-labelledby="upload-request-tab">
+          <app-add-request></app-add-request>
+        </div>
+
+        <div class="tab-pane fade" id="update-status" role="tabpanel" aria-labelledby="update-status-tab">
+          <app-update-status></app-update-status>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template #progressBlock>
+    <mat-spinner></mat-spinner>
+  </ng-template>
+
+</div>

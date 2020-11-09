@@ -1,0 +1,46 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5>Update request status</h5>
+    <p class="sub-header">Fill this form to update status of the requests made by students.</p>
+  </div>
+
+  <div class="card-body">
+
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+      <mat-progress-bar [hidden]="!updateRequestProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="updateRequestForm">
+
+      <div class="row">
+
+        <mat-form-field class="col-3 mx-0 px-1" appearance="outline">
+          <mat-label>Student ID</mat-label>
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="studentID" placeholder="Ex. 184062V" />
+          <mat-error *ngIf="studentID.touched && studentID.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid student ID</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && !studentID.errors?.pattern && studentDoesNotExist">Student does not exist</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12mx-0 px-1" appearance="outline">
+          <mat-label>Student Name</mat-label>
+          <input type="text" matInput formControlName="studentName" readonly />
+        </mat-form-field>
+
+      </div>
+
+      <div class="row">
+        <mat-form-field class="col-12 mx-0 px-1">
+          <mat-label>Requests</mat-label>
+          <mat-select formControlName="requests">
+            <mat-option *ngFor="let request of requests" [value]="request.requestID">{{ request.date | date: 'MMM d, y' }} | <span *ngFor="let type of request.requestTypes">{{ type.requestType + ', ' }}</span></mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

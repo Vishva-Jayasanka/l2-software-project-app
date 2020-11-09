@@ -389,7 +389,7 @@ export class EditModuleDialogComponent implements OnInit {
               teachers: this.teachers,
               new: this.data.new
             }).subscribe(
-              () => {
+              (response) => {
                 this.dialogRef.close(true);
               },
               error => this.savingError = error

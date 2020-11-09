@@ -20,6 +20,7 @@ import {ResultsComponent} from './home/results/results.component';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
 import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ProfileComponent} from './home/profile/profile.component';
+import {RequestComponent} from './home/request/request.component';
 
 const routes: Routes = [
   {
@@ -89,6 +90,10 @@ const routes: Routes = [
       {
         path: 'profile',
         component: ProfileComponent
+      },
+      {
+        path: 'request',
+        component: RequestComponent
       },
       {
         path: '',
