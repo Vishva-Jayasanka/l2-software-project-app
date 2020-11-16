@@ -220,7 +220,7 @@
             <mat-form-field style="width: 17%; margin-right: 1%">
               <mat-label>Day</mat-label>
               <mat-select formControlName="day">
-                <mat-option *ngFor="let type of daysOfWeek" [value]="type">
+                <mat-option *ngFor="let type of daysOfWeek; let i = index" [value]="i">
                   {{ type }}
                 </mat-option>
               </mat-select>
