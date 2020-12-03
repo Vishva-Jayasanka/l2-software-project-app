@@ -21,6 +21,9 @@ import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payme
 import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ProfileComponent} from './home/profile/profile.component';
 import {RequestComponent} from './home/request/request.component';
+import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
+import {EnrollComponent} from './home/course-module/enroll/enroll.component';
+import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
 
 const routes: Routes = [
   {
@@ -52,10 +55,32 @@ const routes: Routes = [
       {
         path: 'course-modules',
         component: CourseModuleComponent,
-      },
-      {
-        path: 'course-modules/:id',
-        component: CourseModuleComponent
+        children: [
+          {
+            path: 'module-details',
+            component: ModuleDetailComponent
+          },
+          {
+            path: '',
+            redirectTo: 'module-details',
+            pathMatch: 'full'
+          },
+          {
+            path: 'module-details/:moduleCode',
+            component: ModuleDetailComponent
+          },
+          {
+            path: 'new-module',
+            component: NewModuleComponent
+          },
+          {
+            path: 'new-module/:moduleCode',
+            component: NewModuleComponent
+          },
+          {
+            path: 'enroll',
+            component: EnrollComponent
+          }]
       },
       {
         path: 'results',

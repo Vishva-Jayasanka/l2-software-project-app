@@ -21,7 +21,6 @@ import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.co
 import {AttendanceDialogComponent, AttendanceComponent} from './home/attendance/attendance.component';
 import {CourseModuleComponent, DeleteModuleDialogComponent} from './home/course-module/course-module.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
-import {EditModuleDialogComponent} from './home/course-module/course-module.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
@@ -42,6 +41,9 @@ import { ComposerComponent } from './home/notification/composer/composer.compone
 import { RequestComponent } from './home/request/request.component';
 import { AddRequestComponent } from './home/request/add-request/add-request.component';
 import { UpdateStatusComponent } from './home/request/update-status/update-status.component';
+import { EnrollComponent } from './home/course-module/enroll/enroll.component';
+import { NewModuleComponent } from './home/course-module/new-module/new-module.component';
+import { ModuleDetailComponent } from './home/course-module/module-detail/module-detail.component';
 
 
 @NgModule({
@@ -56,7 +58,6 @@ import { UpdateStatusComponent } from './home/request/update-status/update-statu
     CourseModuleComponent,
     AttendanceDialogComponent,
     TimetableComponent,
-    EditModuleDialogComponent,
     DeleteModuleDialogComponent,
     UploadAttendanceComponent,
     EditAttendanceComponent,
@@ -76,7 +77,10 @@ import { UpdateStatusComponent } from './home/request/update-status/update-statu
     ComposerComponent,
     RequestComponent,
     AddRequestComponent,
-    UpdateStatusComponent
+    UpdateStatusComponent,
+    EnrollComponent,
+    NewModuleComponent,
+    ModuleDetailComponent
   ],
   imports: [
     BrowserModule,

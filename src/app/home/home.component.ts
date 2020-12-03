@@ -4,6 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ProfilePictureComponent} from './profile/profile-picture/profile-picture.component';
 import {DataService} from '../_services/data.service';
 import {UserDataService} from '../_services/user-data.service';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,15 +20,89 @@ export class HomeComponent implements OnInit {
   hidden = false;
   user;
   ROUTS = [
-    {component: 'CourseModuleComponent', route: 'course-modules', icon: 'grade', label: 'Course Modules'},
-    {component: 'ResultsComponent', route: 'results', icon: 'assessment', label: 'Exam Results'},
-    {component: 'AttendanceComponent', route: 'attendance', icon: 'assignment_turned_in', label: 'Attendance'},
-    {component: 'TimetableComponent', route: 'timetable', icon: 'watch_later', label: 'Timetable'},
-    {component: 'PaymentComponent', route: 'payment', icon: 'monetization_on', label: 'Payment'},
-    {component: 'RequestComponent', route: 'request', icon: 'description', label: 'Requests'}
-  ];
-  ADMIN_ROUTS = [
-    {component: 'RegistrationComponent', route: 'registration', icon: 'how_to_reg', label: 'Registration'}
+    {
+      component: 'CourseModuleComponent',
+      route: 'course-modules',
+      icon: 'grade',
+      label: 'Course Modules',
+      children: [{
+        component: 'NewModuleComponent',
+        route: 'new-module',
+        label: 'Add New Module'
+      }, {
+        component: 'EnrollComponent',
+        route: 'enroll',
+        label: 'Enroll Students'
+      }]
+    }, {
+      component: 'ResultsComponent',
+      route: 'results',
+      icon: 'assessment',
+      label: 'Exam Results',
+      children: [{
+        component: 'ViewResultComponent',
+        route: 'view-results',
+        label: 'View Results'
+      }, {
+        component: 'UploadResultComponent',
+        route: 'upload-result',
+        label: 'Upload Results'
+      }, {
+        component: 'EditResultComponent',
+        route: 'edit-results',
+        label: 'Edit Results'
+      }]
+    }, {
+      component: 'AttendanceComponent',
+      route: 'attendance',
+      icon: 'assignment_turned_in',
+      label: 'Attendance',
+      children: [{
+        component: 'ViewAttendanceComponent',
+        route: 'view-attendance',
+        label: 'View Attendance'
+      }, {
+        component: 'UploadAttendanceComponent',
+        route: 'upload-attendance',
+        label: 'Upload Attendance'
+      }, {
+        component: 'EditAttendanceModule',
+        route: 'edit-attendance',
+        label: 'Edit Attendance'
+      }]
+    }, {
+      component: 'TimetableComponent',
+      route: 'timetable',
+      icon: 'watch_later',
+      label: 'Timetable',
+      children: []
+    }, {
+      component: 'PaymentComponent',
+      route: 'payment',
+      icon: 'monetization_on',
+      label: 'Payment',
+      children: [{
+        component: 'UploadPaymentComponent',
+        route: 'upload-payment',
+        label: 'Upload Payment'
+      }, {
+        component: 'ViewPaymentComponent',
+        route: 'view-payment',
+        label: 'View Payment'
+      }]
+    }, {
+      component: 'RequestComponent',
+      route: 'request',
+      icon: 'description',
+      label: 'Requests',
+      children: []
+    }, {
+      component: 'RegistrationComponent',
+      route: 'registration',
+      icon: 'how_to_reg',
+      label: 'Registration',
+      children: []
+    }
   ];
 
   @HostListener('window:resize', ['$event'])
@@ -37,6 +112,7 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
+    private router: Router,
     private authentication: AuthenticationService,
     public dialog: MatDialog,
     private data: DataService,
@@ -44,6 +120,11 @@ export class HomeComponent implements OnInit {
   ) {
     this.widthSidenav = (window.innerWidth) < 850;
     this.widthNotification = (window.innerWidth) < 1170;
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //      this.activeRoute = event.urlAfterRedirects.split('/')[2];
+    //   }
+    // });
   }
 
   ngOnInit(): void {
@@ -54,6 +135,7 @@ export class HomeComponent implements OnInit {
       },
       error => console.log(error)
     );
+    console.log(this.router.url);
   }
 
   openDialog() {

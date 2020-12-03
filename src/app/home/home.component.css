@@ -86,3 +86,8 @@ button:focus {
   transition: right 0.2s;
 }
 
+.sub-menu {
+  transition: height 300ms;
+  overflow: hidden;
+}
+
