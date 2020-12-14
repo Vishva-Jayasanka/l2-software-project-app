@@ -1,1 +1,44 @@
-enroll component works!
+<div class="card">
+
+  <div class="card-header">
+    <h5>Enroll Students</h5>
+    <p class="mb-1">You can enroll students to any module.</p>
+  </div>
+
+  <div class="card-body">
+
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+      <mat-progress-bar [hidden]="!enrollProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="enrollmentForm">
+
+      <div class="row">
+
+        <mat-form-field appearance="fill" class="col-6 mx-0 px-1">
+          <mat-label>Batch</mat-label>
+          <mat-select formControlName="batch" (selectionChange)="getStudents()">
+            <mat-option *ngFor="let batch of batches" [value]="batch">Batch {{ batch }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-6 mx-0 px-1">
+          <mat-label>Semester</mat-label>
+          <mat-select formControlName="semester">
+            <mat-option *ngFor="let semester of semesters; let i = index" [value]="i">{{ semester }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="semester.touched && semester.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row">
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

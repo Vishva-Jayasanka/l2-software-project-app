@@ -133,4 +133,12 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}update-notification-status`, {received});
   }
 
+  getStudentsOfBatch(batch: number) {
+    return this.http.post<any>(`${environment.adminUrl}get-students-of-batch`, {batch});
+  }
+
+  getModulesOfSemester(semester: number) {
+    return this.http.post<any>(`${environment.adminUrl}get-modules-of-semester`, {semester});
+  }
+
 }

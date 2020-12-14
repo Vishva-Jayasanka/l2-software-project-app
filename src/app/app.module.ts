@@ -44,6 +44,8 @@ import { UpdateStatusComponent } from './home/request/update-status/update-statu
 import { EnrollComponent } from './home/course-module/enroll/enroll.component';
 import { NewModuleComponent } from './home/course-module/new-module/new-module.component';
 import { ModuleDetailComponent } from './home/course-module/module-detail/module-detail.component';
+import {UserGuard} from './_helpers/user.guard';
+import { ExamResultsComponent } from './home/results/exam-results/exam-results.component';
 
 
 @NgModule({
@@ -80,7 +82,8 @@ import { ModuleDetailComponent } from './home/course-module/module-detail/module
     UpdateStatusComponent,
     EnrollComponent,
     NewModuleComponent,
-    ModuleDetailComponent
+    ModuleDetailComponent,
+    ExamResultsComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +99,7 @@ import { ModuleDetailComponent } from './home/course-module/module-detail/module
   ],
   providers: [
     AuthenticationGuard,
+    UserGuard,
     AuthenticationService,
     {
       provide: HTTP_INTERCEPTORS,

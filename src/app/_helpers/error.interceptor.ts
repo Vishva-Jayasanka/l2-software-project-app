@@ -3,14 +3,11 @@ import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/com
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
-import {AuthenticationService} from '../_services/authentication.service';
-
 @Injectable()
 
 export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(
-    private authentication: AuthenticationService
   ) {
   }
 

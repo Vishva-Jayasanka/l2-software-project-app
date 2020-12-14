@@ -24,6 +24,10 @@ import {RequestComponent} from './home/request/request.component';
 import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
 import {EnrollComponent} from './home/course-module/enroll/enroll.component';
 import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
+import {UserGuard} from './_helpers/user.guard';
+import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
+import {EditResultComponent} from './home/results/edit-result/edit-result.component';
+import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 
 const routes: Routes = [
   {
@@ -84,7 +88,35 @@ const routes: Routes = [
       },
       {
         path: 'results',
-        component: ResultsComponent
+        component: ResultsComponent,
+        children: [
+          {
+            path: 'exam-results',
+            component: ExamResultsComponent,
+            canActivate: [UserGuard]
+          },
+          {
+            path: '',
+            redirectTo: 'exam-results',
+            pathMatch: 'full'
+          },
+          {
+            path: 'exam-results:moduleCode',
+            component: ExamResultsComponent
+          },
+          {
+            path: 'view-results',
+            component: EditResultComponent
+          },
+          {
+            path: 'upload-results',
+            component: UploadResultComponent
+          },
+          {
+            path: 'edit-results',
+            component: EditResultComponent
+          }
+        ]
       },
       {
         path: 'results/:moduleCode',
