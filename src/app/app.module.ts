@@ -18,7 +18,7 @@ import {ErrorInterceptor} from './_helpers/error.interceptor';
 import {VerificationComponent} from './auth/verification/verification.component';
 import {AuthComponent} from './auth/auth.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
-import {AttendanceDialogComponent, AttendanceComponent} from './home/attendance/attendance.component';
+import {AttendanceComponent} from './home/attendance/attendance.component';
 import {CourseModuleComponent, DeleteModuleDialogComponent} from './home/course-module/course-module.component';
 import {TimetableComponent} from './home/timetable/timetable.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -32,20 +32,21 @@ import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
 import {ViewResultComponent} from './home/results/view-result/view-result.component';
-import { ProfileComponent } from './home/profile/profile.component';
-import { ProfilePictureComponent } from './home/profile/profile-picture/profile-picture.component';
+import {ProfileComponent} from './home/profile/profile.component';
+import {ProfilePictureComponent} from './home/profile/profile-picture/profile-picture.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
 import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
-import { ComposerComponent } from './home/notification/composer/composer.component';
-import { RequestComponent } from './home/request/request.component';
-import { AddRequestComponent } from './home/request/add-request/add-request.component';
-import { UpdateStatusComponent } from './home/request/update-status/update-status.component';
-import { EnrollComponent } from './home/course-module/enroll/enroll.component';
-import { NewModuleComponent } from './home/course-module/new-module/new-module.component';
-import { ModuleDetailComponent } from './home/course-module/module-detail/module-detail.component';
+import {ComposerComponent} from './home/notification/composer/composer.component';
+import {RequestComponent} from './home/request/request.component';
+import {AddRequestComponent} from './home/request/add-request/add-request.component';
+import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
+import {EnrollComponent} from './home/course-module/enroll/enroll.component';
+import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
+import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
 import {UserGuard} from './_helpers/user.guard';
-import { ExamResultsComponent } from './home/results/exam-results/exam-results.component';
+import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
+import {AttendanceDialogComponent, ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
 
 
 @NgModule({
@@ -56,14 +57,14 @@ import { ExamResultsComponent } from './home/results/exam-results/exam-results.c
     VerificationComponent,
     AuthComponent,
     ForgotPasswordComponent,
-    AttendanceComponent,
     CourseModuleComponent,
-    AttendanceDialogComponent,
     TimetableComponent,
     DeleteModuleDialogComponent,
+    AttendanceComponent,
     UploadAttendanceComponent,
     EditAttendanceComponent,
     ViewAttendanceComponent,
+    AttendanceDialogComponent,
     NotificationComponent,
     PaymentComponent,
     NotificationComponent,
@@ -83,7 +84,8 @@ import { ExamResultsComponent } from './home/results/exam-results/exam-results.c
     EnrollComponent,
     NewModuleComponent,
     ModuleDetailComponent,
-    ExamResultsComponent
+    ExamResultsComponent,
+    ModuleAttendanceComponent
   ],
   imports: [
     BrowserModule,

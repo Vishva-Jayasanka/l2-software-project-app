@@ -41,10 +41,16 @@ export interface CalculatedResult {
 })
 export class ResultsComponent implements OnInit {
 
-  constructor() {
+  constructor(
+    private authentication: AuthenticationService
+  ) {
   }
 
   ngOnInit() {
+  }
+
+  get getRole() {
+    return this.authentication.details.role;
   }
 
 }

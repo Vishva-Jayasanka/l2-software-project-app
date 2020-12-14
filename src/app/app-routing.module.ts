@@ -28,6 +28,8 @@ import {UserGuard} from './_helpers/user.guard';
 import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
+import {ViewResultComponent} from './home/results/view-result/view-result.component';
+import {ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
 
 const routes: Routes = [
   {
@@ -40,19 +42,29 @@ const routes: Routes = [
         component: AttendanceComponent,
         children: [
           {
-            path: 'upload-attendance',
-            component: UploadAttendanceComponent,
-            canActivate: [AuthenticationGuard]
+            path: 'module-attendance',
+            component: ModuleAttendanceComponent
           },
           {
-            path: 'edit-attendance',
-            component: EditAttendanceComponent,
-            canActivate: [AuthenticationGuard]
+            path: '',
+            redirectTo: 'module-attendance',
+            pathMatch: 'full'
+          },
+          {
+            path: 'module-attendance/:moduleCode',
+            component: ModuleAttendanceComponent
           },
           {
             path: 'view-attendance',
-            component: ViewAttendanceComponent,
-            canActivate: [AuthenticationGuard]
+            component: ViewAttendanceComponent
+          },
+          {
+            path: 'upload-attendance',
+            component: UploadAttendanceComponent
+          },
+          {
+            path: 'edit-attendance',
+            component: EditAttendanceComponent
           }
         ]
       },
@@ -92,8 +104,7 @@ const routes: Routes = [
         children: [
           {
             path: 'exam-results',
-            component: ExamResultsComponent,
-            canActivate: [UserGuard]
+            component: ExamResultsComponent
           },
           {
             path: '',
@@ -106,7 +117,7 @@ const routes: Routes = [
           },
           {
             path: 'view-results',
-            component: EditResultComponent
+            component: ViewResultComponent
           },
           {
             path: 'upload-results',

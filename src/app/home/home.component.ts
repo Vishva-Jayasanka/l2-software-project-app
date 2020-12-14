@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
         label: 'View Results'
       }, {
         component: 'UploadResultComponent',
-        route: 'upload-result',
+        route: 'upload-results',
         label: 'Upload Results'
       }, {
         component: 'EditResultComponent',
@@ -58,15 +58,15 @@ export class HomeComponent implements OnInit {
       icon: 'assignment_turned_in',
       label: 'Attendance',
       children: [{
-        component: 'ViewAttendanceComponent',
+        component: 'ViewAttendance',
         route: 'view-attendance',
         label: 'View Attendance'
       }, {
-        component: 'UploadAttendanceComponent',
+        component: 'UploadAttendance',
         route: 'upload-attendance',
         label: 'Upload Attendance'
       }, {
-        component: 'EditAttendanceModule',
+        component: 'EditAttendance',
         route: 'edit-attendance',
         label: 'Edit Attendance'
       }]
