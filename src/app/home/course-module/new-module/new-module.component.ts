@@ -18,38 +18,24 @@ export class NewModuleComponent implements OnInit {
 
   selectable = true;
   removable = true;
+  progress = false;
+  savingData = false;
+  moduleExists = false;
 
+  years = YEARS;
+  savingError = '';
+  error = '';
+
+  LECTURE_TYPES: string[] = ['Lecture', 'Lab Session', 'Tutorial'];
+  LECTURE_HALLS: string[] = ['New Auditorium', 'Phase 1 Auditorium', 'L1H01', 'L2H02', 'Lab 1', 'Lab 2', 'Lab 3'];
   routeParameter: string;
-
   teacherCtrl = new FormControl();
   filteredTeachers: Observable<Teacher[]>;
   teachers: Teacher[] = [];
   allTeachers: Teacher[] = [];
   courses: Course[] = COURSES;
-  years = YEARS;
-
-  LECTURE_TYPES: string[] = ['Lecture', 'Lab Session', 'Tutorial'];
-  LECTURE_HALLS: string[] = ['New Auditorium', 'Phase 1 Auditorium', 'L1H01', 'L2H02', 'Lab 1', 'Lab 2', 'Lab 3'];
-
   editModuleForm: FormGroup;
-  progress = false;
-  savingData = false;
-  savingError = '';
-  moduleExists = false;
-  error = '';
-
-  data: ModuleData = {
-    moduleCode: '',
-    moduleName: '',
-    batch: 0,
-    description: '',
-    credits: 0,
-    semester: 0,
-    disabled: false,
-    teachers: [],
-    lectureHours: [],
-    new: true
-  };
+  data: ModuleData;
 
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
@@ -63,68 +49,72 @@ export class NewModuleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progress = true;
-    this.route.params.subscribe(params => this.routeParameter = params.moduleCode);
-    if (this.routeParameter) {
-      this.dataService.getModuleDetails(this.routeParameter).subscribe(
-        response => {
-          this.data = response.moduleDetails;
-          this.data.teachers = response.teachers;
-          this.data.lectureHours = response.lectureHours;
-          this.data.new = false;
-          console.log(this.data);
-        },
-        error => console.log(error)
-      ).add(() => this.getModule());
-    } else {
-      this.getModule();
-    }
-  }
 
-  getModule() {
-    this.teachers = this.data.teachers;
+    this.progress = true;
+    this.data = {moduleCode: '', moduleName: '', description: '', credits: 0, teachers: [], lectureHours: [], new: true};
     this.editModuleForm = this.formBuilder.group({
-      moduleCode: [this.data.moduleCode, [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
-      moduleName: [this.data.moduleName, [Validators.required, Validators.minLength(6)]],
-      batch: [this.data.batch, [Validators.required]],
-      description: [this.data.description, [Validators.required, Validators.minLength(6)]],
-      credits: [this.data.credits, [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
-      semester: [this.data.semester.toString()],
+      moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{4}/)]],
+      moduleName: ['', [Validators.required, Validators.minLength(6)]],
+      description: ['', [Validators.required, Validators.minLength(6)]],
+      credits: ['', [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
       teacher: [''],
       lectureHours: this.formBuilder.array([]),
-      newLectureHours: this.formBuilder.array([]),
-      disabled: [this.data.disabled]
+      newLectureHours: this.formBuilder.array([])
     });
-    this.teacher.markAsTouched();
-    for (const lectureHour of this.data.lectureHours) {
-      this.lectureHours.push(this.newLectureHour(
-        lectureHour.lectureHourID,
-        lectureHour.moduleCode,
-        lectureHour.type,
-        lectureHour.day,
-        lectureHour.lectureHall,
-        lectureHour.startingTime,
-        lectureHour.endingTime
-      ));
-    }
-    this.dataService.getTeachers().subscribe(
+
+    this.route.params.subscribe(params => {
+      this.getModule(params.moduleCode);
+    });
+
+  }
+
+  getModule(moduleCode: string | null) {
+    this.dataService.getModuleDetails(moduleCode).subscribe(
       response => {
-        this.allTeachers = response.teachers;
-        this.filteredTeachers = this.editModuleForm.get('teacher').valueChanges.pipe(
-          startWith(null),
-          map((teacher: string | null) => teacher ? this._filter(teacher) : this.allTeachers.slice()));
-      },
-      error => this.error = error
+        this.data = response.moduleDetails;
+        this.data.teachers = response.teachers;
+        this.data.lectureHours = response.lectureHours;
+        this.data.new = false;
+      }, error => this.error = error
     ).add(() => {
-      this.progress = false;
+
+      this.teachers = this.data.teachers;
+      this.moduleCode.setValue(this.data.moduleCode);
+      this.moduleName.setValue(this.data.moduleName);
+      this.credits.setValue(this.data.credits);
+      this.description.setValue(this.data.description);
+      this.teacher.markAsTouched();
+
+      for (const lectureHour of this.data.lectureHours) {
+        this.lectureHours.push(this.newLectureHour(
+          lectureHour.lectureHourID,
+          lectureHour.moduleCode,
+          lectureHour.type,
+          lectureHour.day,
+          lectureHour.lectureHall,
+          lectureHour.startingTime,
+          lectureHour.endingTime
+        ));
+      }
+
+      this.dataService.getTeachers().subscribe(
+        response => {
+          this.allTeachers = response.teachers;
+          this.filteredTeachers = this.editModuleForm.get('teacher').valueChanges.pipe(
+            startWith(null),
+            map((teacher: string | null) => teacher ? this._filter(teacher) : this.allTeachers.slice()));
+        },
+        error => this.error = error
+      ).add(() => this.progress = false);
+
     });
   }
 
   checkIfModuleExists(value) {
+    this.moduleExists = false;
     this.dataService.checkIfModuleExists(value).subscribe(
       response => {
         if (this.data.new && !response.status) {
-          this.moduleCode.setErrors({incorrect: false});
           this.moduleExists = true;
         }
       },
@@ -157,14 +147,7 @@ export class NewModuleComponent implements OnInit {
     this.newLectureHours.push(this.newLectureHour(0, '', 'Lecture', 1, 'Lab 1', '08:15', '10:15'));
   }
 
-  newLectureHour(lectureHourID: number,
-                 moduleCode: string,
-                 type: string,
-                 day: number,
-                 lectureHall: string,
-                 startingTime: string,
-                 endingTime: string
-  ): FormGroup {
+  newLectureHour(lectureHourID: number, moduleCode: string, type: string, day: number, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
     return this.formBuilder.group({
       lectureHourID: [lectureHourID],
       moduleCode: [moduleCode],
@@ -240,16 +223,8 @@ export class NewModuleComponent implements OnInit {
     return this.editModuleForm.get('moduleName');
   }
 
-  get batch() {
-    return this.editModuleForm.get('batch');
-  }
-
   get credits() {
     return this.editModuleForm.get('credits');
-  }
-
-  get semester() {
-    return this.editModuleForm.get('semester');
   }
 
   get description() {

@@ -1,27 +1,13 @@
 import {Component, ElementRef, ViewChild, OnInit, Inject} from '@angular/core';
-import {FormBuilder, FormArray, FormGroup, Validators, FormControl} from '@angular/forms';
-import {MatAutocomplete} from '@angular/material/autocomplete';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
 import {DataService} from '../../_services/data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {Course, COURSES} from '../registration/registration.component';
-import {YEARS} from '../../_services/shared.service';
-
-export interface ResultData {
-  module;
-  results: [];
-}
 
 export interface ModuleData {
   moduleCode: string;
   moduleName: string;
-  batch: number;
   description: string;
   credits: number;
-  semester: number;
-  disabled: boolean;
   teachers: Teacher[];
   lectureHours: LectureHour[];
   new: boolean;
