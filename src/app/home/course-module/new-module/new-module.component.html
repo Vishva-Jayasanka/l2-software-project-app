@@ -7,6 +7,10 @@
 
   <div class="card-body">
 
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+      <mat-progress-bar [hidden]="!editModuleProgress" mode="query"></mat-progress-bar>
+    </div>
+
     <mat-spinner style="margin: 100px auto auto" [hidden]="!progress"></mat-spinner>
 
     <form [formGroup]="editModuleForm" [hidden]="progress">
@@ -15,7 +19,7 @@
 
           <mat-form-field appearance="outline" class="col-4 mx-0 px-1" id="form">
             <mat-label>Module Code</mat-label>
-            <input type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100" (focusout)="checkIfModuleExists($event.target.value)">
+            <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100">
             <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">Required</mat-error>
             <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.pattern">Invalid format</mat-error>
           </mat-form-field>
@@ -71,11 +75,7 @@
           </p>
 
           <mat-chip-list style="margin-bottom: 15px" #teacherList aria-label="Teacher Selection">
-            <mat-chip *ngFor="let teacher of teachers"
-                      [selectable]="selectable"
-                      [removable]="removable"
-                      (removed)="removeTeacher(teacher)"
-                      class="mat-chip-edit-details">
+            <mat-chip *ngFor="let teacher of teachers" [selectable]="selectable" [removable]="removable" (removed)="removeTeacher(teacher)" class="mat-chip-edit-details">
               {{ teacher.username }} | {{ teacher.firstName + ' ' + teacher.lastName }}
               <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
@@ -84,12 +84,7 @@
           <mat-form-field appearance="outline" class="input-field"
                           style="margin-bottom: -5px !important; width: 89%; margin-right: 2%;">
             <mat-label>Teacher ID</mat-label>
-            <input id="selectTeacher"
-                   matInput
-                   placeholder="Ex: 184061R"
-                   type="text"
-                   formControlName="teacher"
-                   [matAutocomplete]="auto"/>
+            <input id="selectTeacher" matInput placeholder="Ex: 184061R" type="text" formControlName="teacher" [matAutocomplete]="auto"/>
             <mat-error *ngIf="teacher.errors?.incorrect">Invalid teacher id</mat-error>
             <mat-autocomplete #auto='matAutocomplete'>
               <mat-option *ngFor="let teacher of filteredTeachers | async"
@@ -245,7 +240,7 @@
 
       <div class="d-flex flex-row-reverse mt-0">
         <button mat-raised-button color="primary" (click)="submitForm()">
-          <span *ngIf="savingData" class="spinner-border spinner-border-sm mr-1"></span>
+          <span *ngIf="editModuleProgress" class="spinner-border spinner-border-sm mr-1"></span>
           Save
         </button>
         <button mat-flat-button>Cancel</button>

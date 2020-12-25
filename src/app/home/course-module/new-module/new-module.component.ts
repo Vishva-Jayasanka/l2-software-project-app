@@ -1,11 +1,11 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {Course, COURSES} from '../../registration/registration.component';
 import {YEARS} from '../../../_services/shared.service';
 import {MatAutocomplete} from '@angular/material/autocomplete';
 import {DataService} from '../../../_services/data.service';
-import {map, startWith} from 'rxjs/operators';
+import {debounceTime, map, startWith, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DAYS_OF_WEEK, ModuleData, Teacher} from '../course-module.component';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 
@@ -19,7 +19,7 @@ export class NewModuleComponent implements OnInit {
   selectable = true;
   removable = true;
   progress = false;
-  savingData = false;
+  editModuleProgress = false;
   moduleExists = false;
 
   years = YEARS;
@@ -36,6 +36,8 @@ export class NewModuleComponent implements OnInit {
   courses: Course[] = COURSES;
   editModuleForm: FormGroup;
   data: ModuleData;
+  term$ = new Subject<string>();
+  private searchSubscription: Subscription;
 
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
@@ -46,6 +48,14 @@ export class NewModuleComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
+    this.searchSubscription = this.term$.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      switchMap(moduleCode => {
+        this.checkModule(moduleCode);
+        return EMPTY;
+      })
+    ).subscribe();
   }
 
   ngOnInit() {
@@ -105,21 +115,28 @@ export class NewModuleComponent implements OnInit {
             map((teacher: string | null) => teacher ? this._filter(teacher) : this.allTeachers.slice()));
         },
         error => this.error = error
-      ).add(() => this.progress = false);
-
+      ).add(() => {
+        this.editModuleProgress = false;
+        this.progress = false;
+      });
     });
   }
 
-  checkIfModuleExists(value) {
+  checkModule(moduleCode: string) {
     this.moduleExists = false;
-    this.dataService.checkIfModuleExists(value).subscribe(
-      response => {
-        if (this.data.new && !response.status) {
-          this.moduleExists = true;
-        }
-      },
-      error => this.error = error
-    );
+    this.error = '';
+    if (moduleCode !== '') {
+      this.dataService.checkIfModuleExists(moduleCode).subscribe(
+        response => {
+          if (this.data.new && !response.status) {
+            this.moduleExists = true;
+          }
+        },
+        error => this.error = error
+      ).add(() => this.editModuleProgress = false);
+    } else {
+      this.editModuleProgress = false;
+    }
   }
 
   addTeacher(): void {
@@ -179,7 +196,7 @@ export class NewModuleComponent implements OnInit {
         if (this.lectureHours.length !== 0 || this.newLectureHours.length !== 0) {
           const res = confirm('Are you sure you want to save changes?');
           if (res) {
-            this.savingData = true;
+            this.editModuleProgress = true;
             this.dataService.editModule({
               moduleDetails: this.editModuleForm.value,
               teachers: this.teachers,
@@ -189,7 +206,7 @@ export class NewModuleComponent implements OnInit {
                 this.router.navigate(['course-modules/module-details', {moduleCode: this.moduleCode.value}]);
               },
               error => this.savingError = error
-            ).add(() => this.savingData = false);
+            ).add(() => this.editModuleProgress = false);
           }
         } else {
           this.elementRef.nativeElement.querySelector('#newLectureHours').scrollIntoView({behavior: 'smooth'});
@@ -202,6 +219,10 @@ export class NewModuleComponent implements OnInit {
       this.editModuleForm.markAllAsTouched();
       this.scrollToFirstInvalidControl();
     }
+  }
+
+  toggleProgress() {
+    this.editModuleProgress = true;
   }
 
   scrollToFirstInvalidControl() {
