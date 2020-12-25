@@ -5,34 +5,7 @@
     <p>You can perform any payment related tasks</p>
   </div>
 
-  <div *ngIf="!progress; else progressBlock">
-
-    <div *ngIf="getRole === 'admin'">
-
-      <div class="nav flex-column nav-pills secondary-nav col-sm-3 mr-0" id="payment-navigation" role="tablist" aria-orientation="vertical">
-        <a class="nav-link active" id="upload-payment-tab" data-toggle="pill" href="#upload-payment" role="tab" aria-controls="upload-payment" aria-selected="true">Upload Payments</a>
-        <a class="nav-link" id="view-payment-tab" data-toggle="pill" href="#view-payment" role="tab" aria-controls="view-payment" aria-selected="false">View Payments</a>
-      </div>
-
-      <div class="tab-content" id="payment-navigation-content">
-
-        <div class="tab-pane fade show active" id="upload-payment" role="tabpanel" aria-labelledby="upload-payment-tab">
-          <app-upload-payment></app-upload-payment>
-        </div>
-
-        <div class="tab-pane fade" id="view-payment" role="tabpanel" aria-labelledby="view-payment-tab">
-          <app-view-payment></app-view-payment>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <ng-template #progressBlock>
-    <mat-spinner></mat-spinner>
-  </ng-template>
+  <router-outlet></router-outlet>
 
 </div>
 

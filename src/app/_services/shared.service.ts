@@ -9,3 +9,8 @@ export function glow(elementRef: ElementRef, id: string, color: string) {
     2000
   );
 }
+
+export function scrollToFirstInvalidElement(elementRef: ElementRef) {
+  const firstInvalidControl: HTMLElement = elementRef.nativeElement.querySelector('form .ng-invalid');
+  firstInvalidControl.scrollIntoView({behavior: 'smooth'});
+}

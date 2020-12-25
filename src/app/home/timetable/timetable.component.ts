@@ -1,8 +1,7 @@
-import {Component, enableProdMode, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataService} from '../../_services/data.service';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {Time} from '@angular/common';
 
 export interface TimeSlot {
   moduleCode: string;
@@ -12,6 +11,10 @@ export interface TimeSlot {
   endingTime: string;
   day: number;
   lectureHall: string;
+}
+
+export interface TimeTable {
+  timeSlots: TimeSlot[];
 }
 
 @Component({
@@ -82,7 +85,8 @@ export class TimetableComponent implements OnInit {
 
   getPosition(time: string): number {
     const components = time.split(/[\s:]/);
-    return parseInt(components[0], 10) * 60 + parseInt(components[1], 10) + ((components[3] === 'PM' && components[0] !== '12') ? 720 : 0) - 495;
+    return parseInt(components[0], 10) * 60 + parseInt(components[1], 10) +
+      ((components[3] === 'PM' && components[0] !== '12') ? 720 : 0) - 495;
   }
 
 }

@@ -82,20 +82,32 @@ export class HomeComponent implements OnInit {
       icon: 'monetization_on',
       label: 'Payment',
       children: [{
+        component: 'ViewPaymentComponent',
+        route: 'view-payment',
+        label: 'View Payment'
+      }, {
         component: 'UploadPaymentComponent',
         route: 'upload-payment',
         label: 'Upload Payment'
       }, {
-        component: 'ViewPaymentComponent',
-        route: 'view-payment',
-        label: 'View Payment'
+        component: 'EditPaymentComponent',
+        route: 'edit-payment',
+        label: 'Edit Payment'
       }]
     }, {
       component: 'RequestComponent',
       route: 'request',
       icon: 'description',
       label: 'Requests',
-      children: []
+      children: [{
+        component: 'AddRequestComponent',
+        route: 'add-request',
+        label: 'Add Request'
+      }, {
+        component: 'UpdateStatusComponent',
+        route: 'update-status',
+        label: 'Update Status'
+      }]
     }, {
       component: 'RegistrationComponent',
       route: 'registration',

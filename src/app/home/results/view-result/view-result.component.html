@@ -1,1 +1,98 @@
-<p>view-result works!</p>
+<div class="card">
+
+  <div class="card-header">
+    <h5>View Results</h5>
+    <p class="sub-header">View Exam results of any student or module</p>
+  </div>
+
+  <div class="card-body">
+
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+      <mat-progress-bar [hidden]="!viewResultsProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="viewResultsForm">
+
+      <div class="row mb-2">
+
+        <mat-form-field class="col-4 mx-0 px-1" appearance="outline">
+          <mat-label>Module Code</mat-label>
+          <input (keyup)="termModuleCode$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100" />
+          <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-md-8 mx-0 px-1" appearance="outline">
+          <mat-label>Module Name</mat-label>
+          <input type="text" matInput formControlName="moduleName" [readonly]="true" />
+        </mat-form-field>
+
+      </div>
+
+      <div class="row mb-2">
+
+        <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
+          <mat-label>Student ID</mat-label>
+          <input (keyup)="termStudentID$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="studentID" placeholder="Ex: 184061R" />
+          <mat-error *ngIf="studentID.touched && studentID.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid student ID</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-md-8 mx-0 px-1" appearance="outline">
+          <mat-label>Student Name</mat-label>
+          <input type="text" matInput formControlName="studentName" [readonly]="true" />
+        </mat-form-field>
+
+      </div>
+
+      <div class="row px-1 mb-4">
+        <button [disabled]="moduleCode.invalid && studentID.invalid" (click)="getResults()" mat-raised-button color="primary" class="mx-2" type="button">View</button>
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="moduleCodeNotFound" class="alert alert-warning col">No module found with this module code</div>
+      </div>
+
+      <div id="view_results" style="margin: 15px -10px 0 -10px">
+
+        <p>View Results</p>
+
+        <div *ngIf="results.length !== 0">
+
+          <table class="table table-sm">
+
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Index Number</th>
+              <th scope="col">Module</th>
+              <th scope="col">Marks</th>
+              <th scope="col">Date</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let result of results; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>184061R</td>
+              <td>{{ result.moduleName }}</td>
+              <td>{{ result.mark }}</td>
+              <td>{{ result.date | date: 'dd/mm/yyyy' }}</td>
+            </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

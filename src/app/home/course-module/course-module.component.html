@@ -2,9 +2,9 @@
 
   <div class="jumbotron">
     <h3 style="margin-top: 0">Course Modules</h3>
-    <p *ngIf="getRole === 'student'">All the modules you registered so far appear here</p>
-    <p *ngIf="getRole === 'teacher'">All the modules you assigned to</p>
-    <p *ngIf="getRole === 'admin'">You can add new modules or modify existing modules</p>
+    <p *ngIf="getRole === 'Student'">All the modules you registered so far appear here</p>
+    <p *ngIf="getRole === 'Teacher'">All the modules you assigned to</p>
+    <p *ngIf="getRole === 'Admin'">You can add new modules or modify existing modules</p>
   </div>
 
   <router-outlet></router-outlet>

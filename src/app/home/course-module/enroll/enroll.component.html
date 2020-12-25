@@ -13,28 +13,107 @@
 
     <form [formGroup]="enrollmentForm">
 
-      <div class="row">
+      <div class="row mb-2">
 
-        <mat-form-field appearance="fill" class="col-6 mx-0 px-1">
-          <mat-label>Batch</mat-label>
-          <mat-select formControlName="batch" (selectionChange)="getStudents()">
-            <mat-option *ngFor="let batch of batches" [value]="batch">Batch {{ batch }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
+        <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
+          <mat-label>Registration Number</mat-label>
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput
+                 formControlName="studentID" placeholder="Ex: 184061R"/>
+          <mat-error *ngIf="studentID.touched && studentID.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid
+            registration number
+          </mat-error>
+          <mat-error
+            *ngIf="studentID.touched && !studentID.errors?.required && !studentID.errors?.pattern && studentIDNotFound">
+            Student ID is not found
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" class="col-6 mx-0 px-1">
-          <mat-label>Semester</mat-label>
-          <mat-select formControlName="semester">
-            <mat-option *ngFor="let semester of semesters; let i = index" [value]="i">{{ semester }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="semester.touched && semester.errors?.required">This field is required</mat-error>
+        <mat-form-field class="col-md-8 mx-0 px-1" appearance="outline">
+          <mat-label>Student Name</mat-label>
+          <input type="text" matInput formControlName="studentName" [readonly]="true"/>
         </mat-form-field>
 
       </div>
 
-      <div class="row">
+      <div class="row px-1">
+        <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
+      </div>
 
+      <div class="row mb-2">
+
+        <mat-form-field class="col-md-12 mx-0 px-1" appearance="outline">
+          <mat-label>Course</mat-label>
+          <input type="text" matInput formControlName="course" [readonly]="true"/>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row mb-2">
+
+        <mat-form-field class="col-md-6 mx-0 px-1" appearance="outline">
+          <mat-label>Semester</mat-label>
+          <mat-select formControlName="semester">
+            <mat-option [value]="1">Level 1 Semester 1</mat-option>
+            <mat-option [value]="2">Level 1 Semester 2</mat-option>
+            <mat-option [value]="3">Level 2 Semester 1</mat-option>
+            <mat-option [value]="4">Level 2 Semester 2</mat-option>
+          </mat-select>
+          <mat-error *ngIf="semester.touched && semester.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-md-6 mx-0 px-1" appearance="outline">
+          <mat-label>Academic Year</mat-label>
+          <mat-select formControlName="academicYear">
+            <mat-option *ngFor="let year of academicYears" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="academicYear.touched && academicYear.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row mb-2">
+
+        <mat-form-field class="col-md-12 mx-0 px-1" appearance="fill">
+          <mat-label>Favorite Fruits</mat-label>
+          <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip
+              *ngFor="let module of modules"
+              [selectable]="true"
+              [removable]="true"
+              (removed)="remove(module)">
+              {{module.moduleCode}} | {{module.moduleName}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input
+              formControlName="inputModule"
+              placeholder="New fruit..."
+              #fruitInput
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let module of filteredModules | async" [value]="module.moduleCode">
+              {{module.moduleCode}} | {{module.moduleName}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="success" class="alert alert-success col">Successfully enrolled</div>
+      </div>
+
+      <div class="d-flex flex-row-reverse my-0">
+        <button (click)="submitForm()" type="button" mat-raised-button color="primary" class="mx-1">Enroll</button>
+        <button (click)="resetForm()" type="button" mat-flat-button class="mx-1">Reset</button>
       </div>
 
     </form>

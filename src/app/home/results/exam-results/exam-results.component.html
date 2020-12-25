@@ -1,76 +1,76 @@
-<div class="container-md">
+<div class="row px-3">
+  <div *ngIf="resultsError" class="alert alert-danger mt-1 col">{{ resultsError }}</div>
+</div>
 
-  <div class="jumbotron">
-    <h3>Exam Results</h3>
-    <p>You can perform any exam result related tasks</p>
-  </div>
+<mat-form-field [hidden]="getRole === 'admin'" class="filter">
+  <mat-label>Filter</mat-label>
+  <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
+</mat-form-field>
 
-  <div class="row px-3">
-    <div *ngIf="resultsError" class="alert alert-danger mt-1 col">{{ resultsError }}</div>
-  </div>
+<div *ngIf="!progress; else progressBlock" id="accordion">
 
-  <mat-form-field [hidden]="getRole === 'admin'" class="filter">
-    <mat-label>Filter</mat-label>
-    <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
-  </mat-form-field>
+  <div *ngFor="let module of filteredResults">
 
-  <div *ngIf="!progress; else progressBlock" id="accordion">
+    <div *ngIf="module.marks.length !== 0" class="card" style="margin-bottom: 15px">
 
-    <div *ngFor="let module of filteredResults" >
+      <h5 class="card-header accordion-header" [attr.id]="'heading' + module.moduleCode + module.batch"
+          data-toggle="collapse" [attr.data-target]="'#collapse' + module.moduleCode + module.batch"
+          aria-expanded="false" [attr.aria-controls]="'collapse' + module.moduleCode + module.batch">
+        <span style="float: left">{{ module.moduleName }} ({{ module.batch }})</span>
+        <span style="float: right">{{ module.moduleCode }}</span>
+      </h5>
 
-      <div *ngIf="module.marks.length !== 0" class="card" style="margin-bottom: 15px">
+      <div [attr.id]="'collapse' + module.moduleCode + module.batch" class="collapse"
+           [class.show]="moduleCode === module.moduleCode"
+           [attr.aria-labelledby]="'heading' + module.moduleCode + module.batch" data-parent="#accordion">
+        <div class="card-body" style="padding: 0">
+          <table class="table table-hover" style="margin-bottom: 0; width: 100%">
 
-        <h5 class="card-header accordion-header"  [attr.id]="'heading' + module.moduleCode + module.batch" data-toggle="collapse" [attr.data-target]="'#collapse' + module.moduleCode + module.batch" aria-expanded="false" [attr.aria-controls]="'collapse' + module.moduleCode + module.batch">
-          <span style="float: left">{{ module.moduleName }} ({{ module.batch }})</span>
-          <span style="float: right">{{ module.moduleCode }}</span>
-        </h5>
+            <thead class="thead-light">
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Date Held</th>
+              <th scope="col">Marks</th>
+              <th scope="col">Grade</th>
+              <th scope="col">Allocation</th>
+            </tr>
+            </thead>
 
-        <div [attr.id]="'collapse' + module.moduleCode + module.batch" class="collapse" [class.show]="moduleCode === module.moduleCode" [attr.aria-labelledby]="'heading' + module.moduleCode + module.batch" data-parent="#accordion">
-          <div class="card-body" style="padding: 0">
-            <table class="table table-hover" style="margin-bottom: 0; width: 100%">
+            <tbody>
 
-              <thead class="thead-light">
-              <tr>
-                <th scope="col">Type</th>
-                <th scope="col">Date Held</th>
-                <th scope="col">Marks</th>
-                <th scope="col">Grade</th>
-                <th scope="col">Allocation</th>
-              </tr>
-              </thead>
+            <tr *ngFor="let record of module.marks">
+              <td>{{ record.type }}</td>
+              <td>{{ record.dateHeld | date: 'MMM d, y'}}</td>
+              <td *ngIf="record.mark !== null; else notAvailableBlock">
+                <mat-chip-list aria-label="marks">
+                  <mat-chip [style.background-color]="getColor(record.mark)"
+                            style="color: white; width: 50px">{{ record.mark }}</mat-chip>
+                </mat-chip-list>
+              </td>
+              <ng-template #notAvailableBlock>
+                <td><i>Not Available</i></td>
+              </ng-template>
+              <td>
+                <mat-chip-list aria-label="grade">
+                  <mat-chip [style.background-color]="getColorGrade(record.grade, true)"
+                            style="color: white; width: 50px">{{ record.grade }}</mat-chip>
+                </mat-chip-list>
+              </td>
+              <td>{{ record.allocation }}</td>
+            </tr>
 
-              <tbody>
+            </tbody>
+            <tfoot>
+            <tr [style.background-color]="getColorGrade(module.grade, false)">
+              <td *ngIf="module.grade !== null; else finalGradeNotAvailableBlock" colspan="5"><span
+                style="font-size: 17px; font-weight: 800">Final Grade : {{ module.grade }}</span></td>
+              <ng-template #finalGradeNotAvailableBlock>
+                <td colspan="5" class="bg-light">Final Grade: <i>Not Available</i></td>
+              </ng-template>
+            </tr>
+            </tfoot>
 
-              <tr *ngFor="let record of module.marks">
-                <td>{{ record.type }}</td>
-                <td>{{ record.dateHeld | date: 'MMM d, y'}}</td>
-                <td *ngIf="record.mark !== null; else notAvailableBlock">
-                  <mat-chip-list aria-label="marks">
-                    <mat-chip [style.background-color] = "getColor(record.mark)" style="color: white; width: 50px">{{ record.mark }}</mat-chip>
-                  </mat-chip-list>
-                </td>
-                <ng-template #notAvailableBlock><td><i>Not Available</i></td></ng-template>
-                <td>
-                  <mat-chip-list aria-label="grade">
-                    <mat-chip [style.background-color] = "getColorGrade(record.grade, true)" style="color: white; width: 50px">{{ record.grade }}</mat-chip>
-                  </mat-chip-list>
-                </td>
-                <td>{{ record.allocation }}</td>
-              </tr>
-
-              </tbody>
-              <tfoot>
-              <tr [style.background-color] = "getColorGrade(module.grade, false)">
-                <td *ngIf="module.grade !== null; else finalGradeNotAvailableBlock" colspan="5"><span style="font-size: 17px; font-weight: 800">Final Grade : {{ module.grade }}</span></td>
-                <ng-template #finalGradeNotAvailableBlock>
-                  <td colspan="5" class="bg-light">Final Grade: <i>Not Available</i></td>
-                </ng-template>
-              </tr>
-              </tfoot>
-
-            </table>
-          </div>
-
+          </table>
         </div>
 
       </div>
@@ -79,8 +79,9 @@
 
   </div>
 
-  <ng-template #progressBlock>
-    <mat-spinner style="margin: 100px auto"></mat-spinner>
-  </ng-template>
-
 </div>
+
+<ng-template #progressBlock>
+  <mat-spinner style="margin: 100px auto"></mat-spinner>
+</ng-template>
+

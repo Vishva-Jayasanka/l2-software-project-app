@@ -30,6 +30,11 @@ import {EditResultComponent} from './home/results/edit-result/edit-result.compon
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {ViewResultComponent} from './home/results/view-result/view-result.component';
 import {ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
+import {PaymentDetailsComponent} from './home/payment/payment-details/payment-details.component';
+import {EditPaymentComponent} from './home/payment/edit-payment/edit-payment.component';
+import {SubmitedRequestsComponent} from './home/request/submited-requests/submited-requests.component';
+import {AddRequestComponent} from './home/request/add-request/add-request.component';
+import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
 
 const routes: Routes = [
   {
@@ -142,12 +147,25 @@ const routes: Routes = [
         component: PaymentComponent,
         children: [
           {
-            path: 'upload-payment',
-            component: UploadPaymentComponent
+            path: 'payment-details',
+            component: PaymentDetailsComponent
+          },
+          {
+            path: '',
+            redirectTo: 'payment-details',
+            pathMatch: 'full'
           },
           {
             path: 'view-payment',
             component: ViewPaymentComponent
+          },
+          {
+            path: 'upload-payment',
+            component: UploadPaymentComponent
+          },
+          {
+            path: 'edit-payment',
+            component: EditPaymentComponent
           }
         ]
       },
@@ -161,7 +179,26 @@ const routes: Routes = [
       },
       {
         path: 'request',
-        component: RequestComponent
+        component: RequestComponent,
+        children: [
+          {
+            path: 'submitted-requests',
+            component: SubmitedRequestsComponent
+          },
+          {
+            path: '',
+            redirectTo: 'submitted-requests',
+            pathMatch: 'full'
+          },
+          {
+            path: 'add-request',
+            component: AddRequestComponent
+          },
+          {
+            path: 'update-status',
+            component: UpdateStatusComponent
+          }
+        ]
       },
       {
         path: '',

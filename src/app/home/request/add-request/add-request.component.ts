@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, ElementRef, OnInit} from '@angular/core';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
+import {scrollToFirstInvalidElement} from '../../../_services/shared.service';
 
 export interface Request {
   requestTypeID: number;
@@ -16,11 +17,16 @@ export interface Request {
 })
 export class AddRequestComponent implements OnInit {
 
-  addRequestProgress = false;
-  studentDoesNotExist = false;
+  uploadRequestProgress = false;
+  studentIDNotFound = false;
   success = false;
 
-  maxDate = new Date();
+  error = '';
+
+  requestForm: FormGroup;
+  maxDate: Date = new Date();
+  term$ = new Subject<string>();
+  private searchSubscription: Subscription;
 
   requests: Request[] = [
     {requestTypeID: 1, requestType: 'Extension -Permitted Duration up to maximum duration'},
@@ -32,15 +38,10 @@ export class AddRequestComponent implements OnInit {
     {requestTypeID: 7, requestType: 'Other(Please Specify)'}
   ];
 
-  error = '';
-
-  requestForm: FormGroup;
-  term$ = new Subject<string>();
-  private searchSubscription: Subscription;
-
   constructor(
     private formBuilder: FormBuilder,
-    private data: DataService
+    private data: DataService,
+    private elementRef: ElementRef
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -48,7 +49,7 @@ export class AddRequestComponent implements OnInit {
       switchMap(studentID => {
         this.error = '';
         this.success = false;
-        this.studentDoesNotExist = false;
+        this.studentIDNotFound = false;
         this.checkStudentID(studentID);
         return EMPTY;
       })
@@ -57,24 +58,22 @@ export class AddRequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
-      studentID: ['', [Validators.required, Validators.pattern(/^[0-9]{6}[A-Z]$/)]],
-      studentName: [''],
-      course: [''],
-      requestDate: ['', [Validators.required]],
-      request: ['', Validators.required],
-      reasons: this.formBuilder.array([this.formBuilder.group({
-        reason: ['', Validators.required]
-      })]),
-      remarks: ['', [Validators.required]],
+      studentID: ['', [Validators.required, Validators.pattern(/^[0-9]{6}[A-Za-z]/)]],
+      studentName: ['', [Validators.required]],
+      course: ['', [Validators.required]],
+      submissionDate: ['', [Validators.required]],
+      request: ['', [Validators.required]],
+      reasons: this.formBuilder.array([new FormControl('', [Validators.required])]),
+      remarks: [''],
       recordBookAttached: [false],
       documentsAttached: [false]
     });
   }
 
-  checkStudentID(studentID: string) {
+  checkStudentID(studentID: string): void {
     this.success = false;
     this.error = '';
-    this.studentDoesNotExist = false;
+    this.studentIDNotFound = false;
     if (studentID) {
       this.data.checkStudentID(studentID).subscribe(
         response => {
@@ -84,53 +83,70 @@ export class AddRequestComponent implements OnInit {
           } else {
             this.studentName.reset();
             this.course.reset();
-            this.studentDoesNotExist = true;
+            this.studentIDNotFound = true;
           }
         },
         error => {
           this.error = error;
         }
-      ).add(() => this.addRequestProgress = false);
+      ).add(() => this.uploadRequestProgress = false);
     } else {
-      this.addRequestProgress = false;
+      this.uploadRequestProgress = false;
     }
   }
 
-  submitForm() {
+  submitForm(): void {
+    if (this.requestForm.valid) {
+      if (confirm('Are you sure you want to submit this form?')) {
+        this.uploadRequestProgress = true;
+        this.data.uploadRequest(this.requestForm.value).subscribe(
+          response => console.log(response),
+          error => console.log(error)
+        ).add(() => this.uploadRequestProgress = false);
+      }
+    } else {
+      scrollToFirstInvalidElement(this.elementRef);
+    }
   }
 
-  addReason() {
-    this.reasons.push(this.formBuilder.group({
-      reason: ['', [Validators.required]]
-    }));
+  toggleProgress(): void {
+    this.uploadRequestProgress = true;
+  }
+
+  addReason(): void {
+    this.reasons.push(new FormControl('', [Validators.required]));
   }
 
   removeReason(i: number): void {
     this.reasons.controls.splice(i, i + 1);
   }
 
-  toggleProgress() {
-    this.addRequestProgress = true;
-  }
-
-  get studentID() {
+  get studentID(): AbstractControl {
     return this.requestForm.get('studentID');
   }
 
-  get studentName() {
+  get studentName(): AbstractControl {
     return this.requestForm.get('studentName');
   }
 
-  get course() {
+  get course(): AbstractControl {
     return this.requestForm.get('course');
   }
 
-  get requestDate() {
-    return this.requestForm.get('requestDate');
+  get submissionDate(): AbstractControl {
+    return this.requestForm.get('submissionDate');
   }
 
-  get request() {
+  get request(): AbstractControl {
     return this.requestForm.get('request');
+  }
+
+  get recordBookAttached(): AbstractControl {
+    return this.requestForm.get('recordBookAttached');
+  }
+
+  get documentsAttached(): AbstractControl {
+    return this.requestForm.get('documentsAttached');
   }
 
   get reasons(): FormArray {
