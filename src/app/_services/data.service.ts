@@ -146,4 +146,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}upload-request`, {request});
   }
 
+  enrollStudent(enrollmentForm: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}enroll-student`, enrollmentForm);
+  }
+
 }

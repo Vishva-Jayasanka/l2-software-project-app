@@ -8,7 +8,7 @@ import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/a
 import {MatChipInputEvent} from '@angular/material/chips';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {YEARS} from '../../../_services/shared.service';
+import {scrollToFirstInvalidElement, YEARS} from '../../../_services/shared.service';
 
 export interface Student {
   studentID: string;
@@ -43,18 +43,15 @@ export class EnrollComponent implements OnInit {
 
   filteredModules: Observable<Module[]>;
   modules: Module[] = [];
-  allModules: Module[] = [
-    {moduleCode: 'IN5101', moduleName: 'Object Oriented Programming'},
-    {moduleCode: 'IN5110', moduleName: 'Distributed Systems and Networking'},
-    {moduleCode: 'IN5210', moduleName: 'Programming and Program Design'}
-  ];
+  allModules: Module[] = [];
 
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(
     private formBuilder: FormBuilder,
-    private data: DataService
+    private data: DataService,
+    private elementRef: ElementRef
   ) {
 
     this.searchSubscription = this.term$.pipe(
@@ -86,6 +83,16 @@ export class EnrollComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.enrollProgress = true;
+    this.data.getModules().subscribe(
+      response => this.allModules = response.modules.map(module => {
+        return {
+          moduleCode: module.moduleCode,
+          moduleName: module.moduleName
+        };
+      }),
+      error => this.error = error
+    ).add(() => this.enrollProgress = false);
   }
 
   add(event: MatChipInputEvent): void {
@@ -133,9 +140,11 @@ export class EnrollComponent implements OnInit {
           if (response.status) {
             this.studentName.setValue(response.name);
             this.course.setValue(response.course);
+            this.academicYear.setValue(response.academicYear);
           } else {
             this.studentName.setValue('');
             this.course.setValue('');
+            this.academicYear.setValue('');
             this.studentIDNotFound = true;
           }
         },
@@ -153,7 +162,23 @@ export class EnrollComponent implements OnInit {
   }
 
   submitForm() {
-    console.log(this.enrollmentForm.value);
+    this.success = false;
+    this.error = '';
+    if (this.enrollmentForm.valid) {
+      if (confirm('Are you sure you want to submit the form?')) {
+        this.enrollProgress = true;
+        const request = this.enrollmentForm.value;
+        request.modules = this.modules;
+        this.data.enrollStudent(request).subscribe(
+          response => {
+            this.modules = [];
+            this.success = true;
+          }, error => this.error = error
+        ).add(() => this.enrollProgress = false);
+      }
+    } else {
+      scrollToFirstInvalidElement(this.elementRef);
+    }
   }
 
   toggleProgress() {
