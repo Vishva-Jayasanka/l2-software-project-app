@@ -15,8 +15,8 @@ export class UserGuard implements CanActivate {
   }
 
   canActivate() {
-    if (this.authentication.details.role === 'admin') {
-      this.router.navigate(['/results/view-results']);
+    if (this.authentication.details.role !== 'Admin') {
+      this.router.navigate(['/auth/login']);
       return false;
     }
     return true;

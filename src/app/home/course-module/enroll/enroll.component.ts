@@ -165,16 +165,20 @@ export class EnrollComponent implements OnInit {
     this.success = false;
     this.error = '';
     if (this.enrollmentForm.valid) {
-      if (confirm('Are you sure you want to submit the form?')) {
-        this.enrollProgress = true;
-        const request = this.enrollmentForm.value;
-        request.modules = this.modules;
-        this.data.enrollStudent(request).subscribe(
-          response => {
-            this.modules = [];
-            this.success = true;
-          }, error => this.error = error
-        ).add(() => this.enrollProgress = false);
+      if (this.modules.length > 0) {
+        if (confirm('Are you sure you want to submit the form?')) {
+          this.enrollProgress = true;
+          const request = this.enrollmentForm.value;
+          request.modules = this.modules;
+          this.data.enrollStudent(request).subscribe(
+            response => {
+              this.modules = [];
+              this.success = true;
+            }, error => this.error = error
+          ).add(() => this.enrollProgress = false);
+        }
+      } else {
+        this.elementRef.nativeElement.querySelector('#add-modules').scrollIntoView({behavior: 'smooth'});
       }
     } else {
       scrollToFirstInvalidElement(this.elementRef);

@@ -12,12 +12,10 @@ export interface Module {
 
 export interface Result {
   moduleCode: string;
-  type: string;
   dateHeld: Date;
-  allocation: number;
-  batch: number;
+  semester: number;
+  academicYear: number;
   grade: string;
-  mark: number;
 }
 
 export interface CalculatedResult {

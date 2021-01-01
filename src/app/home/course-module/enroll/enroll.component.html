@@ -72,7 +72,7 @@
 
       </div>
 
-      <div class="row mb-2">
+      <div class="row mb-0" id="add-modules">
 
         <mat-form-field class="col-md-12 mx-0 px-1" appearance="fill">
           <mat-label>Select Modules</mat-label>
@@ -101,6 +101,10 @@
           </mat-autocomplete>
         </mat-form-field>
 
+      </div>
+
+      <div class="row px-1 mt-0">
+        <p *ngIf="modules.length === 0" class="text-danger ml-2">Please add at least one module.</p>
       </div>
 
       <div class="row px-1">

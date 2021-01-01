@@ -92,15 +92,18 @@ const routes: Routes = [
           },
           {
             path: 'new-module',
-            component: NewModuleComponent
+            component: NewModuleComponent,
+            canActivate: [UserGuard]
           },
           {
             path: 'new-module/:moduleCode',
-            component: NewModuleComponent
+            component: NewModuleComponent,
+            canActivate: [UserGuard]
           },
           {
             path: 'enroll',
-            component: EnrollComponent
+            component: EnrollComponent,
+            canActivate: [UserGuard]
           }]
       },
       {
@@ -122,15 +125,18 @@ const routes: Routes = [
           },
           {
             path: 'view-results',
-            component: ViewResultComponent
+            component: ViewResultComponent,
+            canActivate: [UserGuard]
           },
           {
             path: 'upload-results',
-            component: UploadResultComponent
+            component: UploadResultComponent,
+            canActivate: [UserGuard]
           },
           {
             path: 'edit-results',
-            component: EditResultComponent
+            component: EditResultComponent,
+            canActivate: [UserGuard]
           }
         ]
       },

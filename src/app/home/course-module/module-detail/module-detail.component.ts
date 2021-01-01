@@ -4,7 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DataService} from '../../../_services/data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
 import {DAYS_OF_WEEK, DeleteModuleDialogComponent, LectureHour, ModuleData, Teacher} from '../course-module.component';
-import {glow} from '../../../_services/shared.service';
+import {getSemester, glow, filter} from '../../../_services/shared.service';
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -21,9 +21,9 @@ export class ModuleDetailComponent implements OnInit {
 
   error = '';
   courseName = '';
-  routeParameter;
 
   filter: FormControl = new FormControl('');
+  moduleCode: string;
 
   constructor(
     public route: ActivatedRoute,
@@ -34,20 +34,13 @@ export class ModuleDetailComponent implements OnInit {
     private elementRef: ElementRef
   ) {
     this.filter.valueChanges.subscribe(value => {
-      const filterValue = value.toLowerCase();
-      if (filterValue) {
-        this.filteredSemesters['Modules'] = this.semesters['Modules'].filter(
-          module => module.moduleCode.toLowerCase().includes(filterValue) || module.moduleName.toLowerCase().includes(filterValue)
-        );
-      } else {
-        Object.assign(this.filteredSemesters, this.semesters);
-      }
+      Object.assign(this.filteredSemesters, filter(this.semesters, value, 'moduleCode', 'moduleName'));
     });
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.routeParameter = params;
+      this.moduleCode = params.moduleCode;
     });
     this.progress = true;
     this.getData();
@@ -63,7 +56,7 @@ export class ModuleDetailComponent implements OnInit {
               module.teachers = response.teachers.filter(teacher => teacher.moduleCode === module.moduleCode);
               module.lectureHours = response.lectureHours.filter(lectureHour => lectureHour.moduleCode === module.moduleCode);
             }
-            this.semesters[this.getCurrentLevel(i)] = temp;
+            this.semesters[getSemester(i)] = temp;
           }
         } else {
           const temp = response.modules;
@@ -85,8 +78,8 @@ export class ModuleDetailComponent implements OnInit {
         if (!this.error) {
           setTimeout(() => {
             try {
-              document.querySelector(`#${this.routeParameter.moduleCode}`).scrollIntoView({behavior: 'smooth'});
-              glow(this.elementRef, this.routeParameter.moduleCode, 'rgb(100, 60, 180)');
+              document.querySelector(`#${this.moduleCode}`).scrollIntoView({behavior: 'smooth'});
+              glow(this.elementRef, this.moduleCode, 'rgb(100, 60, 180)');
             } catch (exeption) {
             }
           }, 200);
@@ -106,10 +99,6 @@ export class ModuleDetailComponent implements OnInit {
         this.getData();
       }
     });
-  }
-
-  getCurrentLevel(val) {
-    return 'Level ' + (Math.floor(val / 2) + 1) + ' Semester ' + (val % 2 + 1);
   }
 
   get getRole() {

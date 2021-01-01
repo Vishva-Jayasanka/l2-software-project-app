@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   widthSidenav: boolean;
   widthNotification: boolean;
   activeRoute: string;
+  childRoute: string;
   hidden = false;
   user;
   ROUTS = [
@@ -132,14 +133,12 @@ export class HomeComponent implements OnInit {
   ) {
     this.widthSidenav = (window.innerWidth) < 850;
     this.widthNotification = (window.innerWidth) < 1170;
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //      this.activeRoute = event.urlAfterRedirects.split('/')[2];
-    //   }
-    // });
   }
 
   ngOnInit(): void {
+
+    this.childRoute = this.router.url.split(/\//)[2];
+
     this.user = this.authentication.details;
     this.data.getProfilePicture().subscribe(
       response => {
@@ -147,7 +146,13 @@ export class HomeComponent implements OnInit {
       },
       error => console.log(error)
     );
-    console.log(this.router.url);
+
+    this.router.events.subscribe(value => {
+      if (value instanceof NavigationEnd) {
+        this.childRoute = value.urlAfterRedirects.split(/\//)[2];
+      }
+    });
+
   }
 
   openDialog() {
