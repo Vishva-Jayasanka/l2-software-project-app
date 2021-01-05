@@ -112,6 +112,13 @@ export class ViewResultComponent implements OnInit {
   }
 
   getResults() {
+    this.data.getResults(this.viewResultsForm.value).subscribe(
+      response => {
+        console.log(response);
+      }, error => {
+        console.log(error);
+      }
+    );
   }
 
   toggleProgress(): void {

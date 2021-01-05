@@ -150,4 +150,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}enroll-student`, enrollmentForm);
   }
 
+  getResults(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}view-results`, data);
+  }
+
 }
