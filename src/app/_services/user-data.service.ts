@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {DataService} from './data.service';
+import {Subject} from 'rxjs';
 import {environment} from '../../environments/environment';
 
 @Injectable({

@@ -1,7 +1,5 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {DataService} from '../../_services/data.service';
 
 export interface Module {
   moduleCode: string;
