@@ -6,7 +6,8 @@
   <mat-form-field>
     <mat-label>Filter</mat-label>
     <input type="search" matInput [formControl]="filter"/>
-    <button mat-button *ngIf="filter.value" matSuffix mat-icon-button aria-labelledby="Clear" (click)="filter.setValue('')">
+    <button mat-button *ngIf="filter.value" matSuffix mat-icon-button aria-labelledby="Clear"
+            (click)="filter.setValue('')">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
@@ -22,7 +23,8 @@
 
       <div [attr.id]="'accordion' + semester.value[0].moduleCode">
 
-        <div *ngFor="let result of semester.value" [attr.id]="result.moduleCode" class="card mb-2" style="transition: box-shadow 2s">
+        <div *ngFor="let result of semester.value" [attr.id]="result.moduleCode" class="card mb-2"
+             style="transition: box-shadow 2s">
 
           <h5 [attr.id]="'heading' + result.moduleCode"
               [attr.data-target]="'#collapse' + result.moduleCode"
@@ -55,7 +57,8 @@
                   <div class="text-secondary w-25">Grade</div>
                   <div class="w-75">
                     <mat-chip-list aria-label="attendance">
-                      <mat-chip [style.background-color]="getGradeColor(result.grade, true)" class="text-white">{{ result.grade }}</mat-chip>
+                      <mat-chip [style.background-color]="getGradeColor(result.grade, true)"
+                                class="text-white">{{ result.grade }}</mat-chip>
                     </mat-chip-list>
                   </div>
                 </li>
@@ -72,6 +75,10 @@
 
     </div>
 
+  </div>
+
+  <div *ngIf="!resultsFound && getRole !== 'admin'" class="alert alert-dark mt-3 mb-0">
+    No modules found..!
   </div>
 
 </div>

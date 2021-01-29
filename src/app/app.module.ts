@@ -46,7 +46,10 @@ import {NewModuleComponent} from './home/course-module/new-module/new-module.com
 import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
 import {UserGuard} from './_helpers/user.guard';
 import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
-import {AttendanceDialogComponent, ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
+import {
+  AttendanceDialogComponent,
+  ModuleAttendanceComponent
+} from './home/attendance/module-attendance/module-attendance.component';
 import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.component';
 import { PaymentDetailsComponent } from './home/payment/payment-details/payment-details.component';
 import { SubmitedRequestsComponent } from './home/request/submited-requests/submited-requests.component';

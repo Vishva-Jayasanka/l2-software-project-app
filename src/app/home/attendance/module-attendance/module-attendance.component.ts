@@ -1,10 +1,13 @@
 import {Component, ElementRef, Inject, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {AuthenticationService} from '../../../_services/authentication.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Attendance, DetailedAttendance} from '../attendance.component';
+import {glow} from '../../../_services/shared.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {HomeComponent} from '../../home.component';
 
 @Component({
   selector: 'app-module-attendance',
@@ -13,9 +16,12 @@ import {Attendance, DetailedAttendance} from '../attendance.component';
 })
 export class ModuleAttendanceComponent implements OnInit {
 
+  moduleCode: string;
+
   attendance: Attendance[] = [];
   filteredAttendance: Attendance[] = [];
   detailedAttendance: DetailedAttendance;
+  filter: FormControl = new FormControl('');
 
   progress = false;
   attendanceError = '';
@@ -25,17 +31,54 @@ export class ModuleAttendanceComponent implements OnInit {
     private data: DataService,
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
+    private route: ActivatedRoute,
+    public dialog: MatDialog,
     private elementRef: ElementRef,
-    public dialog: MatDialog
+    private snackBar: MatSnackBar
   ) {
+    if (this.getRole !== 'Student') {
+      router.navigate(['../view-attendance'], {relativeTo: this.route});
+    }
   }
 
   ngOnInit(): void {
+
+    this.route.params.subscribe(params => {
+      this.moduleCode = params.moduleCode;
+    });
+
+    this.filter.valueChanges.subscribe(value => {
+      this.filteredAttendance = Object.assign([], this.filterAttendance(value));
+    });
+
     this.progress = true;
     this.data.getAttendance().subscribe(
       response => this.getAttendance(response.attendance),
       error => this.attendanceError = error
-    ).add(() => this.progress = false);
+    ).add(() => {
+      this.progress = false;
+      if (this.moduleCode) {
+        setTimeout(() => {
+          try {
+            const element = this.elementRef.nativeElement.querySelector('#' + this.moduleCode);
+            if (element) {
+              this.elementRef.nativeElement.querySelector('#' + this.moduleCode).scrollIntoView({behavior: 'smooth'});
+              glow(this.elementRef, this.moduleCode, 'purple');
+            } else {
+              this.snackBar.open(`No Attendance Details Available for ${this.moduleCode}`, 'Close', {duration: 4000});
+            }
+          } catch (exception) {
+          }
+        }, 500);
+      }
+    });
+  }
+
+  filterAttendance(value: string): Attendance[] {
+    const filterValue = value.toLowerCase();
+    return this.attendance.filter(
+      attendance => attendance.moduleCode.toLowerCase().includes(filterValue) || attendance.moduleName.toLowerCase().includes(filterValue)
+    );
   }
 
   getAttendance(response) {
@@ -59,22 +102,12 @@ export class ModuleAttendanceComponent implements OnInit {
         });
       }
     }
-    this.filteredAttendance = Object.assign([], this.attendance);
+    console.log(this.attendance);
+    Object.assign(this.filteredAttendance, this.attendance);
   }
 
   calculateAttendance(total, count) {
     return Math.round((total - count) * 100 / total);
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    if (filterValue) {
-      this.filteredAttendance = this.attendance.filter(
-        obj => obj.moduleCode.toLowerCase().includes(filterValue) || obj.moduleName.toLowerCase().includes(filterValue)
-      );
-    } else {
-      this.filteredAttendance = this.attendance;
-    }
   }
 
   openDialog(moduleCode: string, moduleName: string, type: string, batch: number): void {
@@ -122,7 +155,7 @@ export class AttendanceDialogComponent implements OnInit {
       response => {
         for (const session of response) {
           this.data.attendance.push({
-            date: session.dateHeld,
+            date: session.date,
             status: session.status
           });
         }
@@ -138,3 +171,4 @@ export class AttendanceDialogComponent implements OnInit {
   }
 
 }
+

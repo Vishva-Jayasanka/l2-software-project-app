@@ -61,15 +61,18 @@ const routes: Routes = [
           },
           {
             path: 'view-attendance',
-            component: ViewAttendanceComponent
+            component: ViewAttendanceComponent,
+            canActivate: [UserGuard]
           },
           {
             path: 'upload-attendance',
-            component: UploadAttendanceComponent
+            component: UploadAttendanceComponent,
+            canActivate: [UserGuard]
           },
           {
             path: 'edit-attendance',
-            component: EditAttendanceComponent
+            component: EditAttendanceComponent,
+            canActivate: [UserGuard]
           }
         ]
       },

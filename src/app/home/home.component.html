@@ -27,7 +27,7 @@
 
   <mat-sidenav #sidenav [mode]="widthSidenav ? 'over' : 'side'" [opened]="!widthSidenav" class="sidenav">
 
-    <mat-selection-list #list [multiple]="false" class="accordion" id="accordionCourseModule" style="cursor: pointer">
+    <mat-selection-list [multiple]="false" class="accordion" id="accordionCourseModule" style="cursor: pointer">
 
       <div *ngFor="let route of ROUTS">
 

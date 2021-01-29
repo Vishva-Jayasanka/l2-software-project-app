@@ -4,6 +4,7 @@ import {AuthenticationService} from '../../../_services/authentication.service';
 import {DataService} from '../../../_services/data.service';
 import {getSemester, glow, filter} from '../../../_services/shared.service';
 import {FormControl} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-exam-results',
@@ -19,13 +20,15 @@ export class ExamResultsComponent implements OnInit {
   results = {};
   filteredResults = {};
   progress = false;
+  resultsFound = true;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authentication: AuthenticationService,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private snackBar: MatSnackBar
   ) {
     if (this.getRole !== 'Student') {
       router.navigate(['../view-results'], {relativeTo: this.route});
@@ -36,12 +39,12 @@ export class ExamResultsComponent implements OnInit {
 
     this.progress = true;
     this.route.params.subscribe(params => {
-      console.log(params.moduleCode);
       this.moduleCode = params.moduleCode;
     });
 
     this.filter.valueChanges.subscribe(value => {
       Object.assign(this.filteredResults, filter(this.results, value, 'moduleCode', 'moduleName'));
+      this.resultsFound = !this.isEmpty();
     });
 
     this.data.getExamResults().subscribe(
@@ -50,18 +53,35 @@ export class ExamResultsComponent implements OnInit {
           this.results[getSemester(i)] = response.results.filter(result => result.semester === i + 1);
         }
         Object.assign(this.filteredResults, this.results);
+        this.resultsFound = !this.isEmpty();
       },
       error => this.resultsError = error
     ).add(() => {
       this.progress = false;
-      setTimeout(() => {
-        try {
-          this.elementRef.nativeElement.querySelector('#collapse' + this.moduleCode).scrollIntoView({behavior: 'smooth'});
-          glow(this.elementRef, this.moduleCode, 'purple');
-        } catch (exception) {
-        }
-      }, 500);
+      if (this.moduleCode) {
+        setTimeout(() => {
+          try {
+            const element = this.elementRef.nativeElement.querySelector('#collapse' + this.moduleCode);
+            if (element) {
+              element.scrollIntoView({behavior: 'smooth'});
+              glow(this.elementRef, this.moduleCode, 'purple');
+            } else {
+              this.snackBar.open(`No Exam Results Available for ${this.moduleCode}`, 'Close', {duration: 4000});
+            }
+          } catch (Exception) {
+          }
+        }, 500);
+      }
     });
+  }
+
+  isEmpty(): boolean {
+    for (let i = 0; i < 4; i++) {
+      if (this.filteredResults[getSemester(i)].length !== 0) {
+        return false;
+      }
+    }
+    return true;
   }
 
   get getRole() {

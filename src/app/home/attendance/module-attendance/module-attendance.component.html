@@ -2,14 +2,19 @@
   <div *ngIf="attendanceError" class="alert alert-danger mt-1 col">{{ attendanceError }}</div>
 </div>
 
-<mat-form-field [hidden]="getRole === 'admin'" class="filter">
-  <mat-label>Filter</mat-label>
-  <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
-</mat-form-field>
+<div class="d-flex flex-row-reverse">
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input type="search" matInput [formControl]="filter"/>
+    <button mat-button *ngIf="filter.value" matSuffix mat-icon-button aria-labelledby="Clear" (click)="filter.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
 
 <div *ngIf="!progress; else progressBlock">
 
-  <div *ngFor="let module of filteredAttendance" class="card" style="margin-bottom: 15px">
+  <div *ngFor="let module of filteredAttendance" [attr.id]="module.moduleCode" class="card" style="margin-bottom: 15px; transition: box-shadow 2s">
 
     <h5 class="card-header">
       <span style="float: left">{{ module.moduleName }}</span>
