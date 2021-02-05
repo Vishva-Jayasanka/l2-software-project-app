@@ -28,17 +28,17 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   checkUsername() {
-    this.progress = true;
-    this.authentication.checkUsername(this.usernameForm.value).subscribe(
-      response => {
+    // this.progress = true;
+    // this.authentication.checkUsername(this.usernameForm.value).subscribe(
+    //   response => {
         this.router.navigate(['/login']);
-      },
-      error => {
-        this.error = error;
-      },
-    ).add(
-      () => this.progress = false
-    );
+    //   },
+    //   error => {
+    //     this.error = error;
+    //   },
+    // ).add(
+    //   () => this.progress = false
+    // );
   }
 
   get username() {

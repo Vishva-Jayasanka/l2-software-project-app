@@ -235,8 +235,7 @@ const routes: Routes = [
       },
       {
         path: 'verification',
-        component: VerificationComponent,
-        canActivate: [AuthenticationGuard]
+        component: VerificationComponent
       },
       {
         path: '',

@@ -102,7 +102,6 @@ export class ModuleAttendanceComponent implements OnInit {
         });
       }
     }
-    console.log(this.attendance);
     Object.assign(this.filteredAttendance, this.attendance);
   }
 

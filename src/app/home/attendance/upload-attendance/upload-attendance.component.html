@@ -43,7 +43,7 @@
           <mat-label>Session</mat-label>
           <mat-select (selectionChange)="checkValue($event.value)" id="session" formControlName="session">
             <mat-option value="0">New Session</mat-option>
-            <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a'}}</mat-option>
+            <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.date | date: 'MMM d, y, h:mm a'}}</mat-option>
           </mat-select>
           <mat-error *ngIf="session.touched && session.errors?.required">This field is required</mat-error>
         </mat-form-field>

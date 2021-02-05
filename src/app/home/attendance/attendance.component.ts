@@ -22,7 +22,7 @@ export interface DetailedAttendance {
 
 export interface Session {
   sessionID: number;
-  dateHeld: Date;
+  date: Date;
 }
 
 @Component({

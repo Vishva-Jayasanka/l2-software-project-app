@@ -23,16 +23,16 @@ export class VerificationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authentication.isVerified().subscribe(
-      response => {
-        if (response.verified) {
-          this.router.navigate(['/']);
-        }
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    // this.authentication.isVerified().subscribe(
+    //   response => {
+    //     if (response.verified) {
+    //       this.router.navigate(['/']);
+    //     }
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // );
     this.emailForm = this.formBuilder.group({
       email: ['', [Validators.email, Validators.required]]
     });

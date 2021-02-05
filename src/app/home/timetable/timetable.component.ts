@@ -3,18 +3,22 @@ import {DataService} from '../../_services/data.service';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../_services/authentication.service';
 
+export interface Day {
+  day: number;
+  timeSlots: TimeSlot[];
+}
+
 export interface TimeSlot {
+  startingTime: string;
+  endingTime: string;
+  sessions: Session[];
+}
+
+export interface Session {
   moduleCode: string;
   moduleName: string;
   type: string;
-  startingTime: string;
-  endingTime: string;
-  day: number;
   lectureHall: string;
-}
-
-export interface TimeTable {
-  timeSlots: TimeSlot[];
 }
 
 @Component({
@@ -31,9 +35,9 @@ export class TimetableComponent implements OnInit {
     {index: 5, day: 'Thursday'},
     {index: 6, day: 'Friday'}
   ];
+  timeTable: Day[] = [];
 
   progress = false;
-  times: TimeSlot[] = [];
 
   error = '';
 
@@ -48,21 +52,18 @@ export class TimetableComponent implements OnInit {
     this.progress = true;
     this.data.getTimetable().subscribe(
       response => {
-        response.times.forEach(timeSlot => {
-          this.times.push({
-            moduleCode: timeSlot.moduleCode,
-            moduleName: timeSlot.moduleName,
-            type: timeSlot.type,
-            startingTime: this.getTime(timeSlot.startingTime),
-            endingTime: this.getTime(timeSlot.endingTime),
-            day: timeSlot.day,
-            lectureHall: timeSlot.lectureHall
-          });
-        });
+        for (const session of response.times) {
+          console.log(session.moduleCode + ' ' + session.type + ' ' + this.getPosition(this.getTime(session.startingTime)) + ' ' + this.getPosition(this.getTime(session.endingTime)));
+        }
+        // const temp = response.times;
+        // temp.sort((s1, s2) => this.convertTime(s1.startingTime) > this.convertTime(s2.startingTime) ? 0 : -1);
+        // for (const day of this.weekdays) {
+        //   for (let i = 0; i < temp.length; i++) {
+        //     if ()
+        //   }
+        // }
       },
-      error => {
-        this.error = error;
-      }
+      error => this.error = error
     ).add(() => this.progress = false);
   }
 
@@ -70,8 +71,8 @@ export class TimetableComponent implements OnInit {
     return new Date(time).toLocaleTimeString('ISO', {timeZone: 'UTC'});
   }
 
-  getTimeSlots(day: number) {
-    return this.times.filter(time => time.day === day);
+  getTimeSlots(day: number): TimeSlot[] {
+    return this.timeTable.filter(time => time.day === day).map(value => value.timeSlots)[0];
   }
 
   getRole() {
