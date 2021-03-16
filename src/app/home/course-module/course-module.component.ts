@@ -31,7 +31,6 @@ export interface Teacher {
 
 export interface Results {
   moduleName: string;
-  type: string;
   mark: number;
   date: Date;
 }

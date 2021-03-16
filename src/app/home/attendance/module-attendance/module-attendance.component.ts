@@ -152,6 +152,7 @@ export class AttendanceDialogComponent implements OnInit {
     this.progress = true;
     this.dataService.getDetailedAttendance(this.data.moduleCode, this.data.type, this.data.batch).subscribe(
       response => {
+        console.log(response);
         for (const session of response) {
           this.data.attendance.push({
             date: session.date,

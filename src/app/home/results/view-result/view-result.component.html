@@ -15,30 +15,38 @@
 
       <div class="row mb-2">
 
-        <mat-form-field class="col-4 mx-0 px-1" appearance="outline">
+        <mat-form-field class="col-3 mx-0 px-1" appearance="outline">
           <mat-label>Module Code</mat-label>
           <input (keyup)="termModuleCode$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100" />
           <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
           <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
         </mat-form-field>
 
-        <mat-form-field class="col-md-8 mx-0 px-1" appearance="outline">
+        <mat-form-field class="col-6 mx-0 px-1" appearance="outline">
           <mat-label>Module Name</mat-label>
-          <input type="text" matInput formControlName="moduleName" [readonly]="true" />
+          <input [readonly]="true" type="text" matInput formControlName="moduleName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-3 mx-0 px-1">
+          <mat-label>Academic Year</mat-label>
+          <mat-select (selectionChange)="getExamResults()">
+            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="academicYear.touched && academicYear.errors?.required">This field is required</mat-error>
         </mat-form-field>
 
       </div>
 
       <div class="row mb-2">
 
-        <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
+        <mat-form-field class="col-4 mx-0 px-1" appearance="outline">
           <mat-label>Student ID</mat-label>
           <input (keyup)="termStudentID$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="studentID" placeholder="Ex: 184061R" />
           <mat-error *ngIf="studentID.touched && studentID.errors?.required">This field is required</mat-error>
           <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid student ID</mat-error>
         </mat-form-field>
 
-        <mat-form-field class="col-md-8 mx-0 px-1" appearance="outline">
+        <mat-form-field class="col-8 mx-0 px-1" appearance="outline">
           <mat-label>Student Name</mat-label>
           <input type="text" matInput formControlName="studentName" [readonly]="true" />
         </mat-form-field>

@@ -3,24 +3,6 @@ import {DataService} from '../../_services/data.service';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../_services/authentication.service';
 
-export interface Day {
-  day: number;
-  timeSlots: TimeSlot[];
-}
-
-export interface TimeSlot {
-  startingTime: string;
-  endingTime: string;
-  sessions: Session[];
-}
-
-export interface Session {
-  moduleCode: string;
-  moduleName: string;
-  type: string;
-  lectureHall: string;
-}
-
 @Component({
   selector: 'app-timetable',
   templateUrl: './timetable.component.html',
@@ -35,7 +17,7 @@ export class TimetableComponent implements OnInit {
     {index: 5, day: 'Thursday'},
     {index: 6, day: 'Friday'}
   ];
-  timeTable: Day[] = [];
+  timeTable;
 
   progress = false;
 
@@ -52,16 +34,56 @@ export class TimetableComponent implements OnInit {
     this.progress = true;
     this.data.getTimetable().subscribe(
       response => {
+        const timetable = [];
         for (const session of response.times) {
-          console.log(session.moduleCode + ' ' + session.type + ' ' + this.getPosition(this.getTime(session.startingTime)) + ' ' + this.getPosition(this.getTime(session.endingTime)));
+          if (!(session.day in timetable)) {
+            timetable[session.day] = [[]];
+          }
+          timetable[session.day][0].push({
+              moduleCode: session.moduleCode,
+              moduleName: session.moduleName,
+              startingTime: session.startingTime,
+              endingTime: session.endingTime,
+              type: session.type,
+              lectureHall: session.lectureHall
+            }
+          );
         }
-        // const temp = response.times;
-        // temp.sort((s1, s2) => this.convertTime(s1.startingTime) > this.convertTime(s2.startingTime) ? 0 : -1);
-        // for (const day of this.weekdays) {
-        //   for (let i = 0; i < temp.length; i++) {
-        //     if ()
-        //   }
-        // }
+
+        for (let i = 1; i <= 7; i++) {
+          if (i in timetable) {
+            let temp = timetable[i][0];
+            let isFound: boolean;
+            do {
+              timetable[i].push([]);
+              isFound = false;
+              if (temp.length > 1) {
+                temp.sort((obj1, obj2) => {
+                  const val = this.getPosition(this.convertTime(obj1.startingTime)) - this.getPosition(this.convertTime(obj2.startingTime));
+                  if (val === 0) {
+                    return this.getPosition(this.convertTime(obj2.endingTime)) - this.getPosition(this.convertTime(obj2.endingTime));
+                  }
+                  return val;
+                });
+                const l = timetable[i].length;
+                let p = 1;
+                const nextTrack = timetable[i][l - 1];
+                while (p < temp.length) {
+                  if (this.getPosition(this.getTime(temp[p].startingTime)) < this.getPosition(this.getTime(temp[p - 1].endingTime))) {
+                    nextTrack.push(temp[p]);
+                    temp.splice(p, 1);
+                    isFound = true;
+                  } else {
+                    p++;
+                  }
+                }
+                temp = nextTrack;
+              }
+            } while (isFound);
+            timetable[i].splice(timetable[i].length - 1, 1);
+          }
+        }
+        this.timeTable = timetable;
       },
       error => this.error = error
     ).add(() => this.progress = false);
@@ -71,7 +93,7 @@ export class TimetableComponent implements OnInit {
     return new Date(time).toLocaleTimeString('ISO', {timeZone: 'UTC'});
   }
 
-  getTimeSlots(day: number): TimeSlot[] {
+  getTimeSlots(day: number): any {
     return this.timeTable.filter(time => time.day === day).map(value => value.timeSlots)[0];
   }
 

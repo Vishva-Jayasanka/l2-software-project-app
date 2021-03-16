@@ -1,20 +1,7 @@
-.scale-left {
+.scale {
   background-color: #e3e3e3 !important;
-  transition: 0.2s;
-  transform-origin: left;
-  z-index: 2;
-}
-
-.scale-center {
-  background-color: #e3e3e3 !important;
-  transition: 0.2s;
-  z-index: 2;
-}
-
-.scale-right {
-  background-color: #e3e3e3 !important;
-  transition: 0.2s;
-  transform-origin: right;
+  width: calc(100% - 4px);
+  transition: width 0.2s;
   z-index: 2;
 }
 
@@ -22,25 +9,26 @@
   display: none;
 }
 
-.scale-left:hover, .scale-center:hover, .scale-right:hover {
+.scale:hover {
   z-index: 99999;
-  transform: scale(1.2);
+  width: var(--width);
   opacity: 0.8;
   background-color: black !important;
   color: white;
   font-size: 12px;
-  box-shadow:  0 20px 20px 0  rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 20px 0 rgba(0, 0, 0, 0.4);
 }
 
-.scale-left:hover .hidden {
-  display: block;
+.rotate {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
-.scale-center:hover .hidden {
-  display: block;
+.scale:hover .rotate {
+  display: none;
 }
 
-.scale-right:hover .hidden {
+.scale:hover .hidden {
   display: block;
 }
 

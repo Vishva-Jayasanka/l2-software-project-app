@@ -4,6 +4,7 @@ import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
 import {Results} from '../../course-module/course-module.component';
+import {YEARS} from '../../../_services/shared.service';
 
 @Component({
   selector: 'app-view-result',
@@ -11,6 +12,8 @@ import {Results} from '../../course-module/course-module.component';
   styleUrls: ['./view-result.component.css']
 })
 export class ViewResultComponent implements OnInit {
+
+  years = YEARS;
 
   viewResultsProgress = false;
   success = false;
@@ -21,9 +24,9 @@ export class ViewResultComponent implements OnInit {
 
   viewResultsForm: FormGroup;
   results: Results[] = [
-    {moduleName: 'Programming and Program Design', type: 'Final Exam', mark: 75, date: new Date('2020-01-01')},
-    {moduleName: 'Distributed Systems and Networking', type: 'Final Exam', mark: 54, date: new Date('2020-01-05')},
-    {moduleName: 'Object Oriented Programming', type: 'Final Exam', mark: 7, date: new Date('2020-04-08')}
+    {moduleName: 'Programming and Program Design', mark: 75, date: new Date('2020-01-01')},
+    {moduleName: 'Distributed Systems and Networking', mark: 54, date: new Date('2020-01-05')},
+    {moduleName: 'Object Oriented Programming', mark: 7, date: new Date('2020-04-08')}
   ];
 
   termModuleCode$ = new Subject<string>();
@@ -64,6 +67,7 @@ export class ViewResultComponent implements OnInit {
     this.viewResultsForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}$/)]],
       moduleName: ['', Validators.required],
+      academicYear: ['', [Validators.required]],
       studentID: ['', [Validators.required, Validators.pattern(/^[0-9]{6}[A-Za-z]$/)]],
       studentName: ['', Validators.required]
     });
@@ -74,11 +78,19 @@ export class ViewResultComponent implements OnInit {
   }
 
   checkModuleCode(moduleCode: string): void {
+    this.error = '';
+    this.success = false;
+    this.academicYear.disable();
+    this.studentID.disable();
     if (moduleCode) {
       this.data.checkIfModuleExists(moduleCode).subscribe(
         response => {
           if (!response.status) {
             this.moduleName.setValue(response.moduleName);
+            this.academicYear.reset();
+            this.academicYear.enable();
+            this.studentID.reset();
+            this.studentName.reset();
           } else {
             this.moduleCodeNotFound = true;
           }
@@ -90,6 +102,21 @@ export class ViewResultComponent implements OnInit {
     } else {
       this.viewResultsProgress = false;
     }
+  }
+
+  getExamResults(): void {
+    this.viewResultsProgress = true;
+    this.error = '';
+    this.success = false;
+    this.data.getResultsOfModule({
+      moduleCode: this.moduleCode.value,
+      academicYear: this.academicYear.value
+    }).subscribe(
+      response => {
+        this.studentID.reset();
+        this.studentID.enable();
+      }, error => this.error = error
+    );
   }
 
   checkStudentID(studentID: string): void {
@@ -131,6 +158,10 @@ export class ViewResultComponent implements OnInit {
 
   get moduleName(): AbstractControl {
     return this.viewResultsForm.get('moduleName');
+  }
+
+  get academicYear(): AbstractControl {
+    return this.viewResultsForm.get('academicYear');
   }
 
   get studentID(): AbstractControl {

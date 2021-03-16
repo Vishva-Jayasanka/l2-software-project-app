@@ -86,16 +86,16 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}get-results`, {});
   }
 
-  getResultsOfModule(examID: number) {
-    return this.http.post<any>(`${environment.adminUrl}get-module-results`, {examID});
+  getResultsOfModule(data: object) {
+    return this.http.post<any>(`${environment.adminUrl}get-module-results`, data);
   }
 
   editResults(results) {
     return this.http.post<any>(`${environment.adminUrl}edit-results`, {results});
   }
 
-  deleteExam(examID: number) {
-    return this.http.post<any>(`${environment.adminUrl}delete-exam`, {examID});
+  deleteExam(data: object) {
+    return this.http.post<any>(`${environment.adminUrl}delete-exam`, data);
   }
 
   uploadProfilePicture(profilePicture) {
@@ -152,6 +152,10 @@ export class DataService {
 
   getResults(data: object): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}view-results`, data);
+  }
+
+  checkIfResultsUploaded(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}check-if-results-uploaded`, data);
   }
 
 }

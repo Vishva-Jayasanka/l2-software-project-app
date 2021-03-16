@@ -1,11 +1,10 @@
 import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
 import {Exam} from '../upload-result/upload-result.component';
-import {allocationValidator} from '../../../_validators/custom-validators.module';
 import * as _ from 'lodash';
 import {glow} from '../../../_services/shared.service';
 
@@ -22,17 +21,14 @@ export class EditResultComponent implements OnInit, OnDestroy {
   buttonProgress = false;
   moduleExists = false;
   success = false;
-  examsNotFound = false;
-  resultsNotFound = false;
-  invalidAllocation = false;
+  resultsFound = false;
   successfullyDeleted = false;
 
   roteParameter: string;
-  moduleName: string;
   error: string;
-  availableAllocation: string;
 
   editResultsForm: FormGroup;
+  examID: number;
   maxDate = new Date();
   exams: Exam[] = [];
   results = [];
@@ -45,7 +41,8 @@ export class EditResultComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private router: Router
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -62,14 +59,10 @@ export class EditResultComponent implements OnInit, OnDestroy {
     });
     this.editResultsForm = this.formBuilder.group({
       moduleCode: [this.roteParameter, [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
-      batch: [{value: '', disabled: true}, [Validators.required]],
-      exam: [{value: '', disabled: true}, [Validators.required]],
-      type: [{value: '', disabled: true}, [Validators.required]],
-      dateHeld: [{value: '', disabled: true}, [Validators.required]],
-      allocation: [{value: '', disabled: true}, [Validators.required, Validators.pattern(/([0-9]{1,2})|(100)/)]],
-      allocationAvailable: [''],
-      hideMarks: [{value: true, disabled: true}]
-    }, {validators: allocationValidator});
+      moduleName: [''],
+      academicYear: [{value: '', disabled: true}, [Validators.required]],
+      dateHeld: [{value: '', disabled: true}, [Validators.required]]
+    });
   }
 
   ngOnDestroy(): void {
@@ -77,50 +70,54 @@ export class EditResultComponent implements OnInit, OnDestroy {
   }
 
   checkModule(moduleCode: string) {
-    this.batch.disable();
-    this.exam.disable();
+    this.academicYear.disable();
+    this.dateHeld.disable();
     this.error = '';
     this.success = false;
     this.moduleExists = false;
-    this.examsNotFound = false;
-    this.resultsNotFound = false;
+    this.resultsFound = false;
     this.successfullyDeleted = false;
     if (moduleCode !== '') {
       this.data.checkIfModuleExists(moduleCode).subscribe(
         response => {
-          response.status ? this.moduleName = '' : this.moduleName = response.moduleName;
+          this.moduleName.setValue(response.status ? '' : response.moduleName);
           this.moduleExists = response.status;
           if (this.moduleName) {
-            this.batch.enable();
-            this.batch.reset();
-            this.elementRef.nativeElement.querySelector('#edit_batch').focus();
+            this.academicYear.enable();
+            this.academicYear.reset();
+            this.elementRef.nativeElement.querySelector('#edit_academicYear').focus();
           }
         },
-        error => console.error(error)
+        error => this.error = error
       ).add(() => this.editResultsProgress = false);
     } else {
       this.editResultsProgress = false;
     }
   }
 
-  getExams(batch: number) {
+  checkIfResultsExists() {
+    this.editResultsProgress = true;
     this.error = '';
     this.success = false;
-    this.editResultsProgress = true;
-    this.resultsNotFound = false;
-    this.exam.disable();
-    this.data.getExamsOfModule(this.moduleCode.value, batch).subscribe(
+    this.resultsFound = false;
+    this.successfullyDeleted = false;
+    this.data.checkIfResultsUploaded({
+      moduleCode: this.moduleCode.value,
+      academicYear: this.academicYear.value
+    }).subscribe(
       response => {
-        this.exams = response.exams;
-        this.availableAllocation = response.allocationAvailable;
-        this.examsNotFound = this.exams.length === 0;
-        if (!this.examsNotFound) {
-          this.exam.reset();
-          this.exam.enable();
-          this.elementRef.nativeElement.querySelector('#edit_exam').focus();
+        if (response.status) {
+          const res = confirm('No previously uploaded results found for this module and academic year. Do you want to upload results?');
+          if (res) {
+            this.router.navigate(['home/results/upload-results', {
+              moduleCode: this.moduleCode.value,
+              academicYear: this.academicYear.value
+            }]);
+          }
+        } else {
+          this.resultsFound = true;
         }
-      },
-      error => this.error = error
+      }, error => this.error = error
     ).add(() => this.editResultsProgress = false);
   }
 
@@ -128,35 +125,22 @@ export class EditResultComponent implements OnInit, OnDestroy {
     if (this.results.length === 0 || confirm('are you sure you want to discard changes?')) {
       this.error = '';
       this.success = false;
-      this.data.getResultsOfModule(this.exam.value).subscribe(
+      this.data.getResultsOfModule({
+        moduleCode: this.moduleCode.value,
+        academicYear: this.academicYear.value
+      }).subscribe(
         response => {
+          this.examID = response.examID;
+          this.dateHeld.setValue(response.dateHeld);
           this.results = response.results;
           this.updatedResults = _.cloneDeep(this.results);
           this.filteredResults = this.updatedResults;
-          this.resultsNotFound = this.results.length === 0;
-          if (!this.resultsNotFound) {
-            const selectedExam = this.exams.find(exam => exam.examID === this.exam.value);
-            this.hideMarks.enable();
-            this.type.enable();
-            this.dateHeld.enable();
-            this.allocation.enable();
-            this.type.setValue(selectedExam.type);
-            this.dateHeld.setValue(selectedExam.dateHeld);
-            this.allocation.setValue(selectedExam.allocation);
-            this.allocationAvailable.setValue(this.availableAllocation + selectedExam.allocation);
-            this.hideMarks.setValue(selectedExam.hideMarks);
-            this.elementRef.nativeElement.querySelector('#upload_preview').scrollIntoView({behavior: 'smooth'});
-            glow(this.elementRef, 'upload_preview', 'rgb(100, 60, 180)');
-          } else {
-            this.type.disable();
-            this.dateHeld.disable();
-            this.allocation.disable();
-            this.hideMarks.disable();
-          }
+          this.dateHeld.enable();
+          this.dateHeld.setValue(response.dateHeld);
+          this.elementRef.nativeElement.querySelector('#upload_preview').scrollIntoView({behavior: 'smooth'});
+          glow(this.elementRef, 'upload_preview', 'rgb(100, 60, 180)');
         },
-        error => {
-          console.error(error);
-        }
+        error => this.error = error
       );
     }
   }
@@ -169,11 +153,8 @@ export class EditResultComponent implements OnInit, OnDestroy {
       this.success = false;
       if (this.editResultsForm.valid) {
         const selected = {
-          examID: parseInt(this.exam.value, 10),
-          type: this.type.value,
+          examID: this.examID,
           dateHeld: this.dateHeld.value,
-          allocation: parseInt(this.allocation.value, 10),
-          hideMarks: this.hideMarks.value,
           results: this.updatedResults
         };
         this.data.editResults(selected).subscribe(
@@ -186,7 +167,7 @@ export class EditResultComponent implements OnInit, OnDestroy {
             this.success = true;
             this.elementRef.nativeElement.querySelector('#success_message').scrollIntoView({behavior: 'smooth'});
             glow(this.elementRef, 'upload_preview', 'rgb(100, 60, 180)');
-            },
+          },
           error => {
             this.error = error;
             this.elementRef.nativeElement.querySelector('#error_message').scrollIntoView({behavior: 'smooth'});
@@ -210,21 +191,19 @@ export class EditResultComponent implements OnInit, OnDestroy {
   deleteExam() {
     if (confirm('Are your sure you want delete this exam?\nAll results will also be deleted.')) {
       this.editResultsProgress = true;
-      this.data.deleteExam(parseInt(this.exam.value, 10)).subscribe(
+      this.data.deleteExam({
+        moduleCode: this.moduleCode.value,
+        academicYear: this.academicYear.value
+      }).subscribe(
         response => {
           this.editResultsForm.reset();
-          this.batch.disable();
-          this.exam.disable();
-          this.type.disable();
+          this.academicYear.disable();
           this.dateHeld.disable();
-          this.allocation.disable();
-          this.hideMarks.disable();
-          this.moduleName = '';
           this.results = [];
           this.successfullyDeleted = true;
         },
         error => console.log(error)
-      ).add(() => setTimeout(() => this.editResultsProgress = false , 1000));
+      ).add(() => setTimeout(() => this.editResultsProgress = false, 1000));
     }
   }
 
@@ -256,36 +235,20 @@ export class EditResultComponent implements OnInit, OnDestroy {
     this.editResultsProgress = true;
   }
 
-  get moduleCode() {
+  get moduleCode(): AbstractControl {
     return this.editResultsForm.get('moduleCode');
   }
 
-  get batch() {
-    return this.editResultsForm.get('batch');
+  get moduleName(): AbstractControl {
+    return this.editResultsForm.get('moduleName');
   }
 
-  get exam() {
-    return this.editResultsForm.get('exam');
+  get academicYear(): AbstractControl {
+    return this.editResultsForm.get('academicYear');
   }
 
-  get type() {
-    return this.editResultsForm.get('type');
-  }
-
-  get dateHeld() {
+  get dateHeld(): AbstractControl {
     return this.editResultsForm.get('dateHeld');
-  }
-
-  get allocation() {
-    return this.editResultsForm.get('allocation');
-  }
-
-  get allocationAvailable() {
-    return this.editResultsForm.get('allocationAvailable');
-  }
-
-  get hideMarks() {
-    return this.editResultsForm.get('hideMarks');
   }
 
 }

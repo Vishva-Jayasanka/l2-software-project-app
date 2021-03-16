@@ -4,7 +4,7 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
 import * as XLSX from 'xlsx';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {YEARS, glow} from '../../../_services/shared.service';
 
 export interface Exam {
@@ -32,7 +32,6 @@ export class UploadResultComponent implements OnInit {
   exams: Exam[] = [];
 
   routeParams = '';
-  moduleName = '';
   error = '';
   resultsFile: Result[] = [];
   allocationAvailable;
@@ -45,7 +44,6 @@ export class UploadResultComponent implements OnInit {
 
   uploadResultsProgress = false;
   moduleExists = false;
-  cannotAllocate = false;
   fileError = false;
   success = false;
 
@@ -53,7 +51,8 @@ export class UploadResultComponent implements OnInit {
     private formBuilder: FormBuilder,
     private data: DataService,
     private elementRef: ElementRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -71,12 +70,9 @@ export class UploadResultComponent implements OnInit {
     });
     this.uploadResultsForm = this.formBuilder.group({
       moduleCode: [this.routeParams, [Validators.required, Validators.pattern(/^[A-za-z]{2}[0-9]{4}/)]],
-      batch: [{value: '', disabled: true}, [Validators.required]],
-      exam: [{value: '', disabled: true}, [Validators.required]],
-      type: [{value: '', disabled: true}, [Validators.required]],
+      moduleName: [''],
       dateHeld: [{value: '', disabled: true}, [Validators.required]],
-      allocation: [{value: '', disabled: true}, [Validators.required, Validators.pattern(/^[1-9]$|^[1-9][0-9]$|^(100)$/)]],
-      hideMarks: [{value: false, disabled: true}]
+      academicYear: [{value: '', disabled: true}, [Validators.required]],
     });
     if (this.routeParams !== undefined) {
       this.checkModule(this.routeParams);
@@ -84,72 +80,52 @@ export class UploadResultComponent implements OnInit {
   }
 
   checkModule(moduleCode: string) {
-    this.batch.disable();
-    this.exam.disable();
-    this.type.disable();
     this.dateHeld.disable();
-    this.allocation.disable();
-    this.hideMarks.disable();
+    this.academicYear.disable();
     this.error = '';
     this.success = false;
     this.moduleExists = false;
-    this.cannotAllocate = false;
     if (moduleCode !== '') {
       this.data.checkIfModuleExists(moduleCode).subscribe(
-        response => {
-          response.status ? this.moduleName = '' : this.moduleName = response.moduleName;
-          this.moduleExists = response.status;
+        response1 => {
+          this.moduleName.setValue(response1.status ? '' : response1.moduleName);
+          this.moduleExists = response1.status;
           if (this.moduleName) {
-            this.batch.enable();
-            this.batch.reset();
-            this.elementRef.nativeElement.querySelector('#upload_batch').focus();
+            this.academicYear.enable();
+            this.academicYear.reset();
+            this.elementRef.nativeElement.querySelector('#upload_dateHeld').focus();
           }
         },
-        error => this.moduleName = ''
+        error => {
+          this.moduleName.setValue('');
+          this.error = error;
+        }
       ).add(() => this.uploadResultsProgress = false);
     } else {
       this.uploadResultsProgress = false;
     }
   }
 
-  getExams(batch: number) {
-    this.error = '';
-    this.success = false;
-    this.cannotAllocate = false;
+  checkIfResultsExists() {
     this.uploadResultsProgress = true;
-    this.exam.disable();
-    this.type.disable();
-    this.dateHeld.disable();
-    this.allocation.disable();
-    this.hideMarks.disable();
-    this.data.getExamsOfModule(this.moduleCode.value, batch).subscribe(
+    this.data.checkIfResultsUploaded({
+      moduleCode: this.moduleCode.value,
+      academicYear: parseInt(this.academicYear.value, 10)
+    }).subscribe(
       response => {
-        if (response.allocationAvailable > 0) {
-          this.allocationAvailable = response.allocationAvailable;
-          this.exams = response.exams;
-          this.exam.reset();
-          this.exam.enable();
-          this.elementRef.nativeElement.querySelector('#upload_exam').focus();
+        if (response.status) {
+          this.dateHeld.reset();
+          this.dateHeld.enable();
         } else {
-          this.cannotAllocate = true;
+          const res = confirm('Previously uploaded results are found for this module and academic year. Do you want to modify instead?');
+          if (res) {
+            this.router.navigate(['results/edit-results', {moduleCode: this.moduleCode.value, acadamicyear: this.academicYear.value}]);
+          } else {
+            this.uploadResultsForm.reset();
+          }
         }
-      },
-      error => this.cannotAllocate = true
+      }, error => console.log(error)
     ).add(() => this.uploadResultsProgress = false);
-  }
-
-  checkValue() {
-    if (parseInt(this.exam.value, 10) !== 0) {
-      this.type.disable();
-      this.dateHeld.disable();
-      this.allocation.disable();
-      this.hideMarks.disable();
-    } else {
-      this.type.enable();
-      this.dateHeld.enable();
-      this.allocation.enable();
-      this.hideMarks.enable();
-    }
   }
 
   onFileChange(ev) {
@@ -203,12 +179,8 @@ export class UploadResultComponent implements OnInit {
         if (this.resultsFile.length !== 0) {
           const data = {
             moduleCode: this.moduleCode.value,
-            batch: this.batch.value,
-            examID: parseInt(this.exam.value, 10),
-            type: this.type.value,
             dateHeld: this.dateHeld.value ? this.dateHeld.value : null,
-            allocation: parseInt(this.allocation.value, 10),
-            hideMarks: this.hideMarks.value,
+            academicYear: this.academicYear.value,
             results: this.resultsFile
           };
           this.data.uploadExamResults(data).subscribe(
@@ -233,7 +205,6 @@ export class UploadResultComponent implements OnInit {
 
   resetForm() {
     this.resultsFile = [];
-    this.moduleName = '';
     this.moduleExists = false;
     setTimeout(() => this.uploadResultsProgress = false, 1000);
   }
@@ -255,28 +226,16 @@ export class UploadResultComponent implements OnInit {
     return this.uploadResultsForm.get('moduleCode');
   }
 
-  get batch() {
-    return this.uploadResultsForm.get('batch');
-  }
-
-  get exam() {
-    return this.uploadResultsForm.get('exam');
-  }
-
-  get type() {
-    return this.uploadResultsForm.get('type');
+  get moduleName() {
+    return this.uploadResultsForm.get('moduleName');
   }
 
   get dateHeld() {
     return this.uploadResultsForm.get('dateHeld');
   }
 
-  get allocation() {
-    return this.uploadResultsForm.get('allocation');
-  }
-
-  get hideMarks() {
-    return this.uploadResultsForm.get('hideMarks');
+  get academicYear() {
+    return this.uploadResultsForm.get('academicYear');
   }
 
 }

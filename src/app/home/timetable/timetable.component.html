@@ -9,35 +9,43 @@
 
   <div *ngIf="!progress" class="row mx-0 mt-3 px-0">
 
-    <div *ngFor="let day of weekdays" class="col m-1" style="position: relative">
+    <div *ngFor="let day of weekdays" class="col m-0 p-0" style="position: relative">
 
-      <div class="row p-3 bg-primary text-white rounded">
+      <div class="row p-3 bg-primary text-white rounded" style="margin: 0 2px 0 2px">
         {{ day.day | uppercase }}
       </div>
 
-      <div *ngFor="let timeSlot of getTimeSlots(day.index)"
-           [style.top]="(getPosition(timeSlot.startingTime) + 55) + 'px'"
-           [style.height]="(getPosition(timeSlot.endingTime) - getPosition(timeSlot.startingTime) + 7) + 'px'"
-           [class.scale-left]="day.index === 2" [class.scale-center]="day.index !== 2 && day.index !== 6"
-           [class.scale-right]="day.index === 6"
-           (click)="router.navigate(['../course-modules', {moduleCode: timeSlot.moduleCode}])"
-           class="row p-1 px-4 my-2 bg-light rounded"
-           style="position: absolute; width: 100%"
-      >
+      <div class="row px-3">
 
-        <div style="position: absolute; top: 5px" class="row d-flex align-items-start p-0">
-          <ul style="list-style-type: none; padding: 0; width: 90%">
-            <li>{{ timeSlot.moduleName }}</li>
-            <li class="hidden">{{ timeSlot.moduleCode }}</li>
-            <li><span style="font-size: 13px"><b>{{ timeSlot.type }}</b></span></li>
-          </ul>
-        </div>
+        <div *ngFor="let track of timeTable[day.index]" class="col p-0">
 
-        <div class="row d-flex align-items-end p-0" style="position: absolute; bottom: -10px; font-size: 13px">
-          <ul style="list-style-type: none; padding: 0">
-            <li class="hidden">{{ timeSlot.lectureHall }}</li>
-            <li><b>{{ convertTime(timeSlot.startingTime) + ' - ' + convertTime(timeSlot.endingTime) }}</b></li>
-          </ul>
+          <div *ngFor="let session of track"
+               [style.top]="getPosition(getTime(session.startingTime)) + 'px'"
+               [style.height]="(getPosition(getTime(session.endingTime)) - getPosition(getTime(session.startingTime))) + 'px'"
+               class="row bg-info rounded scale p-1"
+               [style.--width]="(timeTable[day.index].length * 100) + '%'"
+               style="position: relative; margin: 4px 2px 0 2px;">
+
+            <div class="rotate mt-1 h6 text-white">
+              <span class="h6 text text-dark">{{ session.moduleCode }}</span>
+            </div>
+
+            <div class="d-flex align-items-start">
+              <ul style="list-style-type: none; padding: 0;" class="hidden">
+                <li>{{ session.moduleCode }}</li>
+                <li><b>{{ session.moduleName }}</b></li>
+              </ul>
+            </div>
+
+            <div class="d-flex align-items-end" style="position: absolute; bottom: -10px">
+              <ul style="list-style-type: none; padding: 0" class="hidden">
+                <li><b>{{ getTime(session.startingTime) }} - {{ getTime(session.endingTime) }}</b></li>
+                <li><i>{{ session.lectureHall }}</i></li>
+              </ul>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
