@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div *ngIf="getRole === 'teacher' || getRole === 'admin'" class="row p-0 pb-3 m-0" style="z-index: 3; width: 100%; position: absolute; bottom: 0; height: fit-content">
+  <div *ngIf="getRole === 'Teacher' || getRole === 'Admin'" class="row p-0 pb-3 m-0" style="z-index: 3; width: 100%; position: absolute; bottom: 0; height: fit-content">
     <button (click)="userData.toggleComposer()" mat-raised-button class="rounded-pill w-75 mx-auto mt-3 mb-2"><mat-icon>add</mat-icon> Send a message</button>
   </div>
 

@@ -65,11 +65,11 @@ export class ViewResultComponent implements OnInit {
     ).subscribe();
 
     this.viewResultsForm = this.formBuilder.group({
-      moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}$/)]],
-      moduleName: ['', Validators.required],
-      academicYear: ['', [Validators.required]],
-      studentID: ['', [Validators.required, Validators.pattern(/^[0-9]{6}[A-Za-z]$/)]],
-      studentName: ['', Validators.required]
+      moduleCode: ['', [Validators.pattern(/^[A-Za-z]{2}[0-9]{4}$/)]],
+      moduleName: [''],
+      academicYear: [''],
+      studentID: ['', [Validators.pattern(/^[0-9]{6}[A-Za-z]$/)]],
+      studentName: ['']
     });
 
   }

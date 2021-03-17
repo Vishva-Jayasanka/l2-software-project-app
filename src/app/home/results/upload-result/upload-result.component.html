@@ -17,15 +17,21 @@
 
         <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Module Code</mat-label>
-          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="upload_moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100" />
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="upload_moduleCode"
+                 type="text" matInput formControlName="moduleCode" placeholder="Ex CM1100"/>
           <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
-          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
-          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && moduleExists">Module does not exist</mat-error>
+          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid
+            module code
+          </mat-error>
+          <mat-error
+            *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && moduleExists">
+            Module does not exist
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="col-8 mx-0 px-1">
           <mat-label>Module Name</mat-label>
-          <input readonly type="text" matInput formControlName="moduleName" />
+          <input readonly type="text" matInput formControlName="moduleName"/>
         </mat-form-field>
 
       </div>
@@ -46,7 +52,8 @@
 
         <mat-form-field appearance="outline" class="col mx-0 px-1">
           <mat-label>Date</mat-label>
-          <input matInput formControlName="dateHeld" [matDatepicker]="myDatePicker" [max]="maxDate" id="upload_dateHeld"/>
+          <input matInput formControlName="dateHeld" [matDatepicker]="myDatePicker" [max]="maxDate"
+                 id="upload_dateHeld"/>
           <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #myDatePicker></mat-datepicker>
           <mat-error *ngIf="dateHeld.touched && dateHeld.errors?.required">This field required</mat-error>
@@ -90,7 +97,9 @@
         </ng-template>
 
         <div style="overflow: hidden">
-          <button (click)="openFile()" type="button" class="btn btn-success" id="upload_add-button" style="margin: 10px">Add Results</button>
+          <button (click)="openFile()" type="button" class="btn btn-success" id="upload_add-button"
+                  style="margin: 10px">Add Results
+          </button>
           <input (change)="onFileChange($event)" type="file" id="resultFileUpload" hidden/>
         </div>
 
@@ -109,8 +118,13 @@
       </div>
 
       <div class="d-flex flex-row-reverse">
-        <button [disabled]="uploadResultsForm.invalid || uploadResultsProgress || resultsFile.length === 0" (click)="uploadResults()" type="button" mat-raised-button color="primary" class="mx-1" >Upload</button>
-        <button [disabled]="uploadResultsProgress" (click)="resetForm()" type="reset" mat-flat-button class="mx-1" >Reset</button>
+        <button
+          [disabled]="uploadResultsForm.invalid || uploadResultsProgress || (!!resultsFile && resultsFile.length === 0)"
+          (click)="uploadResults()" type="button" mat-raised-button color="primary" class="mx-1">Upload
+        </button>
+        <button [disabled]="uploadResultsProgress" (click)="resetForm()" type="reset" mat-flat-button class="mx-1">
+          Reset
+        </button>
       </div>
 
     </form>

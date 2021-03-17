@@ -66,6 +66,7 @@ export class NotificationService {
   }
 
   public sendMessage(message: MessageBody) {
+    console.log(message);
     const msg: Message = {
       messageType: 'notification',
       messageBody: message

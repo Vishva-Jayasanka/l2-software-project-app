@@ -84,7 +84,6 @@ export class ComposerComponent implements OnInit {
     this.subject.reset();
     this.messageText.reset();
     this.recipients = [];
-    console.log(this.notification.messages);
   }
 
   add(event: MatChipInputEvent): void {
