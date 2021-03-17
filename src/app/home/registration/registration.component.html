@@ -21,13 +21,22 @@
         <br/>
 
         <div class="row px-0">
-          <mat-form-field class="col" appearance="outline" id="course-name">
+
+          <mat-form-field class="col-8 pr-1" appearance="outline" id="course-name">
             <mat-label>Course Name</mat-label>
             <mat-select formControlName="courseName">
               <mat-option *ngFor="let course of courses" [value]="course.courseID">{{course.courseName}}</mat-option>
             </mat-select>
             <mat-error *ngIf="courseName.touched && courseName.errors?.required">This field is required</mat-error>
           </mat-form-field>
+
+          <mat-form-field class="col-4" appearance="outline" id="academicYear">
+            <mat-label>Academic Year</mat-label>
+            <mat-select formControlName="academicYear">
+              <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
         </div>
 
         <div formGroupName="name">
@@ -266,7 +275,14 @@
             </div>
 
           </div>
-          <br>
+
+          <div class="row px-0">
+            <p *ngIf="success" class="alert alert-success">Student registered successfully</p>
+          </div>
+
+          <div class="row px-0">
+            <p *ngIf="error" class="alert alert danger">{{ error }}</p>
+          </div>
 
           <div class="d-flex flex-row-reverse my-0">
             <button (click)="submitForm()" type="submit" mat-raised-button color="primary" class="ml-1">

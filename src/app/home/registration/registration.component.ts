@@ -1,6 +1,7 @@
 import {Component, ElementRef, KeyValueDiffers, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../_services/data.service';
+import {YEARS} from '../../_services/shared.service';
 
 export interface Course {
   courseID: number;
@@ -33,6 +34,10 @@ export class RegistrationComponent implements OnInit {
   registerStudentProgress = false;
   maxDate: Date = new Date();
   courses: Course[] = COURSES;
+  years = YEARS;
+
+  success = false;
+  error = '';
 
   districts: District[] = [
     {code: 'LK-52', name: 'Ampara'},
@@ -83,6 +88,7 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
       courseName: [1, [Validators.required]],
+      academicYear: ['', [Validators.required]],
       name: this.formBuilder.group({
         fullName: ['Atapattu Kuruppuge Vishwa Jayasanka', [Validators.required]],
         nameWithInitials: ['A.K.V Jayasnaka', [Validators.required]],
@@ -133,10 +139,13 @@ export class RegistrationComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.data.registerStudent(this.registrationForm.value).subscribe(
         response => {
-          console.log(response);
+          this.success = true;
+          this.error = '';
+          this.registrationForm.reset();
         },
         error => {
-          console.error(error);
+          this.success = false;
+          this.error = error;
         }
       ).add(() => this.registerStudentProgress = false);
     } else {
