@@ -56,9 +56,11 @@
 
       <div id="upload_preview" style="margin: 0 -10px 0 -10px">
 
-        <p>Preview of the attendance</p>
+        <p>Preview of the results</p>
 
-        <div *ngIf="resultsFile.length !== 0; else elseBlock">
+        <p *ngIf="!resultsFile; else resultsFileBlock"><i>Preview not available. Pleas select a file</i></p>
+
+        <ng-template #resultsFileBlock>
 
           <ul>
             <li><span>File Name:</span> {{file.name}}</li>
@@ -85,15 +87,6 @@
 
           </table>
 
-        </div>
-
-        <ng-template #elseBlock>
-          <p *ngIf="!fileError; else fileErrorBlock">
-            <i>Preview not available. Please select a file.</i>
-          </p>
-          <ng-template #fileErrorBlock>
-            <p class="text-danger">File uploaded contains errors. Please check the file.</p>
-          </ng-template>
         </ng-template>
 
         <div style="overflow: hidden">
@@ -101,6 +94,10 @@
           <input (change)="onFileChange($event)" type="file" id="resultFileUpload" hidden/>
         </div>
 
+      </div>
+
+      <div class="row px-1 mt-2 mb-0">
+        <div *ngIf="fileError" class="alert alert-warning col">The file you uploaded contains errors.</div>
       </div>
 
       <div class="row px-1 mt-2 mb-0">

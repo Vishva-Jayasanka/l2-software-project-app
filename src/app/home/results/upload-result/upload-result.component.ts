@@ -33,8 +33,8 @@ export class UploadResultComponent implements OnInit {
 
   routeParams = '';
   error = '';
-  resultsFile: Result[] = [];
   allocationAvailable;
+  resultsFile;
   file;
 
   uploadResultsForm: FormGroup;

@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {LectureHour} from '../../course-module/course-module.component';
 import {Session} from '../attendance.component';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
@@ -35,7 +35,6 @@ export class UploadAttendanceComponent implements OnInit {
 
   error = '';
   previousModuleCode = '';
-  moduleName = '';
 
   maxDate = new Date();
   attendanceFile;
@@ -62,6 +61,7 @@ export class UploadAttendanceComponent implements OnInit {
   ngOnInit(): void {
     this.uploadAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
+      moduleName: [''],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
       batch: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]],
@@ -84,7 +84,7 @@ export class UploadAttendanceComponent implements OnInit {
       this.data.getLectureHoursOfModule(moduleCode).subscribe(
         response => {
           if (response.status) {
-            this.moduleName = response.moduleName;
+            this.moduleName.setValue(response.moduleName);
             this.lectureHours = response.lectureHours;
             this.lectureHoursFound = (this.lectureHours.length !== 0);
             this.lectureHour.reset();
@@ -98,7 +98,7 @@ export class UploadAttendanceComponent implements OnInit {
             this.lectureHour.disable();
             this.moduleCode.markAsDirty();
             this.moduleCode.setErrors({incorrect: false});
-            this.moduleName = '';
+            this.moduleName.reset();
           }
         }, error => {
           this.lectureHour.disable();
@@ -197,6 +197,8 @@ export class UploadAttendanceComponent implements OnInit {
   }
 
   uploadAttendance() {
+    this.error = '';
+    this.successfullySaved = false;
     if (confirm('Are sure you want to upload this file?')) {
       if (this.uploadAttendanceForm.valid) {
         if (this.attendanceFile) {
@@ -214,7 +216,7 @@ export class UploadAttendanceComponent implements OnInit {
             response => {
               this.successfullySaved = true;
               glow(this.elementRef, 'attendance_preview', 'rgb(100, 60, 180)');
-              },
+            },
             error => {
               this.successfullySaved = false;
               this.error = error;
@@ -247,6 +249,10 @@ export class UploadAttendanceComponent implements OnInit {
 
   get moduleCode() {
     return this.uploadAttendanceForm.get('moduleCode');
+  }
+
+  get moduleName(): AbstractControl {
+    return this.uploadAttendanceForm.get('moduleName');
   }
 
   get lectureHour() {

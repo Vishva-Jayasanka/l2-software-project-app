@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
@@ -29,7 +29,6 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   modifiedAttendance: ModifiedAttendance[] = [];
   filteredAttendance: ModifiedAttendance[] = [];
   sessions: Session[];
-  moduleName: string;
   previousModuleCode: string;
   sessionID: number;
   error = '';
@@ -65,6 +64,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.editAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
+      moduleName: [],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
       batch: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]]
@@ -91,7 +91,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
       this.data.getLectureHoursOfModule(moduleCode).subscribe(
         response => {
           if (response.status) {
-            this.moduleName = response.moduleName;
+            this.moduleName.setValue(response.moduleName);
             this.lectureHours = response.lectureHours;
             this.lectureHoursFound = (this.lectureHours.length !== 0);
             this.lectureHour.reset();
@@ -105,7 +105,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
             this.lectureHour.disable();
             this.moduleCode.markAsDirty();
             this.moduleCode.setErrors({incorrect: false});
-            this.moduleName = '';
+            this.moduleName.reset();
           }
         },
         error => {
@@ -132,6 +132,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
     this.session.disable();
     this.data.getSessions(this.lectureHour.value, this.batch.value).subscribe(
       response => {
+        console.log(response);
         this.sessions = response.sessions;
         this.sessions.sort((date1, date2) => date1 > date2 ? 1 : -1);
         this.sessionsFound = this.sessions.length !== 0;
@@ -158,6 +159,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
       this.editAttendanceProgress = true;
       this.updated = false;
       this.modifiedAttendance = [];
+      this.error = '';
       this.data.getAttendanceOfSession(this.session.value).subscribe(
         response => {
           this.attendance = response.attendance;
@@ -240,6 +242,10 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
 
   get moduleCode() {
     return this.editAttendanceForm.get('moduleCode');
+  }
+
+  get moduleName(): AbstractControl {
+    return this.editAttendanceForm.get('moduleName');
   }
 
   get lectureHour() {

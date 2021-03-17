@@ -15,23 +15,39 @@
 
       <div class="row mb-1">
 
-        <mat-form-field appearance="outline" class="col mx-0 px-1">
+        <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Module Code</mat-label>
-          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode" type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100"/>
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" id="moduleCode"
+                 type="text" matInput formControlName="moduleCode" placeholder="Ex: CM1100"/>
           <mat-error *ngIf="moduleCode.touched && moduleCode.errors?.required">This field is required</mat-error>
-          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid module code</mat-error>
-          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && !moduleName">Module does not exist</mat-error>
+          <mat-error *ngIf="moduleCode.touched && !moduleCode.errors?.required && moduleCode.errors?.pattern">Invalid
+            module code
+          </mat-error>
+          <mat-error
+            *ngIf="moduleCode.touched && !moduleCode.errors?.required && !moduleCode.errors?.pattern && !moduleName">
+            Module does not exist
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="col mx-0 px-1">
+        <mat-form-field appearance="outline" class="col-8 mx-0 px-1">
+          <mat-label>Module Name</mat-label>
+          <input matInput type="text" formControlName="moduleName" readonly/>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row mb-1">
+
+        <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Lecture Hour</mat-label>
           <mat-select (selectionChange)="getBatch()" id="lectureHour" formControlName="lectureHour">
-            <mat-option *ngFor="let lectureHour of lectureHours" [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
+            <mat-option *ngFor="let lectureHour of lectureHours"
+                        [value]="lectureHour.lectureHourID">{{ lectureHour.type }}</mat-option>
           </mat-select>
           <mat-error *ngIf="lectureHour.touched && lectureHour.errors?.required">This field is required</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="col mx-0 px-1">
+        <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Batch</mat-label>
           <mat-select (selectionChange)="getSession()" id="batch" formControlName="batch">
             <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
@@ -39,10 +55,11 @@
           <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="col mx-0 px-1">
+        <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Session</mat-label>
           <mat-select id="session" formControlName="session">
-            <mat-option *ngFor="let session of sessions" [value]="session.sessionID">{{ session.dateHeld | date: 'MMM d, y, h:mm a' }}</mat-option>
+            <mat-option *ngFor="let session of sessions"
+                        [value]="session.sessionID">{{ session.date | date: 'MMM d, y, h:mm a' }}</mat-option>
           </mat-select>
           <mat-error *ngIf="session.touched && session.errors?.required">This field is required</mat-error>
         </mat-form-field>
@@ -50,7 +67,9 @@
       </div>
 
       <div class="row px-1 mb-4">
-        <button [disabled]="moduleCode.invalid" (click)="getAttendance()" mat-raised-button type="button" class="mx-2">Add</button>
+        <button [disabled]="moduleCode.invalid" (click)="getAttendance()" mat-raised-button type="button" class="mx-2">
+          Add
+        </button>
       </div>
 
       <div class="row px-1">
@@ -65,10 +84,6 @@
 
         <p>Preview of the attendance</p>
 
-        <ul *ngIf="moduleName">
-          <li>Module Name: <span style="font-weight: 570">{{ moduleName }}</span></li>
-        </ul>
-
         <p *ngIf="attendance.length === 0; else attendanceBlock" style="color: #888888"><i>Attendance will appear here once selected the required inputs</i></p>
 
         <ng-template #attendanceBlock>
@@ -78,7 +93,8 @@
             <input (keyup)="applyFilter($event)" matInput placeholder="Enter keyword" #input/>
           </mat-form-field>
 
-          <div *ngIf="filteredAttendance.length === 0; else attendanceTable" style="color: darkgray"><i>No records found!</i></div>
+          <div *ngIf="filteredAttendance.length === 0; else attendanceTable" style="color: darkgray"><i>No records
+            found!</i></div>
 
           <ng-template #attendanceTable>
 
@@ -93,7 +109,8 @@
               </thead>
 
               <tbody>
-              <tr *ngFor="let record of filteredAttendance; let i = index" [attr.id]="'tr' + (i + 1)" [class.changed]="record.modified">
+              <tr *ngFor="let record of filteredAttendance; let i = index" [attr.id]="'tr' + (i + 1)"
+                  [class.changed]="record.modified">
                 <td>{{ i + 1 }}</td>
                 <td>{{ record.studentID }}</td>
                 <td>
@@ -122,8 +139,10 @@
       </div>
 
       <div class="d-flex flex-row-reverse my-0">
-        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" class="mx-1">Reset</button>
-        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" class="mx-1">
+        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" class="mx-1">Reset
+        </button>
+        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button"
+                class="mx-1">
           <span *ngIf="buttonProgress" class="spinner-border spinner-border-sm mr-1"></span>
           Save
         </button>
