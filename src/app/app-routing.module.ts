@@ -35,6 +35,7 @@ import {EditPaymentComponent} from './home/payment/edit-payment/edit-payment.com
 import {SubmitedRequestsComponent} from './home/request/submited-requests/submited-requests.component';
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
 import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
+import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -232,6 +233,14 @@ const routes: Routes = [
       {
         path: 'forgot-password',
         component: ForgotPasswordComponent
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
+      },
+      {
+        path: 'reset-password/:token',
+        component: ResetPasswordComponent
       },
       {
         path: 'verification',

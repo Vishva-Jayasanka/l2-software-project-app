@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {map} from 'rxjs/operators';
 
 import {environment} from '../../environments/environment';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class AuthenticationService {
     }));
   }
 
-  sendVerificationEmail(email) {
+  sendVerificationEmail(email): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}send-verification-email`, email);
   }
 
@@ -37,8 +38,16 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.apiUrl}is-verified`, null);
   }
 
-  checkUsername(username) {
-    return this.http.post<any>(`${environment.apiUrl}check-username`, username);
+  sendPasswordResetEmail(username: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}send-password-reset-email`, {username});
+  }
+
+  resetPassword(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}reset-password`, data);
+  }
+
+  changePassword(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}change-password`, data);
   }
 
   logout() {

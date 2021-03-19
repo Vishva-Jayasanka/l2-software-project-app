@@ -13,6 +13,8 @@ export class ForgotPasswordComponent implements OnInit {
   usernameForm: FormGroup;
   error = '';
   progress = false;
+  emailSent = false;
+  wait = 0;
 
   constructor(
     private router: Router,
@@ -28,17 +30,28 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   checkUsername() {
-    // this.progress = true;
-    // this.authentication.checkUsername(this.usernameForm.value).subscribe(
-    //   response => {
-        this.router.navigate(['/login']);
-    //   },
-    //   error => {
-    //     this.error = error;
-    //   },
-    // ).add(
-    //   () => this.progress = false
-    // );
+    this.error = '';
+    this.progress = true;
+    this.authentication.sendPasswordResetEmail(this.username.value).subscribe(
+      response => {
+        this.emailSent = true;
+        this.wait = 30;
+        this.countDown();
+      },
+      error => {
+        this.emailSent = false;
+        this.error = error;
+      }
+    ).add(() => this.progress = false);
+  }
+
+  countDown(): void {
+    setTimeout(() => {
+      this.wait -= 1;
+      if (this.wait !== 0) {
+        this.countDown();
+      }
+    }, 1000);
   }
 
   get username() {

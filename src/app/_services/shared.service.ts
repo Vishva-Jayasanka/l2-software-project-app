@@ -1,4 +1,5 @@
 import {ElementRef} from '@angular/core';
+import {AbstractControl} from '@angular/forms';
 
 export const YEARS = [2016, 2017, 2018, 2019, 2020];
 
@@ -8,6 +9,13 @@ export function glow(elementRef: ElementRef, id: string, color: string) {
     () => elementRef.nativeElement.querySelector('#' + id).style.boxShadow = '0 0 0 2px white',
     2000
   );
+}
+
+export function PasswordValidator(control: AbstractControl): {[key: string]: boolean} | null {
+  const password = control.get('password');
+  const confirmPassword = control.get('confirmPassword');
+  return password && confirmPassword && password.value !== confirmPassword.value ?
+    {mismatch: true} : null;
 }
 
 export function scrollToFirstInvalidElement(elementRef: ElementRef) {

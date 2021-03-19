@@ -53,6 +53,7 @@ import {
 import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.component';
 import { PaymentDetailsComponent } from './home/payment/payment-details/payment-details.component';
 import { SubmitedRequestsComponent } from './home/request/submited-requests/submited-requests.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 
 @NgModule({
@@ -94,7 +95,8 @@ import { SubmitedRequestsComponent } from './home/request/submited-requests/subm
     ModuleAttendanceComponent,
     EditPaymentComponent,
     PaymentDetailsComponent,
-    SubmitedRequestsComponent
+    SubmitedRequestsComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

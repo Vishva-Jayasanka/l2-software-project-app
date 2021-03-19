@@ -1,73 +1,123 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatStepper} from '@angular/material/stepper';
+import {PasswordValidator} from '../../_services/shared.service';
 
 @Component({
   selector: 'app-verification',
   templateUrl: './verification.component.html',
   styleUrls: ['./verification.component.css']
 })
-export class VerificationComponent implements OnInit {
+export class VerificationComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('stepper') stepper: MatStepper;
 
   emailForm: FormGroup;
-  verificationCodeForm: FormGroup;
+  newPasswordForm: FormGroup;
   error = '';
   progress = false;
+  emailSent = false;
+  success = false;
+  wait = 0;
+
+  token: string;
+  recoveryEmail: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+
+    this.route.params.subscribe(params => {
+      this.recoveryEmail = params.email;
+      this.token = params.token;
+    });
+
+    this.emailForm = this.formBuilder.group({
+      email: [this.recoveryEmail ? this.recoveryEmail : '', [Validators.required, Validators.email]]
+    });
+
+    this.newPasswordForm = this.formBuilder.group({
+      password: ['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]]
+    }, {validator: PasswordValidator});
+
+    this.confirmPassword.valueChanges.subscribe(value => {
+      if (this.password.touched && this.password.value !== this.confirmPassword.value) {
+        this.confirmPassword.setErrors({incorrect: true});
+      } else {
+        this.confirmPassword.setErrors(null);
+      }
+    });
+
   }
 
   ngOnInit(): void {
-    // this.authentication.isVerified().subscribe(
-    //   response => {
-    //     if (response.verified) {
-    //       this.router.navigate(['/']);
-    //     }
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   }
-    // );
-    this.emailForm = this.formBuilder.group({
-      email: ['', [Validators.email, Validators.required]]
-    });
-    this.verificationCodeForm = this.formBuilder.group({
-      verificationCode: ['', [Validators.minLength(6), Validators.required]]
-    });
   }
 
-  onSubmitEmail() {
-    this.authentication.sendVerificationEmail(this.emailForm.value).subscribe(
-      response => console.log(response),
-      error => console.log(error)
-    );
+  ngAfterViewInit(): void {
+    if (this.recoveryEmail) {
+      this.stepper.selectedIndex = 1;
+    }
   }
 
-  onSubmitOTP() {
+  sendVerificationEmail(): void {
     this.progress = true;
-    this.authentication.verifyEmail(this.verificationCodeForm.value).subscribe(
+    this.error = '';
+    this.authentication.sendVerificationEmail(this.emailForm.value).subscribe(
       response => {
-        this.router.navigate(['/']);
+        this.emailSent = true;
+        this.wait = 30;
+        this.countDown();
       },
       error => {
+        this.emailSent = false;
         this.error = error;
       }
-    ).add(
-      () => this.progress = false
-    );
+    ).add(() => this.progress = false);
+  }
+
+  resetPassword(): void {
+    this.error = '';
+    this.progress = true;
+    const data = {
+      password: this.password.value,
+      token: this.token
+    };
+    this.authentication.changePassword(data).subscribe(
+      response => {
+        this.success = true;
+      },
+      error => {
+        this.success = false;
+        this.error = error;
+      }
+    ).add(() => this.progress = false);
+  }
+
+  countDown(): void {
+    setTimeout(() => {
+      this.wait -= 1;
+      if (this.wait !== 0) {
+        this.countDown();
+      }
+    }, 1000);
   }
 
   get email() {
     return this.emailForm.get('email');
   }
 
-  get OTP() {
-    return this.verificationCodeForm.get('verificationCode');
+  get password(): AbstractControl {
+    return this.newPasswordForm.get('password');
+  }
+
+  get confirmPassword(): AbstractControl {
+    return this.newPasswordForm.get('confirmPassword');
   }
 
 }

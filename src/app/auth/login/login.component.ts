@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
     this.progress = true;
     this.authentication.login(this.loginForm.value).subscribe(
       response => {
+        console.log(response);
         if (response.verified) {
           this.router.navigate(['/']);
         } else {
