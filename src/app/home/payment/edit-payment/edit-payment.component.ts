@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./edit-payment.component.css']
 })
 export class EditPaymentComponent implements OnInit {
+  editPaymentProgress: false;
+  editPaymentForm: any;
 
   constructor() { }
 
