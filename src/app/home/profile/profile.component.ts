@@ -1,17 +1,23 @@
 import {Component, OnInit} from '@angular/core';
 import {UserDataService} from '../../_services/user-data.service';
-import {AuthenticationService} from '../../_services/authentication.service';
-import {COURSES} from '../registration/registration.component';
 
 export interface User {
   username: string;
+  roleName: string;
+  firstName: string;
+  lastName: string;
   fullName: string;
-  course: string;
+  courseName: string;
   dateOfBirth: Date;
   email: string;
   address: string;
   mobile: string;
   home: string;
+  academicYear: number;
+  currentGPA: number;
+  company: string;
+  designation: string;
+  nic: string;
   educationQualification: {
     degree: string;
     institute: string;
@@ -28,10 +34,9 @@ export interface User {
 export class ProfileComponent implements OnInit {
 
   progress = false;
-  userDetail: User;
+  userDetails: User;
 
   constructor(
-    private authentication: AuthenticationService,
     public userData: UserDataService
   ) {
   }
@@ -40,25 +45,13 @@ export class ProfileComponent implements OnInit {
     this.progress = true;
     this.userData.getUserDetails().subscribe(
       response => {
-        const personal = response.details[0][0];
-        const edu = response.details[1];
-        this.userDetail = {
-          username: this.authentication.details.username,
-          fullName: personal.fullName,
-          course: COURSES.find(course => course.courseID === personal.courseID).courseName,
-          dateOfBirth: new Date(personal.dateOfBirth),
-          email: personal.email,
-          address: personal.address,
-          mobile: personal.mobile,
-          home: personal.home,
-          educationQualification: []
-        };
-        for (const qualification of edu) {
-          this.userDetail.educationQualification.push(qualification);
-        }
-        console.log(this.userDetail);
+        console.log(response.educationQualifications);
+        this.userDetails = response.details;
+        this.userDetails.educationQualification = response.educationQualifications;
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+      }
     ).add(() => this.progress = false);
   }
 
