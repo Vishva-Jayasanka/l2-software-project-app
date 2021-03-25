@@ -37,6 +37,7 @@ import {AddRequestComponent} from './home/request/add-request/add-request.compon
 import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
+import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 
 const routes: Routes = [
   {
@@ -187,6 +188,10 @@ const routes: Routes = [
           {
             path: 'view-registration',
             component: ViewRegistrationComponent
+          },
+          {
+            path: 'new-registration',
+            component: NewRegistrationComponent
           }
           ]
       },
