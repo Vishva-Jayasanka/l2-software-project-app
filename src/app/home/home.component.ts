@@ -112,9 +112,17 @@ export class HomeComponent implements OnInit {
     }, {
       component: 'RegistrationComponent',
       route: 'registration',
-      icon: 'how_to_reg',
+      icon: 'description',
       label: 'Registration',
-      children: []
+      children: [{
+        component: 'ViewRegistrationComponent',
+        route: 'view-registration',
+        label: 'view-registration'
+      }, {
+        component: 'NewRegistrationComponent',
+        route: 'new-registration',
+        label: 'new-registration'
+      }]
     }
   ];
 

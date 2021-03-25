@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserDataService} from '../../_services/user-data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {COURSES} from '../registration/registration.component';
+import {COURSES} from '../registration/new-registration/new-registration.component';
 
 export interface User {
   username: string;
