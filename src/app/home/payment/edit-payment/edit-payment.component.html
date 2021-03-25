@@ -1,8 +1,8 @@
 <div class="card">
 
   <div class="card-header">
-    <h5>Edit Payments</h5>
-    <p class="sub-header">Edit exam results related to any module</p>
+    <h5>Edit Payment Details</h5>
+    <p class="sub-header">Edit payment details related to any student</p>
   </div>
 
   <div class="card-body">
@@ -11,9 +11,95 @@
       <mat-progress-bar [hidden]="!editPaymentProgress" mode="query"></mat-progress-bar>
     </div>
 
-    <form [formGroup]="editPaymentForm">
+    <form [formGroup]="paymentForm">
 
+      <h6>Depositor Details</h6>
+      <mat-divider style="margin-left: -20px; margin-right: -20px"></mat-divider>
+      <br/>
 
+      <div class="row mb-2" formGroupName="depositor">
+
+        <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
+          <mat-label>Registration Number</mat-label>
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="registrationNumber" placeholder="Ex: 184183R">
+          <mat-error *ngIf="registrationNumber.touched && registrationNumber.errors?.required">This field is required</mat-error>
+          <mat-error *ngIf="registrationNumber.touched && !registrationNumber.errors?.required && registrationNumber.errors?.pattern">Invalid input</mat-error>
+          <mat-error *ngIf="registrationNumber.touched && !registrationNumber.errors?.required && !registrationNumber.errors?.pattern && studentIDNotFound">Student ID not found</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col mx-0 px-1" appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input type="text" matInput formControlName="fullName" placeholder="full name" readonly>
+        </mat-form-field>
+
+      </div>
+
+      <div class="row px-1">
+        <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
+      </div>
+
+      <h6>Edit Payments</h6>
+      <mat-divider style="margin-left: -20px; margin-right: -20px"></mat-divider>
+      <br/>
+
+      <div formGroupName="deposit">
+
+        <div class="row mb-2">
+
+          <mat-form-field class="col mx-0 px-1" appearance="outline">
+            <mat-label>Bank</mat-label>
+            <mat-select formControlName="bankName">
+              <mat-option *ngFor="let bank of banks" [value]="bank.bankID">{{bank.bankName}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col mx-0 px-1" appearance="outline">
+            <mat-label>Slip Number</mat-label>
+            <input type="number" matInput formControlName="slipNumber" placeholder="slip number">
+            <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="row mb-0">
+
+          <mat-form-field class="col mx-0 px-1" appearance="outline">
+            <mat-label>Amount Paid (Rs.)</mat-label>
+            <input matInput type="number" class="example-right-align" formControlName="totalPaid" placeholder="Ex: 456,500.00">
+            <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col mx-0 px-1" appearance="outline">
+            <mat-label>Payment Date</mat-label>
+            <input matInput type="date" formControlName="paymentDate"/>
+            <mat-error *ngIf="paymentDate.touched && paymentDate.errors?.required">This field required</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="row px-1">
+          <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
+        </div>
+
+        <div class="row px-1">
+          <div *ngIf="success" class="alert alert-warning col">Payment details uploaded successfully</div>
+        </div>
+
+        <div class="d-flex flex-row-reverse my-0">
+
+            <button (click)="modifyPayments()" type="button" mat-raised-button color="primary" class="mx-1" id="add-button">
+              <span *ngIf="buttonProgress" class="spinner-border spinner-border-sm mr-1"></span>
+              Save Changes
+            </button>
+          <button (click)="deletePayments()" type="button" mat-button color="warn" class="mx-1" id="delete-button">Delete</button>
+          <button (click)="getPayments()" type="button" mat-button class="mx-1" id="reset-button">Reset</button>
+        </div>
+
+      </div>
 
     </form>
+
   </div>
+
+</div>

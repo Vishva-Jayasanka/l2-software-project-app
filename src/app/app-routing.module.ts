@@ -36,6 +36,7 @@ import {SubmitedRequestsComponent} from './home/request/submited-requests/submit
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
 import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
+import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 
 const routes: Routes = [
   {
@@ -181,7 +182,13 @@ const routes: Routes = [
       },
       {
         path: 'registration',
-        component: RegistrationComponent
+        component: RegistrationComponent,
+        children: [
+          {
+            path: 'view-registration',
+            component: ViewRegistrationComponent
+          }
+          ]
       },
       {
         path: 'profile',

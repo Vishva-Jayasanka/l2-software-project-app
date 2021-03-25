@@ -34,6 +34,20 @@
 
       </div>
 
+      <div class="row mb-2">
+
+        <mat-form-field class="col mx-0 px-1" appearance="outline">
+          <mat-label>Course Name</mat-label>
+          <input type="text" matInput formControlName="courseId" placeholder="course name" readonly>
+        </mat-form-field>
+
+        <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
+          <mat-label>Academic Year</mat-label>
+          <input type="text" matInput formControlName="academicYear" placeholder="academic year" readonly>
+        </mat-form-field>
+
+      </div>
+
       <div class="row px-1">
         <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
       </div>
@@ -43,6 +57,7 @@
       <br/>
 
       <div formGroupName="deposit">
+
 
         <div class="row mb-2">
 
@@ -62,6 +77,8 @@
 
         </div>
 
+
+
         <div class="row mb-0">
 
           <mat-form-field class="col mx-0 px-1" appearance="outline">
@@ -76,6 +93,7 @@
             <mat-error *ngIf="paymentDate.touched && paymentDate.errors?.required">This field required</mat-error>
           </mat-form-field>
 
+
         </div>
 
         <div class="row px-1">
@@ -88,6 +106,7 @@
 
         <div class="d-flex flex-row-reverse my-0">
           <button (click)="submitForm()" type="button" mat-raised-button color="primary" class="mx-1">Submit</button>
+          <button (click)="resetForm()" type="button" mat-button class="mr-1">Reset Form</button>
         </div>
 
       </div>

@@ -46,6 +46,7 @@ import {NewModuleComponent} from './home/course-module/new-module/new-module.com
 import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
 import {UserGuard} from './_helpers/user.guard';
 import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
+import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import {
   AttendanceDialogComponent,
   ModuleAttendanceComponent
@@ -96,7 +97,8 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     EditPaymentComponent,
     PaymentDetailsComponent,
     SubmitedRequestsComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ViewRegistrationComponent
   ],
   imports: [
     BrowserModule,

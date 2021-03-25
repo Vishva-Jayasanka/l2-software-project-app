@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
@@ -31,9 +31,12 @@ export class UploadPaymentComponent implements OnInit {
   term$ = new Subject<string>();
   private searchSubscription: Subscription;
 
+
+
   constructor(
     private formBuilder: FormBuilder,
-    private data: DataService
+    private data: DataService,
+    private elementRef: ElementRef
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -53,6 +56,7 @@ export class UploadPaymentComponent implements OnInit {
         depositor: this.formBuilder.group({
           registrationNumber: ['', [Validators.required, Validators.pattern(/^([0-9]{6}[A-Za-z])$/)]],
           fullName: [''],
+          courseId: [''],
         }),
         deposit: this.formBuilder.group({
           bankName: ['', [Validators.required]],
@@ -65,15 +69,31 @@ export class UploadPaymentComponent implements OnInit {
   }
 
   submitForm() {
+    this.uploadAPaymentProgress = true;
+    if (this.paymentForm.valid) {
     this.data.uploadPayment(this.paymentForm.value).subscribe(
       response => {
-        console.log(response);
+        this.success = true;
+        this.error = '';
+        this.paymentForm.reset();
       },
       error => {
+        this.success = false;
         this.error = error;
       }
-    );
+    ).add(() => this.uploadAPaymentProgress = false);
+    } else {
+      this.uploadAPaymentProgress = false;
+      this.scrollToFirstInvalidControl();
+    }
   }
+
+  scrollToFirstInvalidControl() {
+    const firstInvalidControl: HTMLElement = this.elementRef.nativeElement.querySelector('form .ng-invalid');
+    firstInvalidControl.scrollIntoView({behavior: 'smooth'});
+  }
+
+
 
   checkStudentID(studentID) {
     this.success = false;
@@ -84,6 +104,7 @@ export class UploadPaymentComponent implements OnInit {
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
+            this.courseId.setValue(response.name);
           } else {
             this.studentIDNotFound = true;
           }
@@ -101,6 +122,10 @@ export class UploadPaymentComponent implements OnInit {
 
   get fullName() {
     return this.paymentForm.get('depositor').get('fullName');
+  }
+
+  get courseId() {
+    return this.paymentForm.get('depositor').get('courseId');
   }
 
   get registrationNumber() {
@@ -121,5 +146,10 @@ export class UploadPaymentComponent implements OnInit {
 
   get paymentDate() {
     return this.paymentForm.get('deposit').get('totalPaid');
+  }
+
+  resetForm() {
+    this.paymentForm.reset();
+    this.elementRef.nativeElement.querySelector('#course-name').scrollIntoView();
   }
 }
