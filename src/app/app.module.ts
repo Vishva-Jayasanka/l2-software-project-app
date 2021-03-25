@@ -36,7 +36,6 @@ import {ProfileComponent} from './home/profile/profile.component';
 import {ProfilePictureComponent} from './home/profile/profile-picture/profile-picture.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
-import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ComposerComponent} from './home/notification/composer/composer.component';
 import {RequestComponent} from './home/request/request.component';
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
@@ -58,6 +57,8 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
+import { ViewPaymentHomeComponent } from './home/payment/view-payment-home/view-payment-home.component';
+import { ViewPaymentComponent } from './home/payment/view-payment-home/view-payment/view-payment.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { MatChipsModule } from '@angular/material/chips';
     ProfileComponent,
     ProfilePictureComponent,
     UploadPaymentComponent,
+    ViewPaymentHomeComponent,
     ViewPaymentComponent,
     ComposerComponent,
     RequestComponent,

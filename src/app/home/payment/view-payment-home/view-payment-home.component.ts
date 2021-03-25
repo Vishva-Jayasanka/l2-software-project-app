@@ -17,10 +17,10 @@ export const COURSES: Course[] = [
 
 @Component({
   selector: 'app-view-payment',
-  templateUrl: './view-payment.component.html',
-  styleUrls: ['./view-payment.component.css']
+  templateUrl: './view-payment-home.component.html',
+  styleUrls: ['./view-payment-home.component.css']
 })
-export class ViewPaymentComponent implements OnInit {
+export class ViewPaymentHomeComponent implements OnInit {
   viewPaymentsForm: FormGroup;
   viewPaymentsProgress: boolean;
   studentIDNotFound = false;

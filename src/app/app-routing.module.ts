@@ -18,7 +18,6 @@ import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
-import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ProfileComponent} from './home/profile/profile.component';
 import {RequestComponent} from './home/request/request.component';
 import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
@@ -38,6 +37,8 @@ import {UpdateStatusComponent} from './home/request/update-status/update-status.
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
+import { ViewPaymentHomeComponent } from './home/payment/view-payment-home/view-payment-home.component';
+import { ViewPaymentComponent } from './home/payment/view-payment-home/view-payment/view-payment.component';
 
 const routes: Routes = [
   {
@@ -169,7 +170,13 @@ const routes: Routes = [
           },
           {
             path: 'view-payment',
-            component: ViewPaymentComponent
+            component: ViewPaymentComponent,
+            children: [
+              {
+                path: 'exam-results',
+                component: ExamResultsComponent
+              }
+            ]
           },
           {
             path: 'upload-payment',
