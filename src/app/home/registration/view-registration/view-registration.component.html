@@ -1,2 +1,89 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5>View Results</h5>
+    <p class="sub-header">View Exam results of any student or module</p>
+  </div>
+
+  <div class="card-body">
+
+    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+      <mat-progress-bar [hidden]="!viewRegistrationProgress" mode="query"></mat-progress-bar>
+    </div>
+
+    <form [formGroup]="viewRegistrationsForm">
+
+      <div class="row mb-2">
+
+        <mat-form-field class="col-6 mx-0 px-1" appearance="outline">
+          <mat-label>Course Name</mat-label>
+          <mat-select formControlName="courseName">
+            <mat-option *ngFor="let course of courses" [value]="course.courseID">{{course.courseName}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="courseName.touched && courseName.errors?.required">This field is required</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="col-3 mx-0 px-1">
+          <mat-label>Academic Year</mat-label>
+          <mat-select formControlName="academicYear">
+            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+
+      <div class="row px-1 mb-4">
+        <button (click)="getRegistrations()" mat-raised-button color="primary" class="mx-2" type="button">View</button>
+      </div>
+
+
+      <div id="view_results" style="margin: 15px -10px 0 -10px">
+
+        <p>View Registration Details</p>
+
+        <div *ngIf="registration.length !== 0">
+
+          <table class="table table-sm">
+
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Index Number</th>
+              <th scope="col">Title</th>
+              <th scope="col">Name</th>
+              <th scope="col">Course Name</th>
+              <th scope="col">Academic Year</th>
+              <th scope="col">Address</th>
+              <th scope="col">Tel Number</th>
+              <th scope="col">NIC</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let registration of registrations; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>184061R</td>
+              <td>{{ registration.fullName }}</td>
+              <td>{{ registration.courseName }}</td>
+              <td>{{ registration.academicYear }}</td>
+              <td>{{ registration.permanentAddress }}</td>
+              <td>{{ registration.mobile }}</td>
+              <td>{{ registration.nic }}</td>
+            </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
 
 

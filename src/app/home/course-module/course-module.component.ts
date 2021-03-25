@@ -106,3 +106,6 @@ export class DeleteModuleDialogComponent implements OnInit {
   }
 
 }
+
+export class Registrations {
+}
