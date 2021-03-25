@@ -56,7 +56,8 @@ import { PaymentDetailsComponent } from './home/payment/payment-details/payment-
 import { SubmitedRequestsComponent } from './home/request/submited-requests/submited-requests.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
-
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,9 @@ import { NewRegistrationComponent } from './home/registration/new-registration/n
     ReactiveFormsModule,
     HttpClientModule,
     MatAutocompleteModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatPaginatorModule,
+    MatChipsModule
   ],
   providers: [
     AuthenticationGuard,
