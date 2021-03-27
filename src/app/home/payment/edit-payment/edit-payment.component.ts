@@ -5,6 +5,7 @@ import {DataService} from '../../../_services/data.service';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Bank} from '../upload-payment/upload-payment.component';
 
+
 @Component({
   selector: 'app-edit-payment',
   templateUrl: './edit-payment.component.html',
@@ -13,6 +14,7 @@ import {Bank} from '../upload-payment/upload-payment.component';
 export class EditPaymentComponent implements OnInit {
   editPaymentProgress = false;
   studentIDNotFound = false;
+  panelOpenState = false;
   success = false;
 
   error = '';
@@ -27,7 +29,6 @@ export class EditPaymentComponent implements OnInit {
   private searchSubscription: Subscription;
   private elementRef: ElementRef;
   buttonProgress: false;
-
 
   constructor(
     private formBuilder: FormBuilder,
@@ -73,6 +74,7 @@ export class EditPaymentComponent implements OnInit {
       }
     );
   }
+
 
   checkStudentID(studentID) {
     this.success = false;
@@ -127,15 +129,4 @@ export class EditPaymentComponent implements OnInit {
     this.elementRef.nativeElement.querySelector('#course-name').scrollIntoView();
   }
 
-  getPayments() {
-
-  }
-
-  deletePayments() {
-
-  }
-
-  modifyPayments() {
-
-  }
 }

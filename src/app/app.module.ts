@@ -57,8 +57,9 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
-import { ViewPaymentHomeComponent } from './home/payment/view-payment-home/view-payment-home.component';
-import { ViewPaymentComponent } from './home/payment/view-payment-home/view-payment/view-payment.component';
+import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
+import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,7 @@ import { ViewPaymentComponent } from './home/payment/view-payment-home/view-paym
     ProfileComponent,
     ProfilePictureComponent,
     UploadPaymentComponent,
-    ViewPaymentHomeComponent,
+    ViewPaymentsComponent,
     ViewPaymentComponent,
     ComposerComponent,
     RequestComponent,
@@ -103,7 +104,8 @@ import { ViewPaymentComponent } from './home/payment/view-payment-home/view-paym
     SubmitedRequestsComponent,
     ResetPasswordComponent,
     ViewRegistrationComponent,
-    NewRegistrationComponent
+    NewRegistrationComponent,
+    ViewPaymentDetailsComponent
   ],
   imports: [
     BrowserModule,

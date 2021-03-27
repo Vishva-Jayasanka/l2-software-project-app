@@ -37,8 +37,9 @@ import {UpdateStatusComponent} from './home/request/update-status/update-status.
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
-import { ViewPaymentHomeComponent } from './home/payment/view-payment-home/view-payment-home.component';
-import { ViewPaymentComponent } from './home/payment/view-payment-home/view-payment/view-payment.component';
+import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
+import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
 
 const routes: Routes = [
   {
@@ -164,19 +165,16 @@ const routes: Routes = [
             component: PaymentDetailsComponent
           },
           {
-            path: '',
-            redirectTo: 'payment-details',
-            pathMatch: 'full'
-          },
-          {
             path: 'view-payment',
             component: ViewPaymentComponent,
-            children: [
-              {
-                path: 'exam-results',
-                component: ExamResultsComponent
-              }
-            ]
+          },
+          {
+            path: 'view-payment-details',
+            component: ViewPaymentDetailsComponent,
+          },
+          {
+            path: 'view-payments',
+            component: ViewPaymentsComponent,
           },
           {
             path: 'upload-payment',
