@@ -6,11 +6,11 @@
 
     <div class="card-body">
         <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
-          <mat-progress-bar [hidden]="!viewPaymentProgress" mode="query"></mat-progress-bar>
+          <mat-progress-bar [hidden]="dataSource" mode="query"></mat-progress-bar>
         </div>
     </div>
     <form [formGroup]="viewPaymentForm">
-
+      <mat-progress-bar [hidden]="true" mode="query"></mat-progress-bar>
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="overflow-x:scroll;">
                     
             <ng-container matColumnDef="no">
