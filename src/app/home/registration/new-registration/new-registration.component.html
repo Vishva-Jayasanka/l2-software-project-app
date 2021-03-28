@@ -35,6 +35,15 @@
         </div>
 
         <div formGroupName="name">
+          <div class="row px-0">
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>Title</mat-label>
+            <mat-select formControlName="title">
+              <mat-option *ngFor="let title of titles" [value]="title.code">{{title.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="title.touched && title.errors?.requied">This field is required</mat-error>
+          </mat-form-field>
+        </div>
 
           <div class="row px-0">
             <mat-form-field class="col" appearance="outline">

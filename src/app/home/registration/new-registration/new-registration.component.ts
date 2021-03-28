@@ -14,6 +14,11 @@ export interface District {
   name: string;
 }
 
+export interface Title {
+  code: string;
+  name: string;
+}
+
 export interface Province {
   code: string;
   name: string;
@@ -67,6 +72,14 @@ export class NewRegistrationComponent implements OnInit {
     {code: 'LK-53', name: 'Trincomalee'},
     {code: 'LK-44', name: 'Vavuniya'}
   ];
+
+  titles: Title[] = [
+    {code: 'LK-3', name: 'Mr.'},
+    {code: 'LK-5', name: 'Mrs.'},
+    {code: 'LK-7', name: 'Ms.'},
+    {code: 'LK-4', name: 'Rev. (Reverend)'},
+  ];
+
   provinces: Province[] = [
     {code: 'LK-2', name: 'Central Province'},
     {code: 'LK-5', name: 'Eastern Province'},
@@ -78,6 +91,8 @@ export class NewRegistrationComponent implements OnInit {
     {code: 'LK-8', name: 'Uva Province'},
     {code: 'LK-1', name: 'Western Province'},
   ];
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -91,6 +106,7 @@ export class NewRegistrationComponent implements OnInit {
       courseName: [1, [Validators.required]],
       academicYear: ['', [Validators.required]],
       name: this.formBuilder.group({
+        title: ['LK-3', [Validators.required]],
         fullName: ['Atapattu Kuruppuge Vishwa Jayasanka', [Validators.required]],
         nameWithInitials: ['A.K.V Jayasnaka', [Validators.required]],
       }),
@@ -177,6 +193,10 @@ export class NewRegistrationComponent implements OnInit {
 
   get courseName() {
     return this.registrationForm.get('courseName');
+  }
+
+  get title() {
+    return this.registrationForm.get('name').get('title');
   }
 
   get fullName() {

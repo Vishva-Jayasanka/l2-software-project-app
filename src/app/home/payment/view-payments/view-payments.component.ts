@@ -18,31 +18,31 @@ export const COURSES: Course[] = [
 
 export interface PeriodicElement1 {
   position: number;
+  regNo: string;
   title: string;
   name: string;
-  nic: string;
-  email: string;
-  mobile: number;
+  totalPayment: number;
+  courseName: string;
 }
 
 const ELEMENT_DATA1: PeriodicElement1[] = [
-  {position: 1, title: 'Mr', name: 'Hydrogen', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 2, title: 'Mr', name: 'Helium', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 3, title: 'Mr', name: 'Lithium', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 4, title: 'Mr', name: 'Beryllium', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 5, title: 'Mr', name: 'Boron', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 6, title: 'Mr', name: 'Carbon', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 7, title: 'Mr', name: 'Nitrogen', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 8, title: 'Mr', name: 'Oxygen', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 9, title: 'Mr', name: 'Fluorine', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 10, title: 'Mr', name: 'Neon', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 11, title: 'Mr', name: 'Sodium', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 12, title: 'Mr', name: 'Magnesium', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 13, title: 'Mr', name: 'Aluminum', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 14, title: 'Mr', name: 'Silicon', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 15, title: 'Mr', name: 'Phosphorus', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 16, title: 'Mr', name: 'Sulfur', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
-  {position: 17, title: 'Mr', name: 'Chlorine', nic: '995240424V', email: 'onalisharindi@gmail.com', mobile: +94714240853},
+  {position: 1, regNo: '184183R', title: 'Mr', name: 'Hydrogen', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 2, regNo: '184183R', title: 'Mr', name: 'Helium', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 3, regNo: '184183R', title: 'Mr', name: 'Lithium', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 4, regNo: '184183R', title: 'Mr', name: 'Beryllium', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 5, regNo: '184183R', title: 'Mr', name: 'Boron', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 6, regNo: '184183R', title: 'Mr', name: 'Carbon', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 7, regNo: '184183R', title: 'Mr', name: 'Nitrogen', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 8, regNo: '184183R', title: 'Mr', name: 'Oxygen', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 9, regNo: '184183R', title: 'Mr', name: 'Fluorine', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 10, regNo: '184183R', title: 'Mr', name: 'Neon', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 11, regNo: '184183R', title: 'Mr', name: 'Sodium', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 12, regNo: '184183R', title: 'Mr', name: 'Magnesium', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 13, regNo: '184183R', title: 'Mr', name: 'Aluminum', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 14, regNo: '184183R', title: 'Mr', name: 'Silicon', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 15, regNo: '184183R', title: 'Mr', name: 'Phosphorus', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 16, regNo: '184183R', title: 'Mr', name: 'Sulfur', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
+  {position: 17, regNo: '184183R', title: 'Mr', name: 'Chlorine', totalPayment: 995240424, courseName: 'onalisharindi@gmail.com'},
 ];
 
 
@@ -72,7 +72,7 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
   styleUrls: ['./view-payments.component.css']
 })
 export class ViewPaymentsComponent implements OnInit {
-  displayedColumns1 = ['position', 'title', 'name', 'nic', 'email', 'mobile'];
+  displayedColumns1 = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName'];
   table1 = new MatTableDataSource(ELEMENT_DATA1);
 
   displayedColumns2 = ['position', 'regNo', 'name', 'courseName', 'bank', 'date'];
