@@ -103,38 +103,38 @@ export class NewRegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
-      courseName: [1, [Validators.required]],
+      courseName: ['', [Validators.required]],
       academicYear: ['', [Validators.required]],
       name: this.formBuilder.group({
-        title: ['LK-3', [Validators.required]],
-        fullName: ['Atapattu Kuruppuge Vishwa Jayasanka', [Validators.required]],
-        nameWithInitials: ['A.K.V Jayasnaka', [Validators.required]],
+        title: ['', [Validators.required]],
+        fullName: ['', [Validators.required]],
+        nameWithInitials: ['', [Validators.required]],
       }),
       address: this.formBuilder.group({
-        permanentAddress: ['Ihalagewatta, Naimana South, Matara', [Validators.required]],
-        district: ['LK-32', [Validators.required]],
-        province: ['LK-3', [Validators.required]],
+        permanentAddress: ['', [Validators.required]],
+        district: ['', [Validators.required]],
+        province: ['', [Validators.required]],
       }),
-      dateOfBirth: ['1998-01-09', [Validators.required]],
-      race: ['Sinhalees', [Validators.required]],
-      religion: ['Buddhist', [Validators.required]],
-      gender: ['M', [Validators.required]],
-      nic: ['199800910054', [Validators.required, Validators.pattern(/^([0-9]{12})|([0-9]{9}[A-Za-z])/)]],
+      dateOfBirth: ['', [Validators.required]],
+      race: ['', [Validators.required]],
+      religion: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      nic: ['', [Validators.required, Validators.pattern(/^([0-9]{12})|([0-9]{9}[A-Za-z])/)]],
       contactDetails: this.formBuilder.group({
-        email: ['vishvajayasanka@gmail.com', [Validators.required, Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)]],
-        mobile: ['+94719251862', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]],
-        home: ['+94418889637', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]]
+        email: ['', [Validators.required, Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)]],
+        mobile: ['', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]],
+        home: ['', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]]
       }),
       employment: this.formBuilder.group({
-        designation: ['Software Engineer'],
-        employer: ['Saman Kumara'],
-        company: ['ABC Holdings']
+        designation: [''],
+        employer: [''],
+        company: ['']
       }),
       educationQualifications: this.formBuilder.array([]),
       registration: this.formBuilder.group({
-        registrationFees: ['200', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+        registrationFees: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
         registrationFeesPaid: [false],
-        dateOfPayment: ['2020-02-05', [Validators.required]]
+        dateOfPayment: ['', [Validators.required]]
       })
     });
     this.addQualification();
@@ -143,10 +143,10 @@ export class NewRegistrationComponent implements OnInit {
   addQualification() {
     this.educationQualifications.push(
       this.formBuilder.group({
-        degree: ['Bsc. Eng', [Validators.required]],
-        institute: ['University of Moratuwa', [Validators.required]],
-        graduationDate: ['2019-08-15', Validators.required],
-        grade: ['Second Upper', [Validators.required]]
+        degree: ['', [Validators.required]],
+        institute: ['', [Validators.required]],
+        graduationDate: ['', Validators.required],
+        grade: ['', [Validators.required]]
       })
     );
   }
