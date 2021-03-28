@@ -1,11 +1,11 @@
-import {OnInit, Component, ElementRef} from '@angular/core';
+import {OnInit, Component, ElementRef, ViewChild, AfterViewInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {YEARS} from '../../../_services/shared.service';
 import {DataService} from '../../../_services/data.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import { title } from 'process';
-
+import {MatPaginator} from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 export interface Course {
   courseID: number;
@@ -30,21 +30,26 @@ export const COURSES: Course[] = [
     ]),
   ],
 })
-export class ViewPaymentsComponent implements OnInit {
+export class ViewPaymentsComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   columnsToDisplay = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName', ];
   expandedElement: PeriodicElement | null;
-
+  filterValue = '';
   dataSource2 = new MatTableDataSource(ELEMENT_DATA2);
   columnsToDisplay2 = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName', ];
   expandedElement2: PeriodicElement2 | null;
   viewPaymentsForm: FormGroup;
-  filterValue = '';
   public show = false;
   public buttonName: any = 'Show';
   courses: Course[] = COURSES;
   years = YEARS;
+
+
+  @ViewChild('TableOnePaginator', {static: true}) tableOnePaginator: MatPaginator;
+  @ViewChild('TableTwoPaginator', {static: true}) tableTwoPaginator: MatPaginator;
+  @ViewChild('TableOneSort', {static: true}) tableOneSort: MatSort;
+  @ViewChild('TableTwoSort', {static: true}) tableTwoSort: MatSort;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -53,16 +58,16 @@ export class ViewPaymentsComponent implements OnInit {
   ) {
   }
 
+
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
- }
+  }
 
-
- applyFilter2(event: Event) {
-  this.filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource2.filter = this.filterValue.trim().toLowerCase();
-}
+  applyFilter2(event: Event) {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource2.filter = this.filterValue.trim().toLowerCase();
+  }
 
   ngOnInit(): void {
     this.viewPaymentsForm = this.formBuilder.group({
@@ -75,6 +80,7 @@ export class ViewPaymentsComponent implements OnInit {
     this.show = !this.show;
     this.filterValue = '';
     this.dataSource.filter = '';
+    this.dataSource2.filter = '';
 
     if (this.show) {
       this.buttonName = 'Hide';
@@ -84,7 +90,13 @@ export class ViewPaymentsComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.tableOnePaginator;
+    this.dataSource2.paginator = this.tableTwoPaginator;
 
+    this.dataSource.sort = this.tableOneSort;
+    this.dataSource2.sort = this.tableTwoSort;
+  }
 
 
   get courseName() {
@@ -224,6 +236,42 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     regNo: '184183R',
     title: 'Mrs.',
     name: 'gen',
+    totalPayment: 10079,
+    courseName: 'H',
+    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
+        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+  }, {
+    position: 6,
+    regNo: '184183R',
+    title: 'Mrs.',
+    name: 'sharindi',
+    totalPayment: 10079,
+    courseName: 'H',
+    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
+        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+  }, {
+    position: 7,
+    regNo: '184183R',
+    title: 'Mrs.',
+    name: 'Hydrogen',
+    totalPayment: 10079,
+    courseName: 'H',
+    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
+        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+  }, {
+    position: 8,
+    regNo: '184183R',
+    title: 'Mrs.',
+    name: 'sharindi',
+    totalPayment: 10079,
+    courseName: 'H',
+    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
+        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+  }, {
+    position: 9,
+    regNo: '184183R',
+    title: 'Mrs.',
+    name: 'Hydrogen',
     totalPayment: 10079,
     courseName: 'H',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard

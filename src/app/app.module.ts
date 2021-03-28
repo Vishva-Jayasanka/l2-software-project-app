@@ -60,6 +60,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
 import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details
     MatAutocompleteModule,
     ImageCropperModule,
     MatPaginatorModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSortModule
   ],
   providers: [
     AuthenticationGuard,

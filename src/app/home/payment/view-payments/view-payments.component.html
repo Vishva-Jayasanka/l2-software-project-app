@@ -32,11 +32,11 @@
         <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
       </mat-form-field>
 
-  <table mat-table
+  <table mat-table  matSort
         [dataSource]="dataSource" multiTemplateDataRows
         class="mat-elevation-z8" *ngIf="show">
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <th mat-header-cell *matHeaderCellDef>  {{column}} </th>
       <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
     </ng-container>
 
@@ -69,6 +69,7 @@
     </tr>
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
+  <mat-paginator  #TableOnePaginator="matPaginator" [pageSize]="3" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </mat-tab>
 
 
@@ -85,7 +86,7 @@
     </mat-form-field>
 
 
-    <table mat-table
+    <table mat-table  matSort
           [dataSource]="dataSource2" multiTemplateDataRows
           class="mat-elevation-z8" *ngIf="show">
       <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
@@ -122,5 +123,6 @@
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
     </table>
+    <mat-paginator #TableTwoPaginator="matPaginator" [pageSize]="3" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </mat-tab>
 </mat-tab-group>  
