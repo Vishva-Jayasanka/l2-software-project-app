@@ -36,7 +36,6 @@ import {ProfileComponent} from './home/profile/profile.component';
 import {ProfilePictureComponent} from './home/profile/profile-picture/profile-picture.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
-import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ComposerComponent} from './home/notification/composer/composer.component';
 import {RequestComponent} from './home/request/request.component';
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
@@ -46,6 +45,7 @@ import {NewModuleComponent} from './home/course-module/new-module/new-module.com
 import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
 import {UserGuard} from './_helpers/user.guard';
 import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
+import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import {
   AttendanceDialogComponent,
   ModuleAttendanceComponent
@@ -54,7 +54,12 @@ import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.c
 import { PaymentDetailsComponent } from './home/payment/payment-details/payment-details.component';
 import { SubmitedRequestsComponent } from './home/request/submited-requests/submited-requests.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
-
+import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatChipsModule } from '@angular/material/chips';
+import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
+import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +88,7 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     ProfileComponent,
     ProfilePictureComponent,
     UploadPaymentComponent,
+    ViewPaymentsComponent,
     ViewPaymentComponent,
     ComposerComponent,
     RequestComponent,
@@ -96,7 +102,10 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     EditPaymentComponent,
     PaymentDetailsComponent,
     SubmitedRequestsComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ViewRegistrationComponent,
+    NewRegistrationComponent,
+    ViewPaymentDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -108,7 +117,9 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     ReactiveFormsModule,
     HttpClientModule,
     MatAutocompleteModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatPaginatorModule,
+    MatChipsModule
   ],
   providers: [
     AuthenticationGuard,

@@ -1,0 +1,143 @@
+<div class="card">
+    <div class="card-header">
+      <h5>View Payment Details</h5>
+      <p class="sub-header">Upload payment details related to any student</p>
+    </div>
+
+    <div class="card-body">
+        <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
+          <mat-progress-bar [hidden]="!viewPaymentsProgress" mode="query"></mat-progress-bar>
+        </div>
+    </div>
+
+    <mat-tab-group>
+        <mat-tab label="Confirmed Payment"> 
+          <br>
+            <form [formGroup]="viewConfirmedPaymentsForm">
+
+                <div class="row px-0">
+            
+                  <mat-form-field class="col-8 pr-1" appearance="outline" id="course-name">
+                    <mat-label>Course Name</mat-label>
+                    <mat-select formControlName="courseName">
+                      <mat-option *ngFor="let course of courses" [value]="course.courseID">{{course.courseName}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="courseName.touched && courseName.errors?.required">This field is required</mat-error>
+                  </mat-form-field>
+            
+                  <mat-form-field class="col-4" appearance="outline" id="academicYear">
+                    <mat-label>Academic Year</mat-label>
+                    <mat-select formControlName="academicYear">
+                      <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            
+                </div>
+              </form>
+            
+                <div class="row px-2">
+                  <button mat-raised-button color="primary" (click)="toggle()" class="mx-2" type="button"> {{buttonName}} </button>
+                </div>
+            
+            
+                <mat-form-field  *ngIf="show">
+                  <mat-label>Filter</mat-label>
+                  <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                </mat-form-field>
+            
+                  <table mat-table [dataSource]="table1" matSort #sorter1="matSort" *ngIf="show" style="overflow-x:scroll;">
+            
+                    
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="title">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+                      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Full Name </th>
+                      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="nic">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> NIC Number </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nic}} </td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="email">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="mobile">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Mobile </th>
+                      <td mat-cell *matCellDef="let element"> {{element.mobile}} </td>
+                    </ng-container>
+            
+                    
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+            
+                  </table>
+                 <mat-paginator [hidden]="!show" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </mat-tab>
+
+        <mat-tab label="Pending Payments"> 
+
+          <div class="row px-2">
+            <button mat-raised-button color="primary" (click)="toggle()" class="mx-2" type="button"> {{buttonName}} </button>
+          </div>
+
+          <mat-form-field  *ngIf="show">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter2($event)" placeholder="Filter" #input>
+          </mat-form-field>
+
+          <table mat-table [dataSource]="table2" matSort #sorter2="matSort" *ngIf="show" style="overflow-x:scroll;">          
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+            </ng-container>
+
+                
+            <ng-container matColumnDef="regNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Registration Number </th>
+              <td mat-cell *matCellDef="let element"> {{element.regNo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Full Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+    
+            <ng-container matColumnDef="courseName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Course NAme </th>
+              <td mat-cell *matCellDef="let element"> {{element.courseName}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="bank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Bank </th>
+              <td mat-cell *matCellDef="let element"> {{element.bank}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+              <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+            </ng-container>
+    
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+    
+          </table>
+         <mat-paginator [hidden]="!show" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </mat-tab>
+      </mat-tab-group>
+</div>
+
+

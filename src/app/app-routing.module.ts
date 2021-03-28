@@ -18,7 +18,6 @@ import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
-import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ProfileComponent} from './home/profile/profile.component';
 import {RequestComponent} from './home/request/request.component';
 import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
@@ -36,6 +35,11 @@ import {SubmitedRequestsComponent} from './home/request/submited-requests/submit
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
 import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
+import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
+import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
+import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
+import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
 
 const routes: Routes = [
   {
@@ -161,13 +165,16 @@ const routes: Routes = [
             component: PaymentDetailsComponent
           },
           {
-            path: '',
-            redirectTo: 'payment-details',
-            pathMatch: 'full'
+            path: 'view-payment',
+            component: ViewPaymentComponent,
           },
           {
-            path: 'view-payment',
-            component: ViewPaymentComponent
+            path: 'view-payment-details',
+            component: ViewPaymentDetailsComponent,
+          },
+          {
+            path: 'view-payments',
+            component: ViewPaymentsComponent,
           },
           {
             path: 'upload-payment',
@@ -181,7 +188,17 @@ const routes: Routes = [
       },
       {
         path: 'registration',
-        component: RegistrationComponent
+        component: RegistrationComponent,
+        children: [
+          {
+            path: 'view-registration',
+            component: ViewRegistrationComponent
+          },
+          {
+            path: 'new-registration',
+            component: NewRegistrationComponent
+          }
+          ]
       },
       {
         path: 'profile',

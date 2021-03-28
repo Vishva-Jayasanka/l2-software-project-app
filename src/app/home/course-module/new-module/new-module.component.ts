@@ -1,7 +1,7 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
-import {Course, COURSES} from '../../registration/registration.component';
+import {Course, COURSES} from '../../registration/new-registration/new-registration.component';
 import {YEARS} from '../../../_services/shared.service';
 import {MatAutocomplete} from '@angular/material/autocomplete';
 import {DataService} from '../../../_services/data.service';
