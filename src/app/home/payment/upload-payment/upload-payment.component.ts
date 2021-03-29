@@ -20,6 +20,7 @@ export class UploadPaymentComponent implements OnInit {
   studentIDNotFound = false;
   success = false;
 
+
   error = '';
 
   banks: Bank[] = [
@@ -33,10 +34,11 @@ export class UploadPaymentComponent implements OnInit {
 
 
 
+
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -68,6 +70,7 @@ export class UploadPaymentComponent implements OnInit {
     );
   }
 
+
   submitForm() {
     this.uploadAPaymentProgress = true;
     if (this.paymentForm.valid) {
@@ -92,8 +95,6 @@ export class UploadPaymentComponent implements OnInit {
     const firstInvalidControl: HTMLElement = this.elementRef.nativeElement.querySelector('form .ng-invalid');
     firstInvalidControl.scrollIntoView({behavior: 'smooth'});
   }
-
-
 
   checkStudentID(studentID) {
     this.success = false;
