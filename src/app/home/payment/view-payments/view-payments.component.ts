@@ -40,6 +40,7 @@ export class ViewPaymentsComponent implements OnInit, AfterViewInit {
   columnsToDisplay2 = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName', ];
   expandedElement2: PeriodicElement2 | null;
   viewPaymentsForm: FormGroup;
+  viewPaymentsProgress: false;
   public show = false;
   public buttonName: any = 'Show';
   courses: Course[] = COURSES;
@@ -119,65 +120,65 @@ export interface PeriodicElement {
 const ELEMENT_DATA: PeriodicElement[] = [
   {
     position: 1,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184021R',
+    title: 'Mr.',
+    name: 'Sadun Alwis',
+    totalPayment: 150500,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 2,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184061R',
+    title: 'Mr.',
+    name: 'Vishwa Jayasanka Atapattu',
+    totalPayment: 200000,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 3,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184032B',
+    title: 'Ms.',
+    name: 'Tharushi Weerasingha',
+    totalPayment: 150500,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGYH',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 4,
-    regNo: '184183R',
+    regNo: '185083K',
     title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    name: '	Saduni Perera',
+    totalPayment: 200000,
+    courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 5,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'onali',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '185065H',
+    title: 'Mr.',
+    name: 'Ravidu Shamika Kulathunga',
+    totalPayment: 350500,
+    courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 6,
     regNo: '184183R',
-    title: 'Mrs.',
-    name: 'sharindi',
-    totalPayment: 10079,
-    courseName: 'H',
+    title: 'Ms.',
+    name: 'Onali Vithanage',
+    totalPayment: 160500,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 7,
-    regNo: '184183R',
+    regNo: '185090L',
     title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    name: 'Thilini Wijekoon',
+    totalPayment: 350500,
+    courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }
@@ -197,83 +198,83 @@ export interface PeriodicElement2 {
 const ELEMENT_DATA2: PeriodicElement2[] = [
   {
     position: 1,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184065X',
+    title: 'Ms.',
+    name: '	Nethmi Bimsara Jayasekara',
+    totalPayment: 250500,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 2,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184077N',
+    title: 'Mr.',
+    name: 'Kavidu Yasith Katuwandeniya',
+    totalPayment: 200000,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 3,
-    regNo: '184183R',
+    regNo: '185083K',
     title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    name: '	Saduni Perera',
+    totalPayment: 150500,
+    courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 4,
     regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    title: 'Ms.',
+    name: 'Onali Vithanage',
+    totalPayment: 140500,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 5,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'gen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '185021M',
+    title: 'Ms.',
+    name: 'Naduni Thakshila Bandara',
+    totalPayment: 350500,
+    courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 6,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'sharindi',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184061R',
+    title: 'Mr.',
+    name: 'Vishwa Jayasanka Atapattu',
+    totalPayment: 150500,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 7,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184021R',
+    title: 'Mr.',
+    name: 'Sadun Alwis',
+    totalPayment: 150000,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 8,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'sharindi',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '185003A',
+    title: 'Mr.',
+    name: 'Chathura Perera',
+    totalPayment: 350500,
+    courseName: '',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 9,
-    regNo: '184183R',
-    title: 'Mrs.',
-    name: 'Hydrogen',
-    totalPayment: 10079,
-    courseName: 'H',
+    regNo: '184050J',
+    title: 'Mr.',
+    name: 'Vihanaga Godakubura',
+    totalPayment: 250000,
+    courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
     description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
         atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }

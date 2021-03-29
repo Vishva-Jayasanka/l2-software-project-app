@@ -18,11 +18,6 @@
               <td mat-cell *matCellDef="let element"> {{element.no}} </td>
             </ng-container>
     
-            <ng-container matColumnDef="regFee">
-              <th mat-header-cell *matHeaderCellDef> Registration Fees </th>
-              <td mat-cell *matCellDef="let element"> {{element.regFee}} </td>
-            </ng-container>
-            
             <ng-container matColumnDef="slipNo">
               <th mat-header-cell *matHeaderCellDef> Slip Number </th>
               <td mat-cell *matCellDef="let element"> {{element.slipNo}} </td>
@@ -50,6 +45,10 @@
 
           <table>
               <br>
+              <tr>
+                <td><b>Registration Fee</b></td>
+                <td>#####</td>
+            </tr>
               <tr>
                   <td><b>Total Amount Paid</b></td>
                   <td>#####</td>
