@@ -9,6 +9,9 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 export class ViewPaymentDetailsComponent implements OnInit {
   paymentDetailsForm: FormGroup;
   panelOpenState = false;
+  selectedRowIndex = -1;
+
+
   constructor(
     private formBuilder: FormBuilder,
   ) { }
@@ -28,6 +31,7 @@ export class ViewPaymentDetailsComponent implements OnInit {
     }
   );
   }
+
 
   verifyForm(){
 

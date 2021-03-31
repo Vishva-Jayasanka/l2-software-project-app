@@ -21,6 +21,7 @@ export class UploadPaymentComponent implements OnInit {
   success = false;
 
 
+
   error = '';
 
   banks: Bank[] = [
@@ -116,6 +117,11 @@ export class UploadPaymentComponent implements OnInit {
       this.uploadAPaymentProgress = false;
     }
   }
+
+  clickFileUpload() {
+    document.getElementById('fileUpload').click();
+  }
+
 
   toggleProgress() {
     this.uploadAPaymentProgress = true;

@@ -5,7 +5,8 @@ import {DataService} from '../../../_services/data.service';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
-
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ProfileDetailsDialogComponent } from '../registration.component';
 
 export interface Course {
   courseID: number;
@@ -47,7 +48,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./view-registration.component.css']
 })
 export class ViewRegistrationComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['position', 'title', 'name', 'nic', 'email', 'mobile'];
+  displayedColumns = ['position', 'title', 'name', 'nic', 'email', 'mobile', 'customDataColumn'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   filterValue = '';
   viewRegistrationsForm: FormGroup;
@@ -68,9 +69,11 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
+    public dialog: MatDialog
   ) { }
 
   applyFilter(event: Event) {
@@ -107,7 +110,17 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
     return this.viewRegistrationsForm.get('courseName');
   }
 
+  openProfileDetailsDialog(){
+    const dialogRef = this.dialog.open(ProfileDetailsDialogComponent, {
+      width: '450px',
+
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+      }
+    });
+  }
 
 }
-
 

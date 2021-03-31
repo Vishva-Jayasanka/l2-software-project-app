@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   childRoute: string;
   hidden = false;
   user;
-  ROUTS = [
+  ADMIN_ROUTS = [
     {
       component: 'CourseModuleComponent',
       route: 'course-modules',
@@ -83,19 +83,18 @@ export class HomeComponent implements OnInit {
       icon: 'monetization_on',
       label: 'Payment',
       children: [{
-        component: 'ViewPaymentsComponent',
-        route: 'view-payments',
-        label: 'View Payments'
-      },
-      {
-        component: 'ViewPaymentComponent',
-        route: 'view-payment',
-        label: 'View Payment'
-      },
-      {
-        component: 'ViewPaymentDetailsComponent',
-        route: 'view-payment-details',
-        label: 'View Payment Details'
+        component: 'ViewPaymentsHomeComponent',
+        route: 'view-payments-home',
+        label: 'View Payments',
+        children:[{
+          component: 'ViewPaymentsComponent', 
+          route: 'view-payments',
+          label: 'View Payments '
+        },{
+          component: 'ViewPaymentDetailsComponent',
+          route: 'view-payment-details',
+          label: 'View Payment Details'
+        }]
       },
       {
         component: 'UploadPaymentComponent',
@@ -136,6 +135,66 @@ export class HomeComponent implements OnInit {
       }]
     }
   ];
+
+  STUDENT_ROUTS = [
+    {
+      component: 'CourseModuleComponent',
+      route: 'course-modules',
+      icon: 'grade',
+      label: 'Course Modules',
+      children: [{
+        component: 'NewModuleComponent',
+        route: 'new-module',
+        label: 'Add New Module'
+      }, {
+        component: 'EnrollComponent',
+        route: 'enroll',
+        label: 'Enroll Students'
+      }]
+    }, {
+      component: 'ResultsComponent',
+      route: 'results',
+      icon: 'assessment',
+      label: 'Exam Results',
+      children: [{
+        component: 'ViewResultComponent',
+        route: 'view-results',
+        label: 'View Results'
+      }]
+    }, {
+      component: 'AttendanceComponent',
+      route: 'attendance',
+      icon: 'assignment_turned_in',
+      label: 'Attendance',
+      children: [{
+        component: 'ViewAttendance',
+        route: 'view-attendance',
+        label: 'View Attendance'
+      }]
+    }, {
+      component: 'TimetableComponent',
+      route: 'timetable',
+      icon: 'watch_later',
+      label: 'Timetable',
+      children: []
+    }, {
+      component: 'PaymentComponent',
+      route: 'payment',
+      icon: 'monetization_on',
+      label: 'Payment',
+      children: [{
+        component: 'ViewPaymentsHomeComponent', 
+          route: 'view-payments-home',
+          label: 'View Payments '
+      }]
+    }, {
+      component: 'RequestComponent',
+      route: 'request',
+      icon: 'description',
+      label: 'Requests',
+    }
+  ];
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event?) {

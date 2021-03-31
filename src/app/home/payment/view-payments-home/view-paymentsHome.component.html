@@ -1,3 +1,12 @@
+<div [hidden]="getRole !== 'Student'"><h1>Student</h1>
+  <div class="card-header">
+    <h5>View Payments Details</h5>
+    <p class="sub-header">View Payments details</p>
+  </div>
+  <app-view-payments></app-view-payments>
+</div>
+
+<div [hidden]="getRole !== 'Admin'">
 <mat-tab-group>
   <mat-tab label="Confirmed Payments"> 
   <div class="card">
@@ -49,6 +58,8 @@
   <table mat-table #TableOneSort
         [dataSource]="dataSource" multiTemplateDataRows
         class="mat-elevation-z8" *ngIf="show" >
+
+
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
       <th mat-header-cell *matHeaderCellDef> {{column}} </th>
       <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
@@ -59,17 +70,8 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
         <div class="example-element-detail"
             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <div class="example-element-diagram">
-            <div class="example-element-position"> {{element.position}} </div>
-            <div class="example-element-position"> {{element.regNo}} </div>
-            <div class="example-element-symbol"> {{element.title}} </div>
-            <div class="example-element-name"> {{element.name}} </div>
-            <div class="example-element-weight"> {{element.totalPayment}} </div>
-            <div class="example-element-position"> {{element.courseName}} </div>
-          </div>
           <div class="example-element-description">
-            {{element.description}}
-            <span class="example-element-description-attribution"> -- Wikipedia </span>
+            <app-view-payments></app-view-payments>
           </div>
         </div>
       </td>
@@ -96,7 +98,7 @@
   <div class="card">
 
       <div class="row px-2">
-        <button mat-raised-button color="primary" (click)="toggle()" class="mx-2" type="button"> {{buttonName}} </button>
+        <button mat-raised-button color="primary" (click)="toggle2()" class="mx-2" type="button"> {{buttonName}} </button>
       </div>
   
   
@@ -118,17 +120,8 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
         <div class="example-element-detail"
             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <div class="example-element-diagram">
-            <div class="example-element-position"> {{element.position}} </div>
-            <div class="example-element-position"> {{element.regNo}} </div>
-            <div class="example-element-symbol"> {{element.title}} </div>
-            <div class="example-element-name"> {{element.name}} </div>
-            <div class="example-element-weight"> {{element.totalPayment}} </div>
-            <div class="example-element-position"> {{element.courseName}} </div>
-          </div>
           <div class="example-element-description">
-            {{element.description}}
-            <span class="example-element-description-attribution"> -- Wikipedia </span>
+            <app-view-payment-details></app-view-payment-details>
           </div>
         </div>
       </td>
@@ -151,4 +144,5 @@
 
 </div>
  </mat-tab>
-</mat-tab-group>  
+</mat-tab-group>
+</div>

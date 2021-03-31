@@ -95,10 +95,12 @@
 
         </div>
         
-        <div>
-          <label for="file">Upload your Slip : </label>
-          <input type="file" class="file-upload" onchange="console.log(event.target.files)">
-       </div>
+        <div style="overflow: hidden" class="row px-4 pb-2">
+          <button type="button" (click)="clickFileUpload()"
+                  id="addFile" class="btn btn-success mt-1">upload slip
+          </button>
+          <input type="file" id="fileUpload" hidden/>
+        </div>
 
         <div class="row px-1">
           <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>

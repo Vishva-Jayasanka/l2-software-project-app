@@ -6,6 +6,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 export interface Course {
   courseID: number;
@@ -19,9 +20,9 @@ export const COURSES: Course[] = [
 
 
 @Component({
-  selector: 'app-view-payments',
-  templateUrl: './view-payments.component.html',
-  styleUrls: ['./view-payments.component.css'],
+  selector: 'app-view-payments-home',
+  templateUrl: './view-paymentsHome.component.html',
+  styleUrls: ['./view-paymentsHome.component.css'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -30,7 +31,7 @@ export const COURSES: Course[] = [
     ]),
   ],
 })
-export class ViewPaymentsComponent implements OnInit, AfterViewInit {
+export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   columnsToDisplay = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName', ];
@@ -45,7 +46,8 @@ export class ViewPaymentsComponent implements OnInit, AfterViewInit {
   public buttonName: any = 'Show';
   courses: Course[] = COURSES;
   years = YEARS;
-
+  title = "ViewPaymentDetails";
+  user;
 
   @ViewChild('TableOnePaginator', {static: true}) tableOnePaginator: MatPaginator;
   @ViewChild('TableTwoPaginator', {static: true}) tableTwoPaginator: MatPaginator;
@@ -55,10 +57,12 @@ export class ViewPaymentsComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private authentication: AuthenticationService,
   ) {
   }
 
+  
 
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
@@ -75,12 +79,25 @@ export class ViewPaymentsComponent implements OnInit, AfterViewInit {
       courseName: [1, [Validators.required]],
       academicYear: ['', [Validators.required]]
     });
+    this.user = this.authentication.details;
   }
 
   toggle() {
     this.show = !this.show;
     this.filterValue = '';
     this.dataSource.filter = '';
+
+    if (this.show) {
+      this.buttonName = 'Hide';
+    }
+    else {
+      this.buttonName = 'Show';
+    }
+  }
+
+  toggle2() {
+    this.show = !this.show;
+    this.filterValue = '';
     this.dataSource2.filter = '';
 
     if (this.show) {
@@ -104,7 +121,13 @@ export class ViewPaymentsComponent implements OnInit, AfterViewInit {
     return this.viewPaymentsForm.get('courseName');
   }
 
+  get getRole() {
+    return this.authentication.details.role;
+  }
 
+  uploadPayments(){
+
+  }
 
 }
 export interface PeriodicElement {
@@ -114,7 +137,6 @@ export interface PeriodicElement {
   name: string;
   totalPayment: number;
   courseName: string;
-  description: string;
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
@@ -125,8 +147,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: 'Sadun Alwis',
     totalPayment: 150500,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 2,
     regNo: '184061R',
@@ -134,8 +154,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: 'Vishwa Jayasanka Atapattu',
     totalPayment: 200000,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 3,
     regNo: '184032B',
@@ -143,8 +161,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: 'Tharushi Weerasingha',
     totalPayment: 150500,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGYH',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 4,
     regNo: '185083K',
@@ -152,8 +168,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: '	Saduni Perera',
     totalPayment: 200000,
     courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 5,
     regNo: '185065H',
@@ -161,8 +175,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: 'Ravidu Shamika Kulathunga',
     totalPayment: 350500,
     courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 6,
     regNo: '184183R',
@@ -170,8 +182,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: 'Onali Vithanage',
     totalPayment: 160500,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 7,
     regNo: '185090L',
@@ -179,8 +189,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     name: 'Thilini Wijekoon',
     totalPayment: 350500,
     courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }
 ];
 
@@ -192,7 +200,6 @@ export interface PeriodicElement2 {
   name: string;
   totalPayment: number;
   courseName: string;
-  description: string;
 }
 
 const ELEMENT_DATA2: PeriodicElement2[] = [
@@ -203,8 +210,6 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: '	Nethmi Bimsara Jayasekara',
     totalPayment: 250500,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 2,
     regNo: '184077N',
@@ -212,8 +217,6 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: 'Kavidu Yasith Katuwandeniya',
     totalPayment: 200000,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 3,
     regNo: '185083K',
@@ -221,8 +224,6 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: '	Saduni Perera',
     totalPayment: 150500,
     courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 4,
     regNo: '184183R',
@@ -230,8 +231,6 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: 'Onali Vithanage',
     totalPayment: 140500,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 5,
     regNo: '185021M',
@@ -239,8 +238,7 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: 'Naduni Thakshila Bandara',
     totalPayment: 350500,
     courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+
   }, {
     position: 6,
     regNo: '184061R',
@@ -248,8 +246,6 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: 'Vishwa Jayasanka Atapattu',
     totalPayment: 150500,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 7,
     regNo: '184021R',
@@ -257,17 +253,13 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: 'Sadun Alwis',
     totalPayment: 150000,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }, {
     position: 8,
     regNo: '185003A',
     title: 'Mr.',
     name: 'Chathura Perera',
     totalPayment: 350500,
-    courseName: '',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
+    courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY',
   }, {
     position: 9,
     regNo: '184050J',
@@ -275,8 +267,6 @@ const ELEMENT_DATA2: PeriodicElement2[] = [
     name: 'Vihanaga Godakubura',
     totalPayment: 250000,
     courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
   }
 ];
 

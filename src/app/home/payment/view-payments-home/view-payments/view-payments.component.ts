@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {DataService} from '../../../_services/data.service';
+import {DataService} from '../../../../_services/data.service';
 import {MatTableDataSource} from '@angular/material/table';
 
 export interface PeriodicElement {
@@ -17,11 +17,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'app-view-payment',
-  templateUrl: './view-payment.component.html',
-  styleUrls: ['./view-payment.component.css']
+  selector: 'app-view-payments',
+  templateUrl: './view-payments.component.html',
+  styleUrls: ['./view-payments.component.css']
 })
-export class ViewPaymentComponent implements OnInit {
+export class ViewPaymentsComponents implements OnInit {
   displayedColumns = ['no', 'slipNo', 'bank', 'date', 'paidAmount'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   filterValue = '';

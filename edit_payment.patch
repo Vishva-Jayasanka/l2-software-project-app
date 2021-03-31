@@ -1,0 +1,56 @@
+Index: src/app/home/payment/payment-details/payment-details.component.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/app/home/payment/payment-details/payment-details.component.html b/src/app/home/payment/payment-details/payment-details.component.html
+--- a/src/app/home/payment/payment-details/payment-details.component.html	(revision 9fc556626dec8790929bf6ab8916d6812bc25e9f)
++++ b/src/app/home/payment/payment-details/payment-details.component.html	(date 1615898855549)
+@@ -1,1 +1,0 @@
+-<p>payment-details works!</p>
+Index: src/app/home/payment/edit-payment/edit-payment.component.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/app/home/payment/edit-payment/edit-payment.component.ts b/src/app/home/payment/edit-payment/edit-payment.component.ts
+--- a/src/app/home/payment/edit-payment/edit-payment.component.ts	(revision 9fc556626dec8790929bf6ab8916d6812bc25e9f)
++++ b/src/app/home/payment/edit-payment/edit-payment.component.ts	(date 1615898855721)
+@@ -6,6 +6,8 @@
+   styleUrls: ['./edit-payment.component.css']
+ })
+ export class EditPaymentComponent implements OnInit {
++  editPaymentProgress: false;
++  editPaymentForm: any;
+ 
+   constructor() { }
+ 
+Index: src/app/home/payment/edit-payment/edit-payment.component.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/app/home/payment/edit-payment/edit-payment.component.html b/src/app/home/payment/edit-payment/edit-payment.component.html
+--- a/src/app/home/payment/edit-payment/edit-payment.component.html	(revision 9fc556626dec8790929bf6ab8916d6812bc25e9f)
++++ b/src/app/home/payment/edit-payment/edit-payment.component.html	(date 1615898855674)
+@@ -1,1 +1,19 @@
+-<p>edit-payment works!</p>
++<div class="card">
++
++  <div class="card-header">
++    <h5>Edit Payments</h5>
++    <p class="sub-header">Edit exam results related to any module</p>
++  </div>
++
++  <div class="card-body">
++
++    <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
++      <mat-progress-bar [hidden]="!editPaymentProgress" mode="query"></mat-progress-bar>
++    </div>
++
++    <form [formGroup]="editPaymentForm">
++
++
++
++    </form>
++  </div>

@@ -27,7 +27,7 @@ import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-at
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
-import {RegistrationComponent} from './home/registration/registration.component';
+import {RegistrationComponent, ProfileDetailsDialogComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
@@ -51,16 +51,15 @@ import {
   ModuleAttendanceComponent
 } from './home/attendance/module-attendance/module-attendance.component';
 import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.component';
-import { PaymentDetailsComponent } from './home/payment/payment-details/payment-details.component';
 import { SubmitedRequestsComponent } from './home/request/submited-requests/submited-requests.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
-import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
-import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
-import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
+import { ViewPaymentsHomeComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
 import { MatSortModule } from '@angular/material/sort';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
+import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
 
 @NgModule({
   declarations: [
@@ -89,8 +88,8 @@ import { MatSortModule } from '@angular/material/sort';
     ProfileComponent,
     ProfilePictureComponent,
     UploadPaymentComponent,
-    ViewPaymentsComponent,
-    ViewPaymentComponent,
+    ViewPaymentsHomeComponent,
+    ViewPaymentsComponents,
     ComposerComponent,
     RequestComponent,
     AddRequestComponent,
@@ -101,12 +100,12 @@ import { MatSortModule } from '@angular/material/sort';
     ExamResultsComponent,
     ModuleAttendanceComponent,
     EditPaymentComponent,
-    PaymentDetailsComponent,
     SubmitedRequestsComponent,
     ResetPasswordComponent,
     ViewRegistrationComponent,
     NewRegistrationComponent,
-    ViewPaymentDetailsComponent
+    ViewPaymentDetailsComponent,
+    ProfileDetailsDialogComponent
   ],
   imports: [
     BrowserModule,
