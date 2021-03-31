@@ -38,15 +38,16 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   expandedElement: PeriodicElement | null;
   filterValue = '';
   dataSource2 = new MatTableDataSource(ELEMENT_DATA2);
-  columnsToDisplay2 = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName', ];
+  columnsToDisplay2 = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName'];
   expandedElement2: PeriodicElement2 | null;
   viewPaymentsForm: FormGroup;
   viewPaymentsProgress: false;
   public show = false;
+  public view = false;
   public buttonName: any = 'Show';
   courses: Course[] = COURSES;
   years = YEARS;
-  title = "ViewPaymentDetails";
+  title = 'ViewPaymentDetails';
   user;
 
   @ViewChild('TableOnePaginator', {static: true}) tableOnePaginator: MatPaginator;
@@ -62,7 +63,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   ) {
   }
 
-  
+
 
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
@@ -80,6 +81,10 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
       academicYear: ['', [Validators.required]]
     });
     this.user = this.authentication.details;
+  }
+
+  onChange() {
+    this.buttonName = 'Show';
   }
 
   toggle() {
@@ -125,6 +130,9 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     return this.authentication.details.role;
   }
 
+  do(){
+    this.buttonName = 'Show';
+  }
   uploadPayments(){
 
   }

@@ -7,11 +7,14 @@ tr.example-detail-row {
 }
 
 tr.example-element-row:not(.example-expanded-row):hover {
-  background: whitesmoke;
+  background: rgb(196, 145, 145);
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-  background: #efefef;
+  background: rgb(196, 145, 145);
+}
+.example-expanded-row{
+  background: rgb(196, 145, 145);
 }
 
 .example-element-row td {
@@ -32,14 +35,8 @@ tr.example-element-row:not(.example-expanded-row):active {
   height: 104px;
 }
 
-.example-element-symbol {
-  font-weight: bold;
-  font-size: 40px;
-  line-height: normal;
-}
-
 .example-element-description {
-  padding: 16px;
+  padding: 5px;
 }
 
 .example-element-description-attribution {

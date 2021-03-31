@@ -1,10 +1,9 @@
 
 
-
-<mat-dialog-content>
-
-
-  <button mat-button (click)="onNoClick()">close</button>
-  <app-profile></app-profile>
-
-</mat-dialog-content>
+<h1 mat-dialog-title>Dialog with elements</h1>
+<div mat-dialog-content>This dialog showcases the title, close, content and actions elements.</div>
+<app-profile></app-profile>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
+ 
