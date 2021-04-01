@@ -36,6 +36,7 @@ export class UploadPaymentComponent implements OnInit {
 
 
 
+
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
@@ -60,6 +61,7 @@ export class UploadPaymentComponent implements OnInit {
           registrationNumber: ['', [Validators.required, Validators.pattern(/^([0-9]{6}[A-Za-z])$/)]],
           fullName: [''],
           courseId: [''],
+          academicYear: [''],
         }),
         deposit: this.formBuilder.group({
           bankName: ['', [Validators.required]],
@@ -106,7 +108,8 @@ export class UploadPaymentComponent implements OnInit {
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
-            this.courseId.setValue(response.name);
+            this.course.setValue(response.course);
+            this.academicYear.setValue(response.name);
           } else {
             this.studentIDNotFound = true;
           }
@@ -131,8 +134,12 @@ export class UploadPaymentComponent implements OnInit {
     return this.paymentForm.get('depositor').get('fullName');
   }
 
-  get courseId() {
-    return this.paymentForm.get('depositor').get('courseId');
+  get course() {
+    return this.paymentForm.get('depositor').get('course');
+  }
+
+  get academicYear() {
+    return this.paymentForm.get('depositor').get('academicYear');
   }
 
   get registrationNumber() {
