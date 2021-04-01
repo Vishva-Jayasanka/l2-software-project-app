@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api/',
   adminUrl: 'http://localhost:3000/admin/',
-  teacherUrl: 'http://localhost:3000/teacher/'
+  teacherUrl: 'http://localhost:3000/teacher/',
+  studentUrl: 'http://localhost:3000/student/'
 };
 
 /*

@@ -158,7 +158,20 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}check-if-results-uploaded`, data);
   }
 
-  getRegistrations(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}view-registrations`, data);
+  getRegisteredUsers(): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-registered-users`,{});
   }
+
+  getPaymentList(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
+  }
+
+  getPaymentDetail(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-payment-details`, data);
+  }
+
+  getStudentPaymentList(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.studentUrl}get-student-payment-details`, data);
+  }
+
 }

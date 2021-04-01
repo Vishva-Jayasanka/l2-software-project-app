@@ -52,7 +52,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   filterValue = '';
   viewRegistrationsForm: FormGroup;
-  viewRegistrationProgress: false;
+  viewRegistrationProgress = false;
   courses: Course[] = COURSES;
   years = YEARS;
   success = false;
@@ -84,7 +84,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.viewRegistrationsForm = this.formBuilder.group({
       courseName: [1, [Validators.required]],
-      academicYear: ['', [Validators.required]]
+      academicYear: [1, [Validators.required]]
     });
   }
 
@@ -95,6 +95,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
 
     if (this.show) {
       this.buttonName = 'Hide';
+      this.getData();
     }
     else {
       this.buttonName = 'Show';
@@ -104,6 +105,18 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  getData(){
+    this.viewRegistrationProgress = true;
+    this.data.getRegisteredUsers().subscribe(response => {
+      if (response) {
+        //this.dataSource = new MatTableDataSource(response);
+      }
+    });
+    this.viewRegistrationProgress = false;
+    this.filterValue = '';
+    this.dataSource.filter = '';
   }
 
   get courseName() {

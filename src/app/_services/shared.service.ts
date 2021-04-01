@@ -1,7 +1,15 @@
 import {ElementRef} from '@angular/core';
 import {AbstractControl} from '@angular/forms';
 
-export const YEARS = [2016, 2017, 2018, 2019, 2020];
+// export const YEARS = [2020,2019,2018,2017, 2016 ];
+export const YEARS = [
+  {id: 1, value: '2021'},
+  {id: 2, value: '2020'},
+  {id: 3, value: '2019'},
+  {id: 4, value: '2018'},
+  {id: 5, value: '2017'},
+  {id: 6, value: '2016'}
+];
 
 export function glow(elementRef: ElementRef, id: string, color: string) {
   elementRef.nativeElement.querySelector('#' + id).style.boxShadow = '0 0 0 2px ' + color;
