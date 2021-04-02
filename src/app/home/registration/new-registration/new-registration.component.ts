@@ -1,7 +1,9 @@
 import {Component, ElementRef, KeyValueDiffers, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {YEARS} from '../../../_services/shared.service';
+import {ConfirmDetailsDialogComponent} from '../registration.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 
 export interface Course {
@@ -93,11 +95,11 @@ export class NewRegistrationComponent implements OnInit {
   ];
 
 
-
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    public dialog: MatDialog
   ) {
   }
 
@@ -156,7 +158,9 @@ export class NewRegistrationComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.data.registerStudent(this.registrationForm.value).subscribe(
         response => {
-          this.success = true;
+          if (this.success = true){
+            this.openDialog();
+          }
           this.error = '';
           this.registrationForm.reset();
         },
@@ -169,7 +173,10 @@ export class NewRegistrationComponent implements OnInit {
       this.registerStudentProgress = false;
       this.scrollToFirstInvalidControl();
     }
+
   }
+
+
 
   toggleRegistrationFeesPaid() {
     console.log(!this.registrationFeesPaid.value);
@@ -201,6 +208,10 @@ export class NewRegistrationComponent implements OnInit {
 
   get fullName() {
     return this.registrationForm.get('name').get('fullName');
+  }
+
+  get academicYear(): AbstractControl {
+    return this.registrationForm.get('academicYear');
   }
 
   get nameWithInitials() {
@@ -278,5 +289,18 @@ export class NewRegistrationComponent implements OnInit {
   get educationQualifications(): FormArray {
     return this.registrationForm.get('educationQualifications') as FormArray;
   }
+
+  openDialog(){
+    const dialogRef = this.dialog.open(ConfirmDetailsDialogComponent, {
+      width: '450px',
+
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+      }
+    });
+  }
+
 
 }

@@ -6,6 +6,7 @@ import {DataService} from '../_services/data.service';
 import {UserDataService} from '../_services/user-data.service';
 import {NavigationEnd, Router} from '@angular/router';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -86,11 +87,11 @@ export class HomeComponent implements OnInit {
         component: 'ViewPaymentsHomeComponent',
         route: 'view-payments-home',
         label: 'View Payments',
-        children:[{
-          component: 'ViewPaymentsComponent', 
+        children: [{
+          component: 'ViewPaymentsComponent',
           route: 'view-payments',
           label: 'View Payments '
-        },{
+        }, {
           component: 'ViewPaymentDetailsComponent',
           route: 'view-payment-details',
           label: 'View Payment Details'
@@ -183,7 +184,7 @@ export class HomeComponent implements OnInit {
       icon: 'monetization_on',
       label: 'Payment',
       children: [{
-        component: 'ViewPaymentsHomeComponent', 
+        component: 'ViewPaymentsHomeComponent',
           route: 'view-payments-home',
           label: 'View Payments '
       }]

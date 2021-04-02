@@ -56,7 +56,34 @@ export class ProfileDetailsDialogComponent implements OnInit {
     this.dialogRef.close(false);
   }
   deleteModule() {
-    
+
+  }
+
+}
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// confirm registration msg Component
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@Component({
+  selector: 'app-confirm-details-dialog',
+  templateUrl: './confirm-details-dialog.component.html',
+  styleUrls: ['./registration.component.css']
+})
+
+export class ConfirmDetailsDialogComponent implements OnInit {
+
+  progress = false;
+  error;
+  private router: any;
+
+  constructor(
+    public dataService: DataService,
+    public dialogRef: MatDialogRef<ConfirmDetailsDialogComponent>,
+  ) {
+  }
+
+  ngOnInit() {
   }
 
 }

@@ -27,7 +27,7 @@ import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-at
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
-import {RegistrationComponent, ProfileDetailsDialogComponent} from './home/registration/registration.component';
+import {RegistrationComponent, ProfileDetailsDialogComponent, ConfirmDetailsDialogComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
@@ -105,7 +105,8 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     ViewRegistrationComponent,
     NewRegistrationComponent,
     ViewPaymentDetailsComponent,
-    ProfileDetailsDialogComponent
+    ProfileDetailsDialogComponent,
+    ConfirmDetailsDialogComponent
   ],
   imports: [
     BrowserModule,

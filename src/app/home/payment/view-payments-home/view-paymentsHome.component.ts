@@ -41,7 +41,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   columnsToDisplay2 = ['position', 'regNo', 'title', 'name', 'totalPayment', 'courseName'];
   expandedElement2: PeriodicElement2 | null;
   viewPaymentsForm: FormGroup;
-  viewPaymentsProgress: false;
+  viewPaymentsProgress: boolean;
   public show = false;
   public view = false;
   public buttonName: any = 'Show';
@@ -92,12 +92,23 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.filterValue = '';
     this.dataSource.filter = '';
 
+
     if (this.show) {
       this.buttonName = 'Hide';
     }
     else {
       this.buttonName = 'Show';
     }
+  }
+
+  getConfirmedPaymentsList(){
+    this.viewPaymentsProgress = true;
+    this.data.getConfirmedPaymentsList().subscribe(response => {
+      this.dataSource = new MatTableDataSource(response.results[0]);
+      this.filterValue = '';
+      this.dataSource.filter = '';
+      this.viewPaymentsProgress = false;
+    });
   }
 
   toggle2() {

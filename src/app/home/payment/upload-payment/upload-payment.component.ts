@@ -108,8 +108,8 @@ export class UploadPaymentComponent implements OnInit {
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
-            this.course.setValue(response.course);
-            this.academicYear.setValue(response.name);
+            this.course.setValue(response.courseName);
+            this.academicYear.setValue(response.academicYear);
           } else {
             this.studentIDNotFound = true;
           }

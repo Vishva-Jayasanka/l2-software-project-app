@@ -32,19 +32,20 @@
           <input type="text" matInput formControlName="fullName" placeholder="full name" readonly>
         </mat-form-field>
 
-      </div>
-
-      <div class="row mb-2">
-
         <mat-form-field class="col mx-0 px-1" appearance="outline">
           <mat-label>Course Name</mat-label>
-          <input type="text" id="f" matInput formControlName="course" placeholder="course name" readonly>
+          <input type="text" matInput formControlName="course" placeholder="course name" readonly>
         </mat-form-field>
 
         <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
           <mat-label>Academic Year</mat-label>
           <input type="text" matInput formControlName="academicYear" placeholder="academic year" readonly>
         </mat-form-field>
+      </div>
+
+      <div class="row mb-2">
+
+
 
       </div>
 
@@ -94,7 +95,7 @@
           </mat-form-field>
 
         </div>
-        
+
         <div style="overflow: hidden" class="row px-4 pb-2">
           <button type="button" (click)="clickFileUpload()"
                   id="addFile" class="btn btn-success mt-1">upload slip

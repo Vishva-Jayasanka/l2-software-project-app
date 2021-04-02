@@ -42,7 +42,7 @@ export const DAYS_OF_WEEK: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 @Component({
-  selector: 'app-results',
+  selector: 'app-course-module',
   templateUrl: './course-module.component.html',
   styleUrls: ['./course-module.component.css']
 })
