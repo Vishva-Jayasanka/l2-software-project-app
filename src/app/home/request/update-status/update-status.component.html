@@ -15,28 +15,201 @@
 
       <div class="row">
 
-        <mat-form-field class="col-3 mx-0 px-1" appearance="outline">
+        <mat-form-field class="col-4 mx-0 px-1" appearance="outline">
           <mat-label>Student ID</mat-label>
-          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput formControlName="studentID" placeholder="Ex. 184062V" />
+          <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput
+                 formControlName="studentID" placeholder="Ex. 184062V"/>
           <mat-error *ngIf="studentID.touched && studentID.errors?.required">This field is required</mat-error>
-          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid student ID</mat-error>
-          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && !studentID.errors?.pattern && studentDoesNotExist">Student does not exist</mat-error>
+          <mat-error *ngIf="studentID.touched && !studentID.errors?.required && studentID.errors?.pattern">Invalid
+            student ID
+          </mat-error>
+          <mat-error
+            *ngIf="studentID.touched && !studentID.errors?.required && !studentID.errors?.pattern && studentIDNotFound">
+            Student does not exist
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="col-12mx-0 px-1" appearance="outline">
+        <mat-form-field class="col-8 mx-0 px-1" appearance="outline">
           <mat-label>Student Name</mat-label>
-          <input type="text" matInput formControlName="studentName" readonly />
+          <input type="text" matInput formControlName="studentName" readonly/>
         </mat-form-field>
 
       </div>
 
+      <div class="row px-1">
+        <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
+      </div>
+
       <div class="row">
-        <mat-form-field class="col-12 mx-0 px-1">
+        <mat-form-field appearance="fill" class="col-12 mx-0 px-1">
           <mat-label>Requests</mat-label>
-          <mat-select formControlName="requests">
-            <mat-option *ngFor="let request of requests" [value]="request.requestID">{{ request.date | date: 'MMM d, y' }} | <span *ngFor="let type of request.requestTypes">{{ type.requestType + ', ' }}</span></mat-option>
+          <mat-select formControlName="request" id="requests">
+            <mat-option *ngFor="let request of requests" [value]="request.requestID">{{ request.date | date: 'MMM d, y' }} | <span *ngFor="let requestMade of request.requestTypes">{{ requestMade.request + ', ' }}</span></mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+
+      <div class="row px-1 mb-3 mx-1">
+        <button (click)="getRequestDetails(selectedRequest.value)" type="button" mat-raised-button color="primary">Add
+        </button>
+      </div>
+
+      <div>
+
+        <h6>Request Details</h6>
+        <mat-divider class="mat-divider"></mat-divider>
+        <br/>
+
+        <div class="row">
+
+          <mat-form-field class="col-12 mx-0 px-1" appearance="fill">
+            <mat-label>Request</mat-label>
+            <mat-select formControlName="requests" multiple>
+              <mat-option *ngFor="let request of requestTypes" [value]="request.requestTypeID">{{ request.request }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="selectedRequestTypes.touched && selectedRequestTypes.errors?.required">Please select a request type</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="row">
+
+          <mat-form-field class="col-4 mx-0 px-1" appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput formControlName="submissionDate" [matDatepicker]="myDatePicker" [max]="maxDate"/>
+            <mat-datepicker-toggle matSuffix [for]="myDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #myDatePicker></mat-datepicker>
+            <mat-error *ngIf="submissionDate.touched && submissionDate.errors?.required">This field is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-8 mx-0 px-1" appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput style="resize: none" rows="5" formControlName="remarks"></textarea>
+          </mat-form-field>
+
+        </div>
+
+        <div class="row px-3 mb-3">
+
+          <label>
+            <mat-checkbox formControlName="recordBookAttached" color="primary">
+              Relevant pages of the record book to indicate the registration number and the date of registration are
+              attached
+            </mat-checkbox>
+          </label>
+
+          <label>
+            <mat-checkbox formControlName="relevantDocumentsAttached" color="primary">
+              Relevant documents attached (Ex: Medical Certification, Letter of Offer, etc)?
+            </mat-checkbox>
+          </label>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <h6>Reasons for request</h6>
+        <mat-divider class="mat-divider"></mat-divider>
+        <br/>
+
+        <div formArrayName="reasons" *ngFor="let reason of reasons.controls; let i = index">
+
+          <div class="row">
+
+            <mat-form-field class="col-11 mx-0 px-1" appearance="outline">
+              <mat-label>Reason</mat-label>
+              <input type="text" matInput [formControl]="reason"/>
+              <mat-error *ngIf="reason.touched && reason.errors?.required">This field is required</mat-error>
+            </mat-form-field>
+
+            <div class="col-1">
+              <button (click)="removeReason(i)" [disabled]="reasons.controls.length <= 1" type="button" color="warn"
+                      mat-mini-fab style="margin-top: 10px; margin-left: -10px">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="row px-1 mb-3 mx-1">
+          <button (click)="reasons.push(addReason(''))" type="button" mat-raised-button>Add</button>
+        </div>
+      </div>
+
+      <div>
+
+        <h6>Request Progress</h6>
+        <mat-divider class="mat-divider"></mat-divider>
+        <br/>
+
+        <div formArrayName="progress" *ngFor="let step of progress.controls; let i = index">
+
+          <div [formGroupName]="i" class="row">
+
+            <mat-form-field class="col-2 mx-0 px-1" appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option [value]="2">Pending</mat-option>
+                <mat-option [value]="1">Approved</mat-option>
+                <mat-option [value]="0">Not Approved</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="col-3 mx-0 px-1" appearance="outline">
+              <mat-label>By</mat-label>
+              <mat-select formControlName="by">
+                <mat-option *ngFor="let reviewer of reviewers"
+                            [value]="reviewer.reviewerID">{{ reviewer.reviewer }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="col-6 mx-0 px-1" appearance="outline">
+              <mat-label>Reason</mat-label>
+              <input matInput type="text" formControlName="reason"/>
+            </mat-form-field>
+
+            <div class="col-1">
+              <button (click)="removeStep(i)" [disabled]="progress.controls.length <= 1" type="button" color="warn" mat-mini-fab style="margin-top: 10px; margin-left: -10px">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row px-1 mb-3 mx-1">
+        <button (click)="progress.push(addStep('', '', ''))" type="button" mat-raised-button>Add</button>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="fill" class="col-12 mx-0 px-1">
+          <mat-label>Final Decision</mat-label>
+          <mat-select formControlName="finalDecision">
+            <mat-option value="2">Pending</mat-option>
+            <mat-option value="1">Approved</mat-option>
+            <mat-option value="0">Not Approved</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row px-1 mt-3 mb-0 ">
+        <div *ngIf="error" class="alert alert-danger col-12">Error saving data. {{ error }}.</div>
+      </div>
+
+      <div class="row px-1 mt-3 mb-3">
+        <div *ngIf="success" class="alert alert-success col-12">Request successfully saved</div>
+      </div>
+
+      <div class="d-flex flex-row-reverse">
+        <button (click)="submitForm()" type="button" mat-raised-button color="primary" class="mx-1">Submit</button>
       </div>
 
     </form>

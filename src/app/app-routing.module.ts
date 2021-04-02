@@ -36,6 +36,9 @@ import {SubmitedRequestsComponent} from './home/request/submited-requests/submit
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
 import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
+import {AcademicTimetableComponent} from './home/timetable/academic-timetable/academic-timetable.component';
+import {AcademicCalenderComponent} from './home/timetable/academic-calender/academic-calender.component';
+import {DeactivateGuard} from './_helpers/deactivate.guard';
 
 const routes: Routes = [
   {
@@ -150,7 +153,22 @@ const routes: Routes = [
       },
       {
         path: 'timetable',
-        component: TimetableComponent
+        component: TimetableComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'academic-timetable',
+            pathMatch: 'full'
+          },
+          {
+            path: 'academic-timetable',
+            component: AcademicTimetableComponent
+          },
+          {
+            path: 'academic-calender',
+            component: AcademicCalenderComponent,
+            canDeactivate: [DeactivateGuard]
+          }]
       },
       {
         path: 'payment',

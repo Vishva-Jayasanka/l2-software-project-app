@@ -5,9 +5,9 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
 import {scrollToFirstInvalidElement} from '../../../_services/shared.service';
 
-export interface Request {
+export interface RequestType {
   requestTypeID: number;
-  requestType: string;
+  request: string;
 }
 
 @Component({
@@ -28,15 +28,7 @@ export class AddRequestComponent implements OnInit {
   term$ = new Subject<string>();
   private searchSubscription: Subscription;
 
-  requests: Request[] = [
-    {requestTypeID: 1, requestType: 'Extension -Permitted Duration up to maximum duration'},
-    {requestTypeID: 2, requestType: 'To sit examinations with next batch as first attempt candidate'},
-    {requestTypeID: 3, requestType: 'Deferment'},
-    {requestTypeID: 4, requestType: 'Deregistration from the program'},
-    {requestTypeID: 5, requestType: 'Deregistration from course module(s)'},
-    {requestTypeID: 6, requestType: 'Leave'},
-    {requestTypeID: 7, requestType: 'Other(Please Specify)'}
-  ];
+  requestTypes: RequestType[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,6 +49,15 @@ export class AddRequestComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.data.getRequestTypes().subscribe(
+      response => {
+        this.requestTypes = response.requestTypes;
+        console.log(this.requestTypes);
+      },
+      error => this.error = error
+    );
+
     this.requestForm = this.formBuilder.group({
       studentID: ['', [Validators.required, Validators.pattern(/^[0-9]{6}[A-Za-z]/)]],
       studentName: ['', [Validators.required]],
@@ -64,7 +65,7 @@ export class AddRequestComponent implements OnInit {
       submissionDate: ['', [Validators.required]],
       request: ['', [Validators.required]],
       reasons: this.formBuilder.array([new FormControl('', [Validators.required])]),
-      remarks: [''],
+      remarks: ['', [Validators.required]],
       recordBookAttached: [false],
       documentsAttached: [false]
     });
@@ -96,15 +97,25 @@ export class AddRequestComponent implements OnInit {
   }
 
   submitForm(): void {
+    this.error = '';
+    this.success = false;
+    this.uploadRequestProgress = true;
     if (this.requestForm.valid) {
       if (confirm('Are you sure you want to submit this form?')) {
         this.uploadRequestProgress = true;
         this.data.uploadRequest(this.requestForm.value).subscribe(
-          response => console.log(response),
-          error => console.log(error)
+          response => {
+            this.success = true;
+            this.reasons.controls = [new FormControl('', [Validators.required])];
+            this.requestForm.reset();
+          },
+          error => {
+            this.error = error;
+          }
         ).add(() => this.uploadRequestProgress = false);
       }
     } else {
+      this.uploadRequestProgress = false;
       scrollToFirstInvalidElement(this.elementRef);
     }
   }

@@ -1,59 +1,12 @@
 <div class="container-md">
 
   <div class="jumbotron">
-    <h3>Timetables</h3>
-    <p>Time allocation for each module</p>
+    <h3 style="margin-top: 0">Time Tables</h3>
+    <p *ngIf="getRole === 'Student'">Current Academic calender and timetable</p>
+    <p *ngIf="getRole === 'Teacher'">Current Academic calender and timetable</p>
+    <p *ngIf="getRole === 'Admin'">You can add or modify academic calender</p>
   </div>
 
-  <mat-spinner style="margin: 100px auto auto" [hidden]="!progress"></mat-spinner>
-
-  <div *ngIf="!progress" class="row mx-0 mt-3 px-0">
-
-    <div *ngFor="let day of weekdays" class="col m-0 p-0" style="position: relative">
-
-      <div class="row p-3 bg-primary text-white rounded" style="margin: 0 2px 0 2px">
-        {{ day.day | uppercase }}
-      </div>
-
-      <div class="row px-3">
-
-        <div *ngFor="let track of timeTable[day.index]" class="col p-0">
-
-          <div *ngFor="let session of track"
-               [style.top]="getPosition(getTime(session.startingTime)) + 'px'"
-               [style.height]="(getPosition(getTime(session.endingTime)) - getPosition(getTime(session.startingTime))) + 'px'"
-               class="row bg-info rounded scale p-1"
-               [style.--width]="(timeTable[day.index].length * 100) + '%'"
-               style="position: relative; margin: 4px 2px 0 2px;">
-
-            <div class="rotate mt-1 h6 text-white">
-              <span class="h6 text text-dark">{{ session.moduleCode }}</span>
-            </div>
-
-            <div class="d-flex align-items-start">
-              <ul style="list-style-type: none; padding: 0;" class="hidden">
-                <li>{{ session.moduleCode }}</li>
-                <li><b>{{ session.moduleName }}</b></li>
-              </ul>
-            </div>
-
-            <div class="d-flex align-items-end" style="position: absolute; bottom: -10px">
-              <ul style="list-style-type: none; padding: 0" class="hidden">
-                <li><b>{{ getTime(session.startingTime) }} - {{ getTime(session.endingTime) }}</b></li>
-                <li><i>{{ session.lectureHall }}</i></li>
-              </ul>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+  <router-outlet></router-outlet>
 
 </div>

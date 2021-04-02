@@ -76,7 +76,15 @@ export class HomeComponent implements OnInit {
       route: 'timetable',
       icon: 'watch_later',
       label: 'Timetable',
-      children: []
+      children: [{
+        component: 'AcademicTimetableComponent',
+        route: 'academic-timetable',
+        label: 'Academic Timetable'
+      }, {
+        component: 'AcademicCalenderComponent',
+        route: 'academic-calender',
+        label: 'Academic Calender'
+      }]
     }, {
       component: 'PaymentComponent',
       route: 'payment',

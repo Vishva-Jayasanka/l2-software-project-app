@@ -23,24 +23,24 @@
 
       <div [attr.id]="'accordion' + semester.value[0].moduleCode">
 
-        <div *ngFor="let result of semester.value" [attr.id]="result.moduleCode" class="card mb-2"
+        <div *ngFor="let result of semester.value" [attr.id]="result.moduleCode + result.academicYear" class="card mb-2"
              style="transition: box-shadow 2s">
 
-          <h5 [attr.id]="'heading' + result.moduleCode"
-              [attr.data-target]="'#collapse' + result.moduleCode"
-              [attr.aria-controls]="'collapse' + result.moduleCode"
+          <h5 [attr.id]="'heading' + result.moduleCode + result.academicYear"
+              [attr.data-target]="'#collapse' + result.moduleCode + result.academicYear"
+              [attr.aria-controls]="'collapse' + result.moduleCode + result.academicYear"
               aria-expanded="false"
               data-toggle="collapse"
               class="card-header d-flex justify-content-between"
               style="cursor: pointer"
           >
-            <span>{{ result.moduleName }}</span>
+            <span>{{ result.moduleName }} ({{ result.academicYear }})</span>
             <span>{{ result.moduleCode }}</span>
           </h5>
 
-          <div [attr.id]="'collapse' + result.moduleCode"
+          <div [attr.id]="'collapse' + result.moduleCode + result.academicYear"
                [class.show]="result.moduleCode === moduleCode"
-               [attr.aria-labelledby]="'heading' + result.moduleCode"
+               [attr.aria-labelledby]="'heading' + result.moduleCode + result.academicYear"
                [attr.data-parent]="'#accordion' + semester.value[0].moduleCode"
                class="collapse">
 

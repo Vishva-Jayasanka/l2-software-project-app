@@ -46,14 +46,15 @@ import {NewModuleComponent} from './home/course-module/new-module/new-module.com
 import {ModuleDetailComponent} from './home/course-module/module-detail/module-detail.component';
 import {UserGuard} from './_helpers/user.guard';
 import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
-import {
-  AttendanceDialogComponent,
-  ModuleAttendanceComponent
-} from './home/attendance/module-attendance/module-attendance.component';
-import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.component';
-import { PaymentDetailsComponent } from './home/payment/payment-details/payment-details.component';
-import { SubmitedRequestsComponent } from './home/request/submited-requests/submited-requests.component';
-import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import {AttendanceDialogComponent, ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
+import {EditPaymentComponent} from './home/payment/edit-payment/edit-payment.component';
+import {PaymentDetailsComponent} from './home/payment/payment-details/payment-details.component';
+import {SubmitedRequestsComponent} from './home/request/submited-requests/submited-requests.component';
+import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
+import {AcademicTimetableComponent} from './home/timetable/academic-timetable/academic-timetable.component';
+import {AcademicCalenderComponent, NewAcademicYearDialogComponent} from './home/timetable/academic-calender/academic-calender.component';
+import {DayMarkersService, EditService, FilterService, SelectionService, SortService, ToolbarService} from '@syncfusion/ej2-angular-gantt';
+import {DeactivateGuard} from './_helpers/deactivate.guard';
 
 
 @NgModule({
@@ -96,7 +97,10 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     EditPaymentComponent,
     PaymentDetailsComponent,
     SubmitedRequestsComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    AcademicTimetableComponent,
+    AcademicCalenderComponent,
+    NewAcademicYearDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -112,6 +116,7 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
   ],
   providers: [
     AuthenticationGuard,
+    DeactivateGuard,
     UserGuard,
     AuthenticationService,
     {
@@ -123,7 +128,15 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true
-    }
+    },
+
+    EditService,
+    FilterService,
+    SortService,
+    SelectionService,
+    ToolbarService,
+    DayMarkersService
+
   ],
   bootstrap: [AppComponent]
 })

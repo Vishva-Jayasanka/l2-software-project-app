@@ -118,8 +118,9 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}check-student-id`, {studentID});
   }
 
-  getTimetable() {
-    return this.http.post<any>(`${environment.apiUrl}get-timetable`, {});
+  getTimetable(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}get-timetable`, {responseType: 'text'});
+    // return this.http.post<any>(`${environment.apiUrl}get-timetable`, {});
   }
 
   getStudents() {
@@ -142,8 +143,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-modules-of-semester`, {semester});
   }
 
-  uploadRequest(request: object): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}upload-request`, {request});
+  uploadRequest(requestForm: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}upload-request`, requestForm);
   }
 
   enrollStudent(enrollmentForm: object): Observable<any> {
@@ -156,6 +157,34 @@ export class DataService {
 
   checkIfResultsUploaded(data: object): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}check-if-results-uploaded`, data);
+  }
+
+  getRequestTypes(): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-request-types`, {});
+  }
+
+  getRequestsBrief(studentID: string): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-requests-brief`, {studentID});
+  }
+
+  getRequestDetails(requestID: number): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-request-details`, {requestID});
+  }
+
+  updateRequestStatus(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}update-request-status`, data);
+  }
+
+  getRequests(): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}get-requests`, {});
+  }
+
+  getAcademicCalenders(): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}get-academic-calenders`, {});
+  }
+
+  updateAcademicCalender(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}update-academic-calender`, data);
   }
 
 }
