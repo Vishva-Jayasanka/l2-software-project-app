@@ -36,7 +36,7 @@
           <div mat-line>{{ route.label }}</div>
         </mat-list-option>
 
-        <div [hidden]="getRole !== 'Admin'" class="list-group list-group-flush rounded-0 ml-4 sub-menu" [class.sub-menu-hidden]="activeRoute !== route.component" [style.height]="activeRoute === route.component ? (50 * route.children.length) + 'px' : 0">
+        <div [hidden]="getRole !== 'Admin' && route.component !== 'TimetableComponent'" class="list-group list-group-flush rounded-0 ml-4 sub-menu" [class.sub-menu-hidden]="activeRoute !== route.component" [style.height]="activeRoute === route.component ? (50 * route.children.length) + 'px' : 0">
           <a *ngFor="let child of route.children" [routerLink]="['/' + route.route + '/' + child.route]" [ngClass]="childRoute !== child.route ? ['list-group-item', 'list-group-item-action'] : ['list-group-item', 'list-group-item-action', 'active']">{{ child.label }}</a>
         </div>
 
