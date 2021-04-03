@@ -107,7 +107,8 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   ).add(() => setTimeout(() => this.viewRegistrationProgress = false, 1000));
   }
 
-  changeFilterValue(){
+  onChange(){
+    console.log('onchange');
     this.show = false;
     this.buttonName = 'show';
   }
