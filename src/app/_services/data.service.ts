@@ -158,7 +158,7 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}check-if-results-uploaded`, data);
   }
 
-  getRegisteredUsers(data: object): Observable<any> {
+  getRegisteredUsers(data: object) {
     return this.http.post<any>(`${environment.adminUrl}get-registered-users`, data);
   }
 

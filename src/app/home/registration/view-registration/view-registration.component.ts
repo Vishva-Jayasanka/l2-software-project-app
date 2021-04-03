@@ -35,7 +35,6 @@ export interface PeriodicElement {
   styleUrls: ['./view-registration.component.css']
 })
 export class ViewRegistrationComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['position', 'studentID', 'title', 'name', 'nic', 'email', 'mobile', 'customDataColumn'];
   dataSource;
   filterValue = '';
   viewRegistrationsForm: FormGroup;
@@ -96,7 +95,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
     this.viewRegistrationProgress = true;
     this.data.getRegisteredUsers({
       courseID: this.courseName.value,
-      academicYear: this.academicYear.value
+      academicYear: this.years[this.academicYear.value].value
     }).subscribe(response => {
           this.dataSource = new MatTableDataSource(response.results[0]);
           this.filterValue = '';
