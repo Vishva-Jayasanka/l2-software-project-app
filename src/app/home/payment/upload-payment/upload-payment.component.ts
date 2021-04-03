@@ -60,11 +60,11 @@ export class UploadPaymentComponent implements OnInit {
         depositor: this.formBuilder.group({
           registrationNumber: ['', [Validators.required, Validators.pattern(/^([0-9]{6}[A-Za-z])$/)]],
           fullName: [''],
-          courseId: [''],
+          course: [''],
           academicYear: [''],
         }),
         deposit: this.formBuilder.group({
-          bankName: ['', [Validators.required]],
+          bankName:  ['', [Validators.required]], //this.banks[this.bankName.value].bankName,
           slipNumber: ['', [Validators.required]],
           totalPaid: ['', [Validators.required]],
           paymentDate: ['', [Validators.required]],
@@ -108,8 +108,8 @@ export class UploadPaymentComponent implements OnInit {
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
-            this.course.setValue(response.courseName);
             this.academicYear.setValue(response.academicYear);
+            this.course.setValue(response.course);
           } else {
             this.studentIDNotFound = true;
           }
