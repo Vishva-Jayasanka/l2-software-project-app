@@ -166,7 +166,7 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
   }
 
-  getConfirmedPaymentsList(): Observable<any> {
+  getConfirmedPaymentDetails(): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {});
   }
 
