@@ -45,6 +45,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   public show = false;
   public view = false;
   public buttonName: any = 'Show';
+  public buttonName2: any = 'Show';
   courses: Course[] = COURSES;
   years = YEARS;
   title = 'ViewPaymentDetails';
@@ -64,7 +65,6 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   }
 
 
-
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
@@ -82,11 +82,11 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     });
     this.user = this.authentication.details;
   }
-
-  onChange() {
-    this.buttonName = 'Show';
+  onChange(){
+    console.log('onchange');
+    this.show = false;
+    this.buttonName = 'show';
   }
-
   toggle() {
     this.show = !this.show;
     this.filterValue = '';
@@ -117,10 +117,10 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.dataSource2.filter = '';
 
     if (this.show) {
-      this.buttonName = 'Hide';
+      this.buttonName2 = 'Hide';
     }
     else {
-      this.buttonName = 'Show';
+      this.buttonName2 = 'Show';
     }
   }
 
@@ -131,6 +131,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.tableOneSort;
     this.dataSource2.sort = this.tableTwoSort;
   }
+
 
 
   get courseName() {
