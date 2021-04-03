@@ -29,7 +29,7 @@
 
         <mat-form-field class="col-8 pr-1" appearance="outline" id="course-name">
           <mat-label>Course Name</mat-label>
-          <mat-select formControlName="courseName">
+          <mat-select (selectionChange)="onChange()" formControlName="courseName">
             <mat-option *ngFor="let course of courses" [value]="course.courseID">{{course.courseName}}</mat-option>
           </mat-select>
           <mat-error *ngIf="courseName.touched && courseName.errors?.required">This field is required</mat-error>
@@ -37,7 +37,7 @@
 
         <mat-form-field class="col-4" appearance="outline" id="academicYear">
           <mat-label>Academic Year</mat-label>
-          <mat-select id="action" formControlName="academicYear" (ngModelChange)="onChange()">
+          <mat-select (selectionChange)="onChange()" id="action" formControlName="academicYear">
             <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -97,7 +97,7 @@
   <div class="card">
 
       <div class="row px-2">
-        <button mat-raised-button color="primary" (click)="toggle2()" class="mx-2" type="button"> {{buttonName}} </button>
+        <button mat-raised-button color="primary" (click)="toggle2()" class="mx-2" type="button"> {{buttonName2}} </button>
       </div>
 
 
