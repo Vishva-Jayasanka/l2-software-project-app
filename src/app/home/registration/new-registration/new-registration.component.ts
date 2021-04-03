@@ -43,7 +43,8 @@ export class NewRegistrationComponent implements OnInit {
   maxDate: Date = new Date();
   courses: Course[] = COURSES;
   years = YEARS;
-
+  defaultCourseName = 1;
+  defaultYear = 1;
   success = false;
   error = '';
 

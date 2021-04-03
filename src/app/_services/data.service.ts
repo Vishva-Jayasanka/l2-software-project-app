@@ -158,8 +158,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}check-if-results-uploaded`, data);
   }
 
-  getRegisteredUsers(): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-registered-users`, {});
+  getRegisteredUsers(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-registered-users`, data);
   }
 
   getPaymentList(data: any): Observable<any> {

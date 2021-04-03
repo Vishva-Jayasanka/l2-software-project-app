@@ -29,17 +29,17 @@
 
         <mat-form-field class="col mx-0 px-1" appearance="outline">
           <mat-label>Full Name</mat-label>
-          <input type="text" matInput formControlName="fullName" placeholder="full name" readonly>
+          <input type="text" matInput formControlName="fullName" placeholder="full name" [readonly]="true"/>
         </mat-form-field>
 
         <mat-form-field class="col mx-0 px-1" appearance="outline">
           <mat-label>Course Name</mat-label>
-          <input type="text" matInput formControlName="course" placeholder="course name" readonly>
+          <input type="text" matInput formControlName="course" placeholder="course name" [readonly]="true"/>
         </mat-form-field>
 
         <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
           <mat-label>Academic Year</mat-label>
-          <input type="text" matInput formControlName="academicYear" placeholder="academic year" readonly>
+          <input type="text" matInput formControlName="academicYear" placeholder="academic year" [readonly]="true"/>
         </mat-form-field>
       </div>
 

@@ -94,12 +94,17 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
 
   getData(){
     this.viewRegistrationProgress = true;
-    this.data.getRegisteredUsers().subscribe(response => {
+    this.data.getRegisteredUsers({
+      courseID: this.courseName.value,
+      academicYear: this.academicYear.value
+    }).subscribe(response => {
           this.dataSource = new MatTableDataSource(response.results[0]);
           this.filterValue = '';
           this.dataSource.filter = '';
           this.viewRegistrationProgress = false;
-    });
+    },
+    error => console.log(error)
+  ).add(() => setTimeout(() => this.viewRegistrationProgress = false, 1000));
   }
 
   get email(): AbstractControl  {
