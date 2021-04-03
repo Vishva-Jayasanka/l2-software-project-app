@@ -1,7 +1,9 @@
 import {Component, ElementRef, KeyValueDiffers, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {YEARS} from '../../../_services/shared.service';
+import {ConfirmDetailsDialogComponent} from '../registration.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 
 export interface Course {
@@ -10,6 +12,11 @@ export interface Course {
 }
 
 export interface District {
+  code: string;
+  name: string;
+}
+
+export interface Title {
   code: string;
   name: string;
 }
@@ -36,7 +43,8 @@ export class NewRegistrationComponent implements OnInit {
   maxDate: Date = new Date();
   courses: Course[] = COURSES;
   years = YEARS;
-
+  defaultCourseName = 1;
+  defaultYear = 1;
   success = false;
   error = '';
 
@@ -67,6 +75,14 @@ export class NewRegistrationComponent implements OnInit {
     {code: 'LK-53', name: 'Trincomalee'},
     {code: 'LK-44', name: 'Vavuniya'}
   ];
+
+  titles: Title[] = [
+    {code: 'LK-3', name: 'Mr.'},
+    {code: 'LK-5', name: 'Mrs.'},
+    {code: 'LK-7', name: 'Ms.'},
+    {code: 'LK-4', name: 'Rev. (Reverend)'},
+  ];
+
   provinces: Province[] = [
     {code: 'LK-2', name: 'Central Province'},
     {code: 'LK-5', name: 'Eastern Province'},
@@ -79,46 +95,49 @@ export class NewRegistrationComponent implements OnInit {
     {code: 'LK-1', name: 'Western Province'},
   ];
 
+
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    public dialog: MatDialog
   ) {
   }
 
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
-      courseName: [1, [Validators.required]],
+      courseName: ['', [Validators.required]],
       academicYear: ['', [Validators.required]],
       name: this.formBuilder.group({
-        fullName: ['Atapattu Kuruppuge Vishwa Jayasanka', [Validators.required]],
-        nameWithInitials: ['A.K.V Jayasnaka', [Validators.required]],
+        title: ['', [Validators.required]],
+        fullName: ['', [Validators.required]],
+        nameWithInitials: ['', [Validators.required]],
       }),
       address: this.formBuilder.group({
-        permanentAddress: ['Ihalagewatta, Naimana South, Matara', [Validators.required]],
-        district: ['LK-32', [Validators.required]],
-        province: ['LK-3', [Validators.required]],
+        permanentAddress: ['', [Validators.required]],
+        district: ['', [Validators.required]],
+        province: ['', [Validators.required]],
       }),
-      dateOfBirth: ['1998-01-09', [Validators.required]],
-      race: ['Sinhalees', [Validators.required]],
-      religion: ['Buddhist', [Validators.required]],
-      gender: ['M', [Validators.required]],
-      nic: ['199800910054', [Validators.required, Validators.pattern(/^([0-9]{12})|([0-9]{9}[A-Za-z])/)]],
+      dateOfBirth: ['', [Validators.required]],
+      race: ['', [Validators.required]],
+      religion: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      nic: ['', [Validators.required, Validators.pattern(/^([0-9]{12})|([0-9]{9}[A-Za-z])/)]],
       contactDetails: this.formBuilder.group({
-        email: ['vishvajayasanka@gmail.com', [Validators.required, Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)]],
-        mobile: ['+94719251862', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]],
-        home: ['+94418889637', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]]
+        email: ['', [Validators.required, Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)]],
+        mobile: ['', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]],
+        home: ['', [Validators.required, Validators.pattern(/^(0[1-9][0-9]{8})|(\+94[1-9][0-9]{8})$/)]]
       }),
       employment: this.formBuilder.group({
-        designation: ['Software Engineer'],
-        employer: ['Saman Kumara'],
-        company: ['ABC Holdings']
+        designation: [''],
+        employer: [''],
+        company: ['']
       }),
       educationQualifications: this.formBuilder.array([]),
       registration: this.formBuilder.group({
-        registrationFees: ['200', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+        registrationFees: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
         registrationFeesPaid: [false],
-        dateOfPayment: ['2020-02-05', [Validators.required]]
+        dateOfPayment: ['', [Validators.required]]
       })
     });
     this.addQualification();
@@ -127,10 +146,10 @@ export class NewRegistrationComponent implements OnInit {
   addQualification() {
     this.educationQualifications.push(
       this.formBuilder.group({
-        degree: ['Bsc. Eng', [Validators.required]],
-        institute: ['University of Moratuwa', [Validators.required]],
-        graduationDate: ['2019-08-15', Validators.required],
-        grade: ['Second Upper', [Validators.required]]
+        degree: ['', [Validators.required]],
+        institute: ['', [Validators.required]],
+        graduationDate: ['', Validators.required],
+        grade: ['', [Validators.required]]
       })
     );
   }
@@ -140,7 +159,9 @@ export class NewRegistrationComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.data.registerStudent(this.registrationForm.value).subscribe(
         response => {
-          this.success = true;
+          if (this.success = true){
+            this.openDialog();
+          }
           this.error = '';
           this.registrationForm.reset();
         },
@@ -153,7 +174,10 @@ export class NewRegistrationComponent implements OnInit {
       this.registerStudentProgress = false;
       this.scrollToFirstInvalidControl();
     }
+
   }
+
+
 
   toggleRegistrationFeesPaid() {
     console.log(!this.registrationFeesPaid.value);
@@ -179,8 +203,16 @@ export class NewRegistrationComponent implements OnInit {
     return this.registrationForm.get('courseName');
   }
 
+  get title() {
+    return this.registrationForm.get('name').get('title');
+  }
+
   get fullName() {
     return this.registrationForm.get('name').get('fullName');
+  }
+
+  get academicYear(): AbstractControl {
+    return this.registrationForm.get('academicYear');
   }
 
   get nameWithInitials() {
@@ -258,5 +290,18 @@ export class NewRegistrationComponent implements OnInit {
   get educationQualifications(): FormArray {
     return this.registrationForm.get('educationQualifications') as FormArray;
   }
+
+  openDialog(){
+    const dialogRef = this.dialog.open(ConfirmDetailsDialogComponent, {
+      width: '450px',
+
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+      }
+    });
+  }
+
 
 }

@@ -20,6 +20,8 @@ export class UploadPaymentComponent implements OnInit {
   studentIDNotFound = false;
   success = false;
 
+
+
   error = '';
 
   banks: Bank[] = [
@@ -33,10 +35,12 @@ export class UploadPaymentComponent implements OnInit {
 
 
 
+
+
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -57,6 +61,7 @@ export class UploadPaymentComponent implements OnInit {
           registrationNumber: ['', [Validators.required, Validators.pattern(/^([0-9]{6}[A-Za-z])$/)]],
           fullName: [''],
           courseId: [''],
+          academicYear: [''],
         }),
         deposit: this.formBuilder.group({
           bankName: ['', [Validators.required]],
@@ -67,6 +72,7 @@ export class UploadPaymentComponent implements OnInit {
       }
     );
   }
+
 
   submitForm() {
     this.uploadAPaymentProgress = true;
@@ -93,8 +99,6 @@ export class UploadPaymentComponent implements OnInit {
     firstInvalidControl.scrollIntoView({behavior: 'smooth'});
   }
 
-
-
   checkStudentID(studentID) {
     this.success = false;
     this.error = '';
@@ -104,7 +108,8 @@ export class UploadPaymentComponent implements OnInit {
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
-            this.courseId.setValue(response.name);
+            this.course.setValue(response.courseName);
+            this.academicYear.setValue(response.academicYear);
           } else {
             this.studentIDNotFound = true;
           }
@@ -116,6 +121,11 @@ export class UploadPaymentComponent implements OnInit {
     }
   }
 
+  clickFileUpload() {
+    document.getElementById('fileUpload').click();
+  }
+
+
   toggleProgress() {
     this.uploadAPaymentProgress = true;
   }
@@ -124,8 +134,12 @@ export class UploadPaymentComponent implements OnInit {
     return this.paymentForm.get('depositor').get('fullName');
   }
 
-  get courseId() {
-    return this.paymentForm.get('depositor').get('courseId');
+  get course() {
+    return this.paymentForm.get('depositor').get('course');
+  }
+
+  get academicYear() {
+    return this.paymentForm.get('depositor').get('academicYear');
   }
 
   get registrationNumber() {

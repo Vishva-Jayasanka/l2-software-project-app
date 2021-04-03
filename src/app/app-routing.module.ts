@@ -29,7 +29,6 @@ import {EditResultComponent} from './home/results/edit-result/edit-result.compon
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {ViewResultComponent} from './home/results/view-result/view-result.component';
 import {ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
-import {PaymentDetailsComponent} from './home/payment/payment-details/payment-details.component';
 import {EditPaymentComponent} from './home/payment/edit-payment/edit-payment.component';
 import {SubmitedRequestsComponent} from './home/request/submited-requests/submited-requests.component';
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
@@ -37,9 +36,9 @@ import {UpdateStatusComponent} from './home/request/update-status/update-status.
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
-import { ViewPaymentsComponent } from './home/payment/view-payments/view-payments.component';
-import { ViewPaymentComponent } from './home/payment/view-payment/view-payment.component';
-import { ViewPaymentDetailsComponent } from './home/payment/view-payment-details/view-payment-details.component';
+import { ViewPaymentsHomeComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
+import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
 
 const routes: Routes = [
   {
@@ -161,20 +160,16 @@ const routes: Routes = [
         component: PaymentComponent,
         children: [
           {
-            path: 'payment-details',
-            component: PaymentDetailsComponent
-          },
-          {
-            path: 'view-payment',
-            component: ViewPaymentComponent,
-          },
-          {
-            path: 'view-payment-details',
-            component: ViewPaymentDetailsComponent,
-          },
-          {
-            path: 'view-payments',
-            component: ViewPaymentsComponent,
+            path: 'view-payments-home',
+            component: ViewPaymentsHomeComponent,
+            children:[{
+              path: 'view-payment-details',
+              component: ViewPaymentDetailsComponent,
+            },
+            {
+              path: 'view-payments',
+              component: ViewPaymentsComponents,
+            }]
           },
           {
             path: 'upload-payment',
