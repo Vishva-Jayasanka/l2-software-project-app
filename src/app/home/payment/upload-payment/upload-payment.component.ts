@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 export interface Bank {
   bankID: number;
@@ -41,6 +42,7 @@ export class UploadPaymentComponent implements OnInit {
     private formBuilder: FormBuilder,
     private data: DataService,
     private elementRef: ElementRef,
+    private authentication: AuthenticationService,
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -64,7 +66,7 @@ export class UploadPaymentComponent implements OnInit {
           academicYear: [''],
         }),
         deposit: this.formBuilder.group({
-          bankName:  ['', [Validators.required]], //this.banks[this.bankName.value].bankName,
+          bankName:  ['', [Validators.required]], // this.banks[this.bankName.value].bankName,
           slipNumber: ['', [Validators.required]],
           totalPaid: ['', [Validators.required]],
           paymentDate: ['', [Validators.required]],
@@ -77,17 +79,31 @@ export class UploadPaymentComponent implements OnInit {
   submitForm() {
     this.uploadAPaymentProgress = true;
     if (this.paymentForm.valid) {
-    this.data.uploadPayment(this.paymentForm.value).subscribe(
-      response => {
-        this.success = true;
-        this.error = '';
-        this.paymentForm.reset();
-      },
-      error => {
-        this.success = false;
-        this.error = error;
+      if (this.getRole !== 'Student'){
+        this.data.uploadPayment(this.paymentForm.value).subscribe(
+          response => {
+            this.success = true;
+            this.error = '';
+            this.paymentForm.reset();
+          },
+          error => {
+            this.success = false;
+            this.error = error;
+          }
+        ).add(() => this.uploadAPaymentProgress = false);
+      }else if (this.getRole !== 'admin'){
+        this.data.uploadStudentPayment(this.paymentForm.value).subscribe(
+          response => {
+            this.success = true;
+            this.error = '';
+            this.paymentForm.reset();
+          },
+          error => {
+            this.success = false;
+            this.error = error;
+          }
+        ).add(() => this.uploadAPaymentProgress = false);
       }
-    ).add(() => this.uploadAPaymentProgress = false);
     } else {
       this.uploadAPaymentProgress = false;
       this.scrollToFirstInvalidControl();
@@ -119,6 +135,10 @@ export class UploadPaymentComponent implements OnInit {
     } else {
       this.uploadAPaymentProgress = false;
     }
+  }
+
+  get getRole() {
+    return this.authentication.details.role;
   }
 
   clickFileUpload() {
