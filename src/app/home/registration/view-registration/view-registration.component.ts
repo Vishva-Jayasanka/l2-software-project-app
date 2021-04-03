@@ -35,6 +35,7 @@ export interface PeriodicElement {
   styleUrls: ['./view-registration.component.css']
 })
 export class ViewRegistrationComponent implements OnInit, AfterViewInit {
+  displayedColumns = ['position', 'studentID', 'title', 'name', 'nic', 'email', 'mobile', 'customDataColumn'];
   dataSource;
   filterValue = '';
   viewRegistrationsForm: FormGroup;
@@ -104,6 +105,11 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
     },
     error => console.log(error)
   ).add(() => setTimeout(() => this.viewRegistrationProgress = false, 1000));
+  }
+
+  changeFilterValue(){
+    this.show = false;
+    this.buttonName = 'show';
   }
 
   get email(): AbstractControl  {
