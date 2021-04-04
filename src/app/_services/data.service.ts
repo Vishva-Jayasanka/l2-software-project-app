@@ -110,12 +110,16 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}upload-Payment`, {paymentForm});
   }
 
+  uploadStudentPayment(paymentForm) {
+    return this.http.post<any>(`${environment.studentUrl}upload-Payment`, {paymentForm});
+  }
+
   registerStudent(studentDetails) {
     return this.http.post<any>(`${environment.adminUrl}register-student`, {studentDetails});
   }
 
   checkStudentID(studentID) {
-    return this.http.post<any>(`${environment.adminUrl}check-student-id`, {studentID});
+    return this.http.post<any>(`${environment.apiUrl}check-student-id`, {studentID});
   }
 
   getTimetable() {
@@ -166,12 +170,12 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
   }
 
-  getConfirmedPaymentsList(): Observable<any> {
+  getConfirmedPaymentDetails(): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {});
   }
 
-  getStudentPaymentList(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.studentUrl}get-student-payment-details`, data);
+  getStudentPaymentList(studentID: any) {
+    return this.http.post<any>(`${environment.studentUrl}get-student-payment-details`, {studentID});
   }
 
 }

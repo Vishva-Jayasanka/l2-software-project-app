@@ -4,6 +4,7 @@ import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Bank} from '../upload-payment/upload-payment.component';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 
 @Component({
@@ -12,6 +13,7 @@ import {Bank} from '../upload-payment/upload-payment.component';
   styleUrls: ['./edit-payment.component.css']
 })
 export class EditPaymentComponent implements OnInit {
+  dataSource
   editPaymentProgress = false;
   studentIDNotFound = false;
   panelOpenState = false;
@@ -29,10 +31,12 @@ export class EditPaymentComponent implements OnInit {
   private searchSubscription: Subscription;
   private elementRef: ElementRef;
   buttonProgress: false;
+  authentication: AuthenticationService;
+  
 
   constructor(
     private formBuilder: FormBuilder,
-    private data: DataService
+    private data: DataService,
   ) {
 
     this.searchSubscription = this.term$.pipe(
@@ -64,6 +68,25 @@ export class EditPaymentComponent implements OnInit {
     );
   }
 
+  getData(studentId : string){
+    this.editPaymentProgress = true;
+  if (studentId) {
+    this.data.getStudentPaymentList(studentId).subscribe(
+      response => {
+        if (response.status) {
+          this.dataSource=response.results[0];
+        } else {
+          this.studentIDNotFound = true;
+        }
+      },
+      error => this.error = error
+    ).add(() => this.editPaymentProgress = false);
+  } else {
+    this.editPaymentProgress = false;
+  }
+
+  }
+
   submitForm() {
     this.data.uploadPayment(this.paymentForm.value).subscribe(
       response => {
@@ -85,6 +108,7 @@ export class EditPaymentComponent implements OnInit {
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
+            this.getData(response.studentID);
           } else {
             this.studentIDNotFound = true;
           }

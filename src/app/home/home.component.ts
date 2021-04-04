@@ -187,7 +187,12 @@ export class HomeComponent implements OnInit {
         component: 'ViewPaymentsHomeComponent',
           route: 'view-payments-home',
           label: 'View Payments '
-      }]
+      },
+      {
+        component: 'UploadPaymentComponent',
+        route: 'upload-payment',
+        label: 'Upload Payment'
+      }, ]
     }, {
       component: 'RequestComponent',
       route: 'request',

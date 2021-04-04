@@ -36,7 +36,7 @@ export interface PeriodicElement {
 })
 export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   displayedColumns = ['position', 'studentID', 'title', 'name', 'nic', 'email', 'mobile', 'customDataColumn'];
-  dataSource;
+  dataSource = new MatTableDataSource([]);
   filterValue = '';
   viewRegistrationsForm: FormGroup;
   viewRegistrationProgress = false;
@@ -52,9 +52,8 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   registration: any;
   registrations: any;
 
-
-  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
 
   constructor(
