@@ -151,8 +151,12 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}enroll-student`, enrollmentForm);
   }
 
-  getResults(data: object): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}view-results`, data);
+  getResults(studentID: string): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-student-results`, {studentID});
+  }
+
+  getModuleResults(moduleCode: string): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-module-results-view`, {moduleCode});
   }
 
   checkIfResultsUploaded(data: object): Observable<any> {
@@ -185,6 +189,10 @@ export class DataService {
 
   updateAcademicCalender(data: object): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}update-academic-calender`, data);
+  }
+
+  checkKeyword(keyword: string) {
+    return this.http.post<any>(`${environment.adminUrl}check-keyword`, {keyword});
   }
 
 }
