@@ -1,12 +1,11 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
 import {YEARS} from '../../../_services/shared.service';
 import {MatTableDataSource} from '@angular/material/table';
-
-import * as _ from 'lodash';
+import {MatSort} from '@angular/material/sort';
 
 interface Result {
   moduleCode: string;
@@ -39,13 +38,15 @@ export class ViewResultComponent implements OnInit {
   viewResultsForm: FormGroup;
   results: Result[] = [];
 
-  displayedColumnsStudent = ['no', 'moduleCode', 'moduleName', 'dateHeld', 'academicYear', 'marks', 'grade'];
-  displayedColumnsModule = ['no', 'studentID', 'dateHeld', 'academicYear', 'marks', 'grade'];
-  displayedColumns = [];
+  displayedColumnsStudent = ['no', 'moduleCode', 'moduleName', 'dateHeld', 'academicYear', 'mark', 'grade'];
+  displayedColumnsModule = ['no', 'studentID', 'dateHeld', 'academicYear', 'mark', 'grade'];
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<Result>;
 
   termModuleCode$ = new Subject<string>();
   private searchModuleCode: Subscription;
+
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -72,7 +73,6 @@ export class ViewResultComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.results.length);
   }
 
   checkKeyWord(keyword: string): void {
@@ -116,7 +116,7 @@ export class ViewResultComponent implements OnInit {
           this.results = response.results ? response.results as [] : [];
           this.displayedColumns = this.displayedColumnsStudent;
           this.dataSource = new MatTableDataSource<Result>(this.results);
-          console.log(this.results);
+          this.dataSource.sort = this.sort;
         },
         error => {
           this.error = error;
@@ -128,7 +128,7 @@ export class ViewResultComponent implements OnInit {
           this.results = response.results ? response.results as [] : [];
           this.displayedColumns = this.displayedColumnsModule;
           this.dataSource = new MatTableDataSource<Result>(this.results);
-          console.log(this.dataSource);
+          this.dataSource.sort = this.sort;
         },
         error => {
           this.error = error;
@@ -139,6 +139,18 @@ export class ViewResultComponent implements OnInit {
       return;
     }
 
+  }
+
+  camelCaseToTitleCase(text: string): string {
+    const result = text.replace(/([A-Z])/g, ' $1');
+    return result.charAt(0).toUpperCase() + result.slice(1);
+  }
+
+  applyFilter(event, key: number): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource = new MatTableDataSource<Result>(this.results.filter(
+      result => result[this.displayedColumns[key]].toLowerCase().includes(filterValue.toLowerCase())
+    ));
   }
 
   toggleProgress(): void {
