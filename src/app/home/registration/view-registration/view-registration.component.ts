@@ -35,7 +35,7 @@ export interface PeriodicElement {
   styleUrls: ['./view-registration.component.css']
 })
 export class ViewRegistrationComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['position', 'studentID', 'title', 'name', 'nic', 'email', 'mobile', 'customDataColumn'];
+  displayedColumns = ['studentID', 'title', 'name', 'nic', 'email', 'mobile', 'customDataColumn'];
   dataSource = new MatTableDataSource([]);
   filterValue = '';
   viewRegistrationsForm: FormGroup;

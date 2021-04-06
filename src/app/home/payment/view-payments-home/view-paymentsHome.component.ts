@@ -27,6 +27,17 @@ export interface PeriodicElement {
   courseName: string;
 }
 
+
+export interface PeriodicElementPending {
+  position: number;
+  regNo: string;
+  title: string;
+  name: string;
+  paidAmount: number;
+  courseName: string;
+}
+
+
 @Component({
   selector: 'app-view-payments-home',
   templateUrl: './view-paymentsHome.component.html',
@@ -41,19 +52,21 @@ export interface PeriodicElement {
 })
 export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
-  dataSource;
-  columnsToDisplay = ['position', 'studentID', 'title', 'fullName', 'totalPayment', 'courseName', ];
-  expandedElement: PeriodicElement | null;
+  dataSourceConfirmed;
+  confirmedStudentList;
+  columnsToDisplayConfirmed = ['position', 'studentID', 'title', 'fullName', 'totalPayment', 'courseName', ];
+  expandedElementConfirmed: PeriodicElement | null;
   filterValue = '';
-  dataSource2;
-  columnsToDisplay2 = ['position', 'studentID', 'title', 'fullName', 'totalPayment', 'courseName'];
-  expandedElement2: PeriodicElement2 | null;
+  filterValuePending = '';
+  dataSourcePending;
+  columnsToDisplayPending = ['position', 'studentID', 'title', 'fullName', 'amount', 'courseName'];
+  expandedElementPending: PeriodicElementPending | null;
   viewPaymentsForm: FormGroup;
   viewPaymentsProgress: boolean;
   public show = false;
   public view = false;
   public buttonName: any = 'Show';
-  public buttonName2: any = 'Show';
+  public buttonNamePending = 'Show';
   courses: Course[] = COURSES;
   years = YEARS;
   user;
@@ -75,29 +88,26 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+    this.dataSourceConfirmed.filter = this.filterValue.trim().toLowerCase();
   }
 
-  applyFilter2(event: Event) {
-    this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource2.filter = this.filterValue.trim().toLowerCase();
+  applyFilterPending(event: Event) {
+    this.filterValuePending = (event.target as HTMLInputElement).value;
+    this.dataSourcePending.filter = this.filterValuePending.trim().toLowerCase();
   }
 
   ngOnInit(): void {
     this.viewPaymentsForm = this.formBuilder.group({
       courseName: [1, [Validators.required]],
-      academicYear: ['', [Validators.required]]
+      academicYear: [1, [Validators.required]]
     });
     this.user = this.authentication.details;
   }
-  onChange(){
-    this.show = false;
-    this.buttonName = 'show';
-  }
+
   toggle() {
     this.show = !this.show;
     this.filterValue = '';
-    this.dataSource.filter = '';
+    this.dataSourceConfirmed.filter = '';
 
 
     if (this.show) {
@@ -116,40 +126,41 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
       academicYear: this.years[this.academicYear.value].value,
       type: 'confirmed'
      }).subscribe(response => {
-      this.dataSource = new MatTableDataSource(response.results[0]);
+      this.dataSourceConfirmed = new MatTableDataSource(response.results[0]);
+      this.confirmedStudentList = response.results[0];
       this.filterValue = '';
-      this.dataSource.filter = '';
+      this.dataSourceConfirmed.filter = '';
       this.viewPaymentsProgress = false;
     },
     error => console.log(error)
   ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
   }
 
-  toggle2() {
-    this.show = !this.show;
-    this.filterValue = '';
-    this.dataSource2.filter = '';
-
-    if (this.show) {
-      this.buttonName2 = 'Hide';
+  togglePending() {
+    this.view = !this.view;
+    if (this.view) {
+      this.buttonNamePending = 'Hide';
       this.getPendingPaymentsList();
     }
     else {
-      this.buttonName2 = 'Show';
+      this.buttonNamePending = 'Show';
     }
+
+    this.filterValuePending = '';
+    this.dataSourcePending.filter = '';
+
   }
 
   getPendingPaymentsList(){
     this.viewPaymentsProgress = true;
-    console.log('getPendingPaymentsList');
     this.data.getPaymentList(
       {
         type: 'pending'
       }
     ).subscribe(response => {
-      this.dataSource2 = new MatTableDataSource(response.results[0]);
+      this.dataSourcePending = new MatTableDataSource(response.results[0]);
       this.filterValue = '';
-      this.dataSource2.filter = '';
+      this.dataSourcePending.filter = '';
       this.viewPaymentsProgress = false;
     },
     error => console.log(error)
@@ -157,11 +168,11 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.tableOnePaginator;
-    this.dataSource2.paginator = this.tableTwoPaginator;
+    this.dataSourceConfirmed.paginator = this.tableOnePaginator;
+    this.dataSourcePending.paginator = this.tableTwoPaginator;
 
-    this.dataSource.sort = this.tableOneSort;
-    this.dataSource2.sort = this.tableTwoSort;
+    this.dataSourceConfirmed.sort = this.tableOneSort;
+    this.dataSourcePending.sort = this.tableTwoSort;
   }
 
 
@@ -199,23 +210,11 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     return this.authentication.details.role;
   }
 
-  do(){
-    this.buttonName = 'Show';
-  }
-  uploadPayments(){
-
+  get amount() {
+    return this.viewPaymentsForm.get('amount');
   }
 
 }
 
-
-export interface PeriodicElement2 {
-  position: number;
-  regNo: string;
-  title: string;
-  name: string;
-  totalPayment: number;
-  courseName: string;
-}
 
 

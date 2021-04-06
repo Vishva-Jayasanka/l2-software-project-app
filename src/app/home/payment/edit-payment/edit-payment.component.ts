@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
@@ -13,8 +13,7 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
   styleUrls: ['./edit-payment.component.css']
 })
 export class EditPaymentComponent implements OnInit {
-  @ViewChild('myButton') myButton : ElementRef;
-  dataSource
+  dataSource;
   editPaymentProgress = false;
   studentIDNotFound = false;
   panelOpenState = false;
@@ -33,7 +32,8 @@ export class EditPaymentComponent implements OnInit {
   private elementRef: ElementRef;
   buttonProgress: false;
   authentication: AuthenticationService;
-  
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,11 +47,7 @@ export class EditPaymentComponent implements OnInit {
         this.error = '';
         this.success = false;
         this.studentIDNotFound = false;
-        this.panelOpenState = true;
-        setTimeout(() => {
-          this.checkStudentID(studentID);
-          this.panelOpenState = false;
-        }, 1000);
+        this.checkStudentID(studentID);
         return EMPTY;
       })
     ).subscribe();
@@ -73,15 +69,13 @@ export class EditPaymentComponent implements OnInit {
     );
   }
 
-  getData(studentId : string){
+  getData(studentId: string){
     this.editPaymentProgress = true;
-  if (studentId) {
+    if (studentId) {
     this.data.getStudentPaymentList(studentId).subscribe(
       response => {
         if (response.status) {
-          this.dataSource=response.results[0];
-          console.log('dataSource = ', this.dataSource);
-          
+          this.dataSource = response.results[0];
         } else {
           this.studentIDNotFound = true;
         }

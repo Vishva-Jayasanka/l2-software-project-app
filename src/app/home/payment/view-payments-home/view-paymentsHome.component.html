@@ -29,7 +29,7 @@
 
         <mat-form-field class="col-8 pr-1" appearance="outline" id="course-name">
           <mat-label>Course Name</mat-label>
-          <mat-select (selectionChange)="onChange()" formControlName="courseName">
+          <mat-select formControlName="courseName">
             <mat-option *ngFor="let course of courses" [value]="course.courseID">{{course.courseName}}</mat-option>
           </mat-select>
           <mat-error *ngIf="courseName.touched && courseName.errors?.required">This field is required</mat-error>
@@ -37,7 +37,7 @@
 
         <mat-form-field class="col-4" appearance="outline" id="academicYear">
           <mat-label>Academic Year</mat-label>
-          <mat-select (selectionChange)="onChange()" id="action" formControlName="academicYear">
+          <mat-select id="action" formControlName="academicYear">
             <mat-option *ngFor="let year of years" [value]="year.id">{{ year.value }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -55,30 +55,30 @@
         <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
       </mat-form-field>
     <table mat-table #TableOneSort
-        [dataSource]="dataSource" multiTemplateDataRows
+        [dataSource]="dataSourceConfirmed" multiTemplateDataRows
         class="mat-elevation-z8" *ngIf="show" >
 
 
-    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayConfirmed">
       <th mat-header-cell *matHeaderCellDef> {{column}} </th>
       <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
     </ng-container>
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayConfirmed.length">
         <div class="example-element-detail"
-            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            [@detailExpand]="element == expandedElementConfirmed ? 'expanded' : 'collapsed'">
           <div class="example-element-description">
-            <app-view-payments></app-view-payments>
+            <app-view-payments [confirmedStudentPaymentDetails] ="confirmedStudentList[0]" *ngIf="element == expandedElementConfirmed"></app-view-payments>
           </div>
         </div>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
-        (click)="expandedElement = expandedElement === element ? null : element">
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayConfirmed"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplayConfirmed;" class="example-element-row" [class.example-expanded-row]="expandedElementConfirmed === element"
+        (click)="expandedElementConfirmed = expandedElementConfirmed === element ? null : element">
     </tr>
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
@@ -97,28 +97,28 @@
   <div class="card">
 
       <div class="row px-2">
-        <button mat-raised-button color="primary" (click)="toggle2()" class="mx-2" type="button"> {{buttonName2}} </button>
+        <button mat-raised-button color="primary" (click)="togglePending()" class="mx-2" type="button"> {{buttonNamePending}} </button>
       </div>
 
 
-      <mat-form-field  *ngIf="show">
+      <mat-form-field  *ngIf="view">
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter2($event)" placeholder="Filter" #input>
+        <input matInput (keyup)="applyFilterPending($event)" placeholder="Filter" #input>
       </mat-form-field>
 
   <table mat-table #TableTwoSort
-        [dataSource]="dataSource2" multiTemplateDataRows
-        class="mat-elevation-z8" *ngIf="show">
-    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay2">
+        [dataSource]="dataSourcePending" multiTemplateDataRows
+        class="mat-elevation-z8" *ngIf="view">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayPending">
       <th mat-header-cell *matHeaderCellDef> {{column}} </th>
       <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
     </ng-container>
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay2.length">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayPending.length">
         <div class="example-element-detail"
-            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            [@detailExpand]="element == expandedElementPending ? 'expanded' : 'collapsed'">
           <div class="example-element-description">
             <app-view-payment-details></app-view-payment-details>
           </div>
@@ -126,11 +126,11 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay2"></tr>
-    <tr mat-row *matRowDef="let element; columns: columnsToDisplay2;"
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayPending"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplayPending;"
         class="example-element-row"
-        [class.example-expanded-row]="expandedElement === element"
-        (click)="expandedElement = expandedElement === element ? null : element">
+        [class.example-expanded-row]="expandedElementPending === element"
+        (click)="expandedElementPending = expandedElementPending === element ? null : element">
     </tr>
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
@@ -138,7 +138,7 @@
   <mat-paginator
   #TableTwoPaginator="matPaginator"
   [pageSize]="5"
-  [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!show"
+  [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!view"
 ></mat-paginator>
 
 </div>

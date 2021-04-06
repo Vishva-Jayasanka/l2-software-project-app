@@ -25,7 +25,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
-import {PaymentComponent} from './home/payment/payment.component';
+import {PaymentComponent, ConfirmUploadDialogComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import {RegistrationComponent, ProfileDetailsDialogComponent, ConfirmDetailsDialogComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
@@ -106,7 +106,8 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     NewRegistrationComponent,
     ViewPaymentDetailsComponent,
     ProfileDetailsDialogComponent,
-    ConfirmDetailsDialogComponent
+    ConfirmDetailsDialogComponent,
+    ConfirmUploadDialogComponent
   ],
   imports: [
     BrowserModule,
