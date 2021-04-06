@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
@@ -7,6 +7,8 @@ import {FormBuilder, FormGroup} from '@angular/forms';
   styleUrls: ['./view-payment-details.component.css']
 })
 export class ViewPaymentDetailsComponent implements OnInit {
+  @Input() data: any;
+  @Input() position: number;
   paymentDetailsForm: FormGroup;
   panelOpenState = false;
   selectedRowIndex = -1;
@@ -30,11 +32,11 @@ export class ViewPaymentDetailsComponent implements OnInit {
       }),
     }
   );
+    this.getData();
   }
 
-
-  verifyForm(){
-
+  getData(){
+    console.log('data.slip no =', this.data.slipNo);
+    // api call
   }
-
 }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
@@ -13,6 +13,7 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
   styleUrls: ['./edit-payment.component.css']
 })
 export class EditPaymentComponent implements OnInit {
+  @ViewChild('myButton') myButton : ElementRef;
   dataSource
   editPaymentProgress = false;
   studentIDNotFound = false;
@@ -46,7 +47,11 @@ export class EditPaymentComponent implements OnInit {
         this.error = '';
         this.success = false;
         this.studentIDNotFound = false;
-        this.checkStudentID(studentID);
+        this.panelOpenState = true;
+        setTimeout(() => {
+          this.checkStudentID(studentID);
+          this.panelOpenState = false;
+        }, 1000);
         return EMPTY;
       })
     ).subscribe();
@@ -75,6 +80,8 @@ export class EditPaymentComponent implements OnInit {
       response => {
         if (response.status) {
           this.dataSource=response.results[0];
+          console.log('dataSource = ', this.dataSource);
+          
         } else {
           this.studentIDNotFound = true;
         }
