@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {DataService} from '../../../../_services/data.service';
 
 @Component({
   selector: 'app-view-payment-details',
@@ -12,6 +13,9 @@ export class ViewPaymentDetailsComponent implements OnInit {
   paymentDetailsForm: FormGroup;
   panelOpenState = false;
   selectedRowIndex = -1;
+  success = false;
+  error = '';
+  dataSource;
 
 
   constructor(
@@ -35,8 +39,44 @@ export class ViewPaymentDetailsComponent implements OnInit {
     this.getData();
   }
 
-  getData(){
+  getData(): void {
     console.log('data.slip no =', this.data.slipNo);
-    // api call
+    this.error = '';
+    this.success = false;
+    this.data.getStudentPaymentDetails({
+        slipNo: this.slipNumber[this.slipNumber.value].value
+      }
+      ).subscribe(
+        response => {
+          if (response.status) {
+            this.dataSource = response.results[0];
+          }
+        },
+        error => this.error = error
+      );
+    }
+  get slipNumber() {
+    return this.paymentDetailsForm.get('slipNumber');
   }
+
+  get fullName() {
+    return this.paymentDetailsForm.get('fullName');
+  }
+
+  get courseId() {
+    return this.paymentDetailsForm.get('courseId');
+  }
+
+  get bankName() {
+    return this.paymentDetailsForm.get('bankName');
+  }
+
+  get totalPaid() {
+    return this.paymentDetailsForm.get('totalPaid');
+  }
+
+  get paymentDate() {
+    return this.paymentDetailsForm.get('paymentDate');
+  }
+
 }
