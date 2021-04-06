@@ -3,14 +3,14 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DataService} from '../../../_services/data.service';
-import {YEARS} from '../../../_services/shared.service';
+import {glow, YEARS} from '../../../_services/shared.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 
 interface Result {
   moduleCode: string;
   moduleName: string;
-  studentID: string;
+  studentIndex: string;
   academicYear: number;
   dateHeld: Date;
   mark: number;
@@ -39,14 +39,15 @@ export class ViewResultComponent implements OnInit {
   results: Result[] = [];
 
   displayedColumnsStudent = ['no', 'moduleCode', 'moduleName', 'dateHeld', 'academicYear', 'mark', 'grade'];
-  displayedColumnsModule = ['no', 'studentID', 'dateHeld', 'academicYear', 'mark', 'grade'];
-  displayedColumns: string[] = [];
+  displayedColumnsModule = ['no', 'studentIndex', 'dateHeld', 'academicYear', 'mark', 'grade'];
+  displayedColumns: string[] = this.displayedColumnsStudent;
   dataSource: MatTableDataSource<Result>;
 
   termModuleCode$ = new Subject<string>();
   private searchModuleCode: Subscription;
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild('filter') filter;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -117,6 +118,7 @@ export class ViewResultComponent implements OnInit {
           this.displayedColumns = this.displayedColumnsStudent;
           this.dataSource = new MatTableDataSource<Result>(this.results);
           this.dataSource.sort = this.sort;
+          glow(this.elementRef, 'view_results', 'rgb(0,50,255)');
         },
         error => {
           this.error = error;
@@ -129,6 +131,7 @@ export class ViewResultComponent implements OnInit {
           this.displayedColumns = this.displayedColumnsModule;
           this.dataSource = new MatTableDataSource<Result>(this.results);
           this.dataSource.sort = this.sort;
+          glow(this.elementRef, 'view_results', 'rgb(0,50,255)');
         },
         error => {
           this.error = error;
@@ -142,14 +145,14 @@ export class ViewResultComponent implements OnInit {
   }
 
   camelCaseToTitleCase(text: string): string {
-    const result = text.replace(/([A-Z])/g, ' $1');
+    const result = text ? text.replace(/([A-Z])/g, ' $1') : ' ';
     return result.charAt(0).toUpperCase() + result.slice(1);
   }
 
   applyFilter(event, key: number): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource = new MatTableDataSource<Result>(this.results.filter(
-      result => result[this.displayedColumns[key]].toLowerCase().includes(filterValue.toLowerCase())
+      result =>  result[this.displayedColumns[key]].toString().toLowerCase().includes(filterValue.toLowerCase())
     ));
   }
 

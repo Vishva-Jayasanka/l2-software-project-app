@@ -149,21 +149,22 @@ export class AttendanceDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progress = true;
-    this.dataService.getDetailedAttendance(this.data.moduleCode, this.data.type, this.data.batch).subscribe(
-      response => {
-        console.log(response);
-        for (const session of response) {
-          this.data.attendance.push({
-            date: session.date,
-            status: session.status
-          });
+    if (this.data.attendance.length <= 0) {
+      this.progress = true;
+      this.dataService.getDetailedAttendance(this.data.moduleCode, this.data.type, this.data.batch).subscribe(
+        response => {
+          for (const session of response) {
+            this.data.attendance.push({
+              date: session.date,
+              status: session.status
+            });
+          }
+        }, error => {
+          this.error = true;
         }
-      }, error => {
-        this.error = true;
-      }
-    ).add(() => this.progress = false);
-    this.data.attendance.shift();
+      ).add(() => this.progress = false);
+      this.data.attendance.shift();
+    }
   }
 
   onNoClick(): void {

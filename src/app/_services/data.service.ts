@@ -195,4 +195,20 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}check-keyword`, {keyword});
   }
 
+  getStudentAttendance(studentID: string): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-student-attendance`, {studentID});
+  }
+
+  getModuleAttendance(moduleCode: string): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-module-attendance`, {moduleCode});
+  }
+
+  getDetailedStudentAttendance(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-detailed-student-attendance`, data);
+  }
+
+  getDetailedModuleAttendance(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-detailed-module-attendance`, data);
+  }
+
 }

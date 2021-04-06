@@ -24,7 +24,7 @@ import {TimetableComponent} from './home/timetable/timetable.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
-import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
+import {DetailedModuleAttendanceComponent, ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import {RegistrationComponent} from './home/registration/registration.component';
@@ -100,7 +100,8 @@ import {DeactivateGuard} from './_helpers/deactivate.guard';
     ResetPasswordComponent,
     AcademicTimetableComponent,
     AcademicCalenderComponent,
-    NewAcademicYearDialogComponent
+    NewAcademicYearDialogComponent,
+    DetailedModuleAttendanceComponent
   ],
   imports: [
     BrowserModule,

@@ -12,9 +12,6 @@ import {DataManager, WebApiAdaptor} from '@syncfusion/ej2-data';
 })
 export class AcademicTimetableComponent implements OnInit {
 
-  progress = false;
-  error = '';
-
   defaultData = [];
 
   public selectedDate: Date = new Date(2021, 3, 3);
@@ -43,7 +40,7 @@ export class AcademicTimetableComponent implements OnInit {
   ) {
   }
 
-  onDataBinding(event: { [key: string]: object }): void {
+  onDataBinding(event): void {
     const items: { [key: string]: object }[] = (event.result as { [key: string]: object }[]);
     const scheduleData: object[] = [];
     // @ts-ignore
@@ -51,7 +48,6 @@ export class AcademicTimetableComponent implements OnInit {
     const startDate: Date = new Date(url.searchParams.get('StartDate'));
     let endDate: Date = new Date(url.searchParams.get('EndDate'));
     endDate = new Date(endDate.setDate(endDate.getDate() - 1));
-    console.log(endDate);
     if (items.length > 0) {
       items.forEach(item => {
 
@@ -84,15 +80,6 @@ export class AcademicTimetableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // this.data.getTimetable().subscribe(
-    //   response => {
-    //     console.log(response);
-    //   },
-    //   error => {
-    //     console.error(error);
-    //   }
-    // );
   }
 
 }
