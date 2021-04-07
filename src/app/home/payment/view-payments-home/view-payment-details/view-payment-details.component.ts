@@ -67,27 +67,27 @@ export class ViewPaymentDetailsComponent implements OnInit {
       );
     }
   get slipNumber() {
-    return this.paymentDetailsForm.get('slipNumber');
+    return this.paymentDetailsForm.get('depositor').get('slipNumber');
   }
 
   get fullName() {
-    return this.paymentDetailsForm.get('fullName');
+    return this.paymentDetailsForm.get('depositor').get('fullName');
   }
 
   get registrationNumber() {
-    return this.paymentDetailsForm.get('registrationNumber');
+    return this.paymentDetailsForm.get('depositor').get('registrationNumber');
   }
 
   get courseId() {
-    return this.paymentDetailsForm.get('courseId');
+    return this.paymentDetailsForm.get('depositor').get('courseId');
   }
 
   get academicYear() {
-    return this.paymentDetailsForm.get('academicYear');
+    return this.paymentDetailsForm.get('depositor').get('academicYear');
   }
 
   get bankName() {
-    return this.paymentDetailsForm.get('bankName');
+    return this.paymentDetailsForm.get('depositor').get('bankName');
   }
 
   get amountPaid() {
