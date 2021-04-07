@@ -43,8 +43,8 @@ export class NewRegistrationComponent implements OnInit {
   maxDate: Date = new Date();
   courses: Course[] = COURSES;
   years = YEARS;
-  defaultCourseName = 1;
-  defaultYear = 1;
+  // defaultCourseName = 1;
+  defaultYear = 2021;
   success = false;
   error = '';
 
@@ -159,7 +159,7 @@ export class NewRegistrationComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.data.registerStudent(this.registrationForm.value).subscribe(
         response => {
-          if (this.success = true){
+          if (this.success === true){
             this.openDialog();
           }
           this.error = '';
