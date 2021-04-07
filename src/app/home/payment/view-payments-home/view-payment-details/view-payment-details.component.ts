@@ -20,6 +20,7 @@ export class ViewPaymentDetailsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private dataService: DataService,
   ) { }
 
   ngOnInit(): void {
@@ -40,16 +41,26 @@ export class ViewPaymentDetailsComponent implements OnInit {
   }
 
   getData(): void {
+    console.log('data from edit=', this.data);
     console.log('data.slip no =', this.data.slipNo);
+    
     this.error = '';
     this.success = false;
-    this.data.getStudentPaymentDetails({
-        slipNo: this.slipNumber[this.slipNumber.value].value
-      }
-      ).subscribe(
+    this.dataService.getStudentPaymentDetails(this.data.slipNo).subscribe(
         response => {
           if (response.status) {
-            this.dataSource = response.results[0];
+            this.dataSource = response.results[0][0];
+            console.log('this.dataSource=',this.dataSource);
+
+            this.registrationNumber.setValue(this.dataSource.fullName);
+            this.fullName.setValue(this.data.fullName);
+            this.courseId.setValue(this.dataSource.fullName);
+            this.academicYear.setValue(this.dataSource.fullName);
+
+            this.bankName.setValue(this.dataSource.bank);
+            this.slipNumber.setValue(this.dataSource.slipNo);
+            this.amountPaid.setValue(this.dataSource.amount);
+            this.paymentDate.setValue(this.dataSource.paymentDate);
           }
         },
         error => this.error = error
@@ -63,16 +74,24 @@ export class ViewPaymentDetailsComponent implements OnInit {
     return this.paymentDetailsForm.get('fullName');
   }
 
+  get registrationNumber() {
+    return this.paymentDetailsForm.get('registrationNumber');
+  }
+
   get courseId() {
     return this.paymentDetailsForm.get('courseId');
+  }
+
+  get academicYear() {
+    return this.paymentDetailsForm.get('academicYear');
   }
 
   get bankName() {
     return this.paymentDetailsForm.get('bankName');
   }
 
-  get totalPaid() {
-    return this.paymentDetailsForm.get('totalPaid');
+  get amountPaid() {
+    return this.paymentDetailsForm.get('amountPaid');
   }
 
   get paymentDate() {

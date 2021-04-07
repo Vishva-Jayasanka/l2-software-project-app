@@ -76,6 +76,8 @@ export class EditPaymentComponent implements OnInit {
       response => {
         if (response.status) {
           this.dataSource = response.results[0];
+          console.log('getStudentPaymentList : ',this.dataSource);
+          
         } else {
           this.studentIDNotFound = true;
         }

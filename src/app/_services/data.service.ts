@@ -170,8 +170,9 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
   }
 
-  getStudentPaymentDetails(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-payment-details`, data);
+  getStudentPaymentDetails(slipNo): Observable<any>  {
+    console.log('service: getStudentPaymentDetails, slipNo = ', slipNo);
+    return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {slipNo});
   }
 
   getStudentPaymentList(studentID: any) {
