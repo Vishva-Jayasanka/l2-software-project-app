@@ -71,6 +71,7 @@ export class UploadPaymentComponent implements OnInit {
         deposit: this.formBuilder.group({
           bankName:  ['', [Validators.required]], // this.banks[this.bankName.value].bankName,
           slipNumber: ['', [Validators.required]],
+          externalNote: [''],
           totalPaid: ['', [Validators.required]],
           paymentDate: ['', [Validators.required]],
         }),
@@ -83,13 +84,14 @@ export class UploadPaymentComponent implements OnInit {
     this.uploadAPaymentProgress = true;
     if (this.paymentForm.valid) {
       if (this.getRole !== 'Student'){
+        console.log(this.paymentForm.value);
         this.data.uploadPayment(this.paymentForm.value).subscribe(
           response => {
-            if (this.success === true){
-              this.openDialog();
-            }
-            this.error = '';
-            this.paymentForm.reset();
+              if (response.status){
+                this.openDialog();
+              }
+              this.error = '';
+              this.paymentForm.reset();
           },
           error => {
             this.success = false;
@@ -179,6 +181,10 @@ export class UploadPaymentComponent implements OnInit {
 
   get slipNumber() {
     return this.paymentForm.get('deposit').get('slipNumber');
+  }
+
+  get externalNote() {
+    return this.paymentForm.get('deposit').get('externalNote');
   }
 
   get totalPaid() {

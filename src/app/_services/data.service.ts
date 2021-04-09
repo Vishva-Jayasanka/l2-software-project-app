@@ -176,7 +176,7 @@ export class DataService {
   }
 
   getStudentPaymentList(studentID: any) {
-    return this.http.post<any>(`${environment.studentUrl}get-student-payment-details`, {studentID});
+    return this.http.post<any>(`${environment.adminUrl}get-student-payment-details`, {studentID});
   }
 
 }

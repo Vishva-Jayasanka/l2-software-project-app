@@ -159,7 +159,7 @@ export class NewRegistrationComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.data.registerStudent(this.registrationForm.value).subscribe(
         response => {
-          if (this.success === true){
+          if (response.status){
             this.openDialog();
           }
           this.error = '';

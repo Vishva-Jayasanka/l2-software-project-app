@@ -84,7 +84,13 @@
 
         </div>
 
+        <div class="row mb-2">
+        <mat-form-field class="col mx-0 px-1" appearance="outline">
+          <mat-label>External Note</mat-label>
+          <textarea type="text" matInput formControlName="externalNote" placeholder="External Note"></textarea>
+        </mat-form-field>
 
+      </div>
 
         <div class="row mb-0">
 
@@ -109,6 +115,7 @@
           <input type="file" id="fileUpload" hidden />
         </div>
 
+        
         <div class="row px-1">
           <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
         </div>
