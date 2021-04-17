@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {DataService} from '../../../../_services/data.service';
 
 @Component({
@@ -43,19 +43,19 @@ export class ViewPaymentDetailsComponent implements OnInit {
   getData(): void {
     console.log('data from edit=', this.data);
     console.log('data.slip no =', this.data.slipNo);
-    
+
     this.error = '';
     this.success = false;
     this.dataService.getStudentPaymentDetails(this.data.slipNo).subscribe(
         response => {
           if (response.status) {
             this.dataSource = response.results[0][0];
-            console.log('this.dataSource=',this.dataSource);
+            console.log('this.dataSource=', this.dataSource);
 
             this.registrationNumber.setValue(this.dataSource.fullName);
-            this.fullName.setValue(this.data.fullName);
-            this.courseId.setValue(this.dataSource.fullName);
-            this.academicYear.setValue(this.dataSource.fullName);
+            this.fullName.setValue(this.dataSource.fullName);
+            this.courseId.setValue(this.dataSource.courseId);
+            this.academicYear.setValue(this.dataSource.academicYear);
 
             this.bankName.setValue(this.dataSource.bank);
             this.slipNumber.setValue(this.dataSource.slipNo);
@@ -66,35 +66,35 @@ export class ViewPaymentDetailsComponent implements OnInit {
         error => this.error = error
       );
     }
-  get slipNumber() {
+  get slipNumber(): AbstractControl {
     return this.paymentDetailsForm.get('depositor').get('slipNumber');
   }
 
-  get fullName() {
+  get fullName(): AbstractControl {
     return this.paymentDetailsForm.get('depositor').get('fullName');
   }
 
-  get registrationNumber() {
+  get registrationNumber(): AbstractControl {
     return this.paymentDetailsForm.get('depositor').get('registrationNumber');
   }
 
-  get courseId() {
+  get courseId(): AbstractControl {
     return this.paymentDetailsForm.get('depositor').get('courseId');
   }
 
-  get academicYear() {
+  get academicYear(): AbstractControl {
     return this.paymentDetailsForm.get('depositor').get('academicYear');
   }
 
-  get bankName() {
+  get bankName(): AbstractControl {
     return this.paymentDetailsForm.get('depositor').get('bankName');
   }
 
-  get amountPaid() {
+  get amountPaid(): AbstractControl {
     return this.paymentDetailsForm.get('amountPaid');
   }
 
-  get paymentDate() {
+  get paymentDate(): AbstractControl {
     return this.paymentDetailsForm.get('paymentDate');
   }
 

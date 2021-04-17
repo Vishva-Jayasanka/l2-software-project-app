@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {DataService} from '../../../../_services/data.service';
 import {MatTableDataSource} from '@angular/material/table';
 
@@ -12,11 +12,6 @@ export interface PeriodicElement {
   paidAmount: number;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {no: 1, slipNo: '1254678903', bank: 'BOC', date: '28/02/2021', paidAmount: 200000.00},
-  {no: 2, slipNo: '2434567234', bank: 'BOC', date: '20/03/2021', paidAmount: 150500.00},
-];
-
 @Component({
   selector: 'app-view-payments',
   templateUrl: './view-payments.component.html',
@@ -26,7 +21,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ViewPaymentsComponents implements OnInit {
   @Input('confirmedStudentPaymentDetails') confirmedStudentPaymentDetails;
   displayedColumns = ['no', 'slipNo', 'bank', 'date', 'paidAmount'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource([]);
   filterValue = '';
   viewPaymentForm: FormGroup;
   viewPaymentProgress: boolean;
@@ -49,7 +44,7 @@ export class ViewPaymentsComponents implements OnInit {
     this.data.getStudentPaymentList(studentId).subscribe(
       response => {
         if (response.status) {
-          this.dataSource = response.results[0];
+          this.dataSource = new MatTableDataSource(response.results[0]);
         } else {
           this.viewPaymentProgress = true;
         }
@@ -69,6 +64,29 @@ export class ViewPaymentsComponents implements OnInit {
   ngOnInit(): void {
    console.log('confirmedStudentPaymentDetails = ', this.confirmedStudentPaymentDetails);
    this.getData(this.confirmedStudentPaymentDetails);
+  }
+
+
+  get bank(): AbstractControl  {
+    return this.viewPaymentForm.get('bank');
+  }
+
+
+  get date(): AbstractControl  {
+    return this.viewPaymentForm.get('date');
+  }
+
+  get no(): AbstractControl  {
+    return this.viewPaymentForm.get('no');
+  }
+
+
+  get slipNo(): AbstractControl  {
+    return this.viewPaymentForm.get('slipNo');
+  }
+
+  get paidAmount(): AbstractControl  {
+    return this.viewPaymentForm.get('paidAmount');
   }
 
 
