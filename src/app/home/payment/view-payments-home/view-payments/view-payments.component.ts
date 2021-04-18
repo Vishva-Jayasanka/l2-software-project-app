@@ -56,6 +56,7 @@ export class ViewPaymentsComponent implements OnInit {
       error => this.error = error
     ).add(() => this.viewPaymentProgress = false);
   this.viewPaymentProgress = false;
+
  }
 
   getData(studentId: string){
