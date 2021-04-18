@@ -59,7 +59,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ViewPaymentsHomeComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
-import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
+import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-payments/view-payments.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +89,7 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     ProfilePictureComponent,
     UploadPaymentComponent,
     ViewPaymentsHomeComponent,
-    ViewPaymentsComponents,
+    ViewPaymentsComponent,
     ComposerComponent,
     RequestComponent,
     AddRequestComponent,
