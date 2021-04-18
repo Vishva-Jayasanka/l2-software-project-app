@@ -39,6 +39,8 @@ import {ResetPasswordComponent} from './auth/reset-password/reset-password.compo
 import {AcademicTimetableComponent} from './home/timetable/academic-timetable/academic-timetable.component';
 import {AcademicCalenderComponent} from './home/timetable/academic-calender/academic-calender.component';
 import {DeactivateGuard} from './_helpers/deactivate.guard';
+import {EditProfileComponent} from './home/profile/edit-profile/edit-profile.component';
+import {ChangeRecoveryEmailComponent} from './auth/change-recovery-email/change-recovery-email.component';
 
 const routes: Routes = [
   {
@@ -206,6 +208,10 @@ const routes: Routes = [
         component: ProfileComponent
       },
       {
+        path: 'edit-profile',
+        component: EditProfileComponent
+      },
+      {
         path: 'request',
         component: RequestComponent,
         children: [
@@ -263,6 +269,14 @@ const routes: Routes = [
       {
         path: 'verification',
         component: VerificationComponent
+      },
+      {
+        path: 'verification/:email',
+        component: VerificationComponent
+      },
+      {
+        path: 'change-recovery-email',
+        component: ChangeRecoveryEmailComponent
       },
       {
         path: '',

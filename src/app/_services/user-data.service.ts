@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -30,8 +30,12 @@ export class UserDataService {
     this.composerToggle.next(!this.openComposer);
   }
 
-  getUserDetails() {
+  getUserDetails(): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}get-user-details`, {});
+  }
+
+  updateUserData(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}update-user-data`, data);
   }
 
 }

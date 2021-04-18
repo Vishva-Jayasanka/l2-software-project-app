@@ -1,4 +1,4 @@
-<mat-toolbar class="toolbar" (window:resize)="onResize($event)">
+<mat-toolbar class="toolbar" color="primary" (window:resize)="onResize($event)">
 
   <button mat-icon-button [hidden]="!widthSidenav" (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
@@ -8,13 +8,20 @@
 
   <span class="toolbar-spacer"></span>
 
-  <button mat-icon-button [hidden]="!widthNotification" (click)="notifications.toggle()">
-    <mat-icon>notifications</mat-icon>
-  </button>
+  <span style="font-weight: 500" [hidden]="widthSidenav">Welcome to the Information Management System @ FIT, UOM</span>
 
-  <a [matMenuTriggerFor]="settings">
+  <span class="toolbar-spacer"></span>
+
+  <a [matMenuTriggerFor]="settings" style="cursor: pointer">
+    <span class="mr-3 h6">{{ user.firstName + ' ' + user.lastName }}</span>
     <img [src]="userData.profilePicture" class="avatar" />
   </a>
+
+  <button mat-icon-button [hidden]="!widthNotification" (click)="notifications.toggle()">
+    <mat-icon [matBadge]="newNotifications + ''"
+              [matBadgeHidden]="newNotifications <= 0"
+              matBadgeColor="warn">notifications</mat-icon>
+  </button>
 
 </mat-toolbar>
 
@@ -47,7 +54,7 @@
   </mat-sidenav>
 
   <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthSidenav" class="notification-bar">
-    <app-notification></app-notification>
+    <app-notification (newNotifications)="newNotifications = $event"></app-notification>
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -84,7 +91,7 @@
     <span>Profile</span>
   </button>
 
-  <button mat-menu-item>
+  <button mat-menu-item [routerLink]="['/' + 'edit-profile']">
     <mat-icon>settings</mat-icon>
     <span>Settings</span>
   </button>

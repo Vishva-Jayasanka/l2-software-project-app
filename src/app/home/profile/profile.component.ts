@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserDataService} from '../../_services/user-data.service';
+import {AuthenticationService} from '../../_services/authentication.service';
 
 export interface User {
   username: string;
@@ -10,6 +11,7 @@ export interface User {
   courseName: string;
   dateOfBirth: Date;
   email: string;
+  recoveryEmail: string;
   address: string;
   mobile: string;
   home: string;
@@ -37,7 +39,8 @@ export class ProfileComponent implements OnInit {
   userDetails: User;
 
   constructor(
-    public userData: UserDataService
+    public userData: UserDataService,
+    private authentication: AuthenticationService
   ) {
   }
 
@@ -53,6 +56,10 @@ export class ProfileComponent implements OnInit {
         console.log(error);
       }
     ).add(() => this.progress = false);
+  }
+
+  get getRole(): string {
+    return this.authentication.details.role;
   }
 
 }

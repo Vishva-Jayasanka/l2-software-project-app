@@ -64,6 +64,7 @@ export class UploadAttendanceComponent implements OnInit {
       moduleName: [''],
       lectureHour: [{value: '', disabled: true}, [Validators.required]],
       batch: [{value: '', disabled: true}, [Validators.required]],
+      comment: [''],
       session: [{value: '', disabled: true}, [Validators.required]],
       date: [{value: '', disabled: true}, [Validators.required]],
       time: [{value: '', disabled: true}, [Validators.required]]

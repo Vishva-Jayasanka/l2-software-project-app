@@ -25,7 +25,7 @@
             <mat-error *ngIf="email.touched && email.errors?.email">Please enter a valid email address</mat-error>
           </mat-form-field>
 
-          <div *ngIf="emailSent" class="alert alert-success mt-0 mb-3">Verification email sent. {{ wait !== 0 ? "Send again in " + wait + "s." : "" }}</div>
+          <div *ngIf="emailSent" class="alert alert-success mt-0 mb-3">Verification email sent. Please check your email to further instructions. {{ wait !== 0 ? "Send again in " + wait + "s." : "" }}</div>
 
           <div *ngIf="error" class="alert alert-danger mt-0 mb-3">{{ error }}</div>
 

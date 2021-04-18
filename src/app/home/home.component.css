@@ -7,6 +7,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  border: 2px solid lavender;
 }
 
 .avatar:hover {
@@ -21,7 +22,7 @@
 }
 
 .logo {
-  background-image: url('https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Institute_of_Technology%2C_University_of_Moratuwa.png/220px-Institute_of_Technology%2C_University_of_Moratuwa.png');
+  background-image: url('../../assets/images/logo.png');
   background-size: cover;
   border-radius: 50%;
   overflow: hidden;

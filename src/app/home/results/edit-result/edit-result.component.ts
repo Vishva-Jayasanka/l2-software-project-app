@@ -130,6 +130,7 @@ export class EditResultComponent implements OnInit, OnDestroy {
         academicYear: this.academicYear.value
       }).subscribe(
         response => {
+          console.log(response);
           this.examID = response.examID;
           this.dateHeld.setValue(response.dateHeld);
           this.results = response.results;

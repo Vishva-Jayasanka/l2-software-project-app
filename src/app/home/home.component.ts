@@ -14,6 +14,7 @@ import {NavigationEnd, Router} from '@angular/router';
 
 export class HomeComponent implements OnInit {
 
+  newNotifications = 0;
   widthSidenav: boolean;
   widthNotification: boolean;
   activeRoute: string;

@@ -55,6 +55,8 @@ import {AcademicTimetableComponent} from './home/timetable/academic-timetable/ac
 import {AcademicCalenderComponent, NewAcademicYearDialogComponent} from './home/timetable/academic-calender/academic-calender.component';
 import {DayMarkersService, EditService, FilterService, SelectionService, SortService, ToolbarService} from '@syncfusion/ej2-angular-gantt';
 import {DeactivateGuard} from './_helpers/deactivate.guard';
+import { EditProfileComponent } from './home/profile/edit-profile/edit-profile.component';
+import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/change-recovery-email.component';
 
 
 @NgModule({
@@ -101,7 +103,9 @@ import {DeactivateGuard} from './_helpers/deactivate.guard';
     AcademicTimetableComponent,
     AcademicCalenderComponent,
     NewAcademicYearDialogComponent,
-    DetailedModuleAttendanceComponent
+    DetailedModuleAttendanceComponent,
+    EditProfileComponent,
+    ChangeRecoveryEmailComponent
   ],
   imports: [
     BrowserModule,

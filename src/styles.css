@@ -36,10 +36,6 @@ a:focus {
   outline: none !important;
 }
 
-tr:hover {
-  background: rgb(245, 245, 245);
-}
-
 th.mat-sort-header-sorted {
   color: black;
 }
@@ -114,14 +110,6 @@ th.mat-sort-header-sorted {
 .text-area {
   resize: none;
   overflow: hidden;
-}
-
-.input-group {
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  width: calc(100% + 20px);
-  padding: 10px;
-  margin: 0 -10px 15px -10px;
 }
 
 .input-group-header {

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
+import {Component, DoCheck, ElementRef, EventEmitter, IterableDiffers, OnDestroy, OnInit, Output} from '@angular/core';
 import {NotificationService} from '../../_services/notification.service';
 import {FormBuilder} from '@angular/forms';
 import {AuthenticationService} from '../../_services/authentication.service';
@@ -10,7 +10,11 @@ import {DataService} from '../../_services/data.service';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements OnInit, OnDestroy {
+export class NotificationComponent implements OnInit, OnDestroy, DoCheck {
+
+  differ: any;
+
+  @Output() newNotifications = new EventEmitter<number>();
 
   constructor(
     public notification: NotificationService,
@@ -18,8 +22,14 @@ export class NotificationComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
     public userData: UserDataService,
-    private data: DataService
+    private data: DataService,
+    private differs: IterableDiffers
   ) {
+    this.differ = differs.find(this.notification.messages).create(null);
+  }
+
+  ngDoCheck() {
+    this.newNotifications.emit(this.notification.messages.filter(message => !message.received && message.sent).length);
   }
 
   ngOnInit(): void {

@@ -30,6 +30,14 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.apiUrl}send-verification-email`, email);
   }
 
+  sendRecoveryEmailVerification(email: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}send-recovery-email-verification`, {email});
+  }
+
+  verifyRecoveryEmail(token: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}verify-recovery-email`, {token});
+  }
+
   verifyEmail(OTP) {
     return this.http.post<any>(`${environment.apiUrl}verify-email`, OTP);
   }
