@@ -52,7 +52,7 @@
     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Installment {{dataSource.indexOf(data)+1}}
+          Installment {{dataSource.indexOf(data)+1}} Details {{panelOpenState ? 'open' : 'closed'}}
         </mat-panel-title>
         <mat-panel-description> 
           Installment {{dataSource.indexOf(data)+1}} Details {{panelOpenState ? 'open' : 'closed'}}

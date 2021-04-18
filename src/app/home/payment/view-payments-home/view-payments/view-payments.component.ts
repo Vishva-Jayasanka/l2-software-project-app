@@ -2,6 +2,7 @@ import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {DataService} from '../../../../_services/data.service';
 import {MatTableDataSource} from '@angular/material/table';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 
 export interface PeriodicElement {
@@ -12,16 +13,21 @@ export interface PeriodicElement {
   paidAmount: number;
 }
 
+const ELEMENT_DATA: PeriodicElement[] = [
+  {no: 1, slipNo: '1254678903', bank: 'BOC', date: '28/02/2021', paidAmount: 200000.00},
+  {no: 2, slipNo: '2434567234', bank: 'BOC', date: '20/03/2021', paidAmount: 150500.00},
+];
+
 @Component({
   selector: 'app-view-payments',
   templateUrl: './view-payments.component.html',
   styleUrls: ['./view-payments.component.css']
 })
 
-export class ViewPaymentsComponents implements OnInit {
+export class ViewPaymentsComponent implements OnInit {
   @Input('confirmedStudentPaymentDetails') confirmedStudentPaymentDetails;
-  displayedColumns = ['no', 'slipNo', 'bank', 'date', 'paidAmount'];
-  dataSource = new MatTableDataSource([]);
+  displayedColumns: string[] = ['no', 'slipNo', 'bank', 'date', 'paidAmount'];
+  dataSource = ELEMENT_DATA;
   filterValue = '';
   viewPaymentForm: FormGroup;
   viewPaymentProgress: boolean;
@@ -32,19 +38,32 @@ export class ViewPaymentsComponents implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
+    private authentication: AuthenticationService,
     private elementRef: ElementRef
   ) {
   }
 
-
+ getStudentData(){
+  this.viewPaymentProgress = true;
+  this.data.getStudentPaymentLists().subscribe(
+      response => {
+        if (response.status) {
+          // this.dataSource = new MatTableDataSource(response.results[0]);
+        } else {
+          this.viewPaymentProgress = true;
+        }
+      },
+      error => this.error = error
+    ).add(() => this.viewPaymentProgress = false);
+  this.viewPaymentProgress = false;
+ }
 
   getData(studentId: string){
-    this.viewPaymentProgress = true;
     if (studentId) {
     this.data.getStudentPaymentList(studentId).subscribe(
       response => {
         if (response.status) {
-          this.dataSource = new MatTableDataSource(response.results[0]);
+         // this.dataSource = new MatTableDataSource(response.results[0]);
         } else {
           this.viewPaymentProgress = true;
         }
@@ -54,16 +73,25 @@ export class ViewPaymentsComponents implements OnInit {
   } else {
     this.viewPaymentProgress = false;
   }
- }
+}
+
 
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue.trim().toLowerCase();
+   // this.dataSource.filter = this.filterValue.trim().toLowerCase();
   }
 
   ngOnInit(): void {
    console.log('confirmedStudentPaymentDetails = ', this.confirmedStudentPaymentDetails);
-   this.getData(this.confirmedStudentPaymentDetails);
+   if (this.getRole !== 'Student'){
+    this.getData(this.confirmedStudentPaymentDetails);
+   } else {
+    this.getStudentData();
+   }
+  }
+
+  get getRole() {
+    return this.authentication.details.role;
   }
 
 
