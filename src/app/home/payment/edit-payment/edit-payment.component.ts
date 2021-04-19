@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
@@ -15,10 +15,9 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
 export class EditPaymentComponent implements OnInit {
   dataSource;
   editPaymentProgress = false;
-  studentIDNotFound = false;
+  hidePaymentDetails = false;
   panelOpenState = false;
   success = false;
-
   error = '';
 
   banks: Bank[] = [
@@ -46,7 +45,7 @@ export class EditPaymentComponent implements OnInit {
       switchMap(studentID => {
         this.error = '';
         this.success = false;
-        this.studentIDNotFound = false;
+        this.hidePaymentDetails = false;
         this.checkStudentID(studentID);
         return EMPTY;
       })
@@ -70,57 +69,53 @@ export class EditPaymentComponent implements OnInit {
   }
 
   getData(studentId: string){
-    this.editPaymentProgress = true;
     if (studentId) {
     this.data.getStudentPaymentList(studentId).subscribe(
       response => {
         if (response.status) {
+          this.dataSource='';
           this.dataSource = response.results[0];
-          console.log('getStudentPaymentList : ',this.dataSource);
-          
         } else {
-          this.studentIDNotFound = true;
+          this.hidePaymentDetails = true;
         }
       },
       error => this.error = error
     ).add(() => this.editPaymentProgress = false);
-  } else {
+  }
     this.editPaymentProgress = false;
   }
 
-  }
-
-  submitForm() {
-    this.data.uploadPayment(this.paymentForm.value).subscribe(
-      response => {
-        console.log(response);
-      },
-      error => {
-        this.error = error;
-      }
-    );
-  }
+  // submitForm() {
+  //   this.data.uploadPayment(this.paymentForm.value).subscribe(
+  //     response => {
+  //       console.log(response);
+  //     },
+  //     error => {
+  //       this.error = error;
+  //     }
+  //   );
+  // }
 
 
   checkStudentID(studentID) {
     this.success = false;
     this.error = '';
-    this.studentIDNotFound = false;
+    this.hidePaymentDetails = false;
     if (studentID) {
       this.data.checkStudentID(studentID).subscribe(
         response => {
           if (response.status) {
             this.fullName.setValue(response.name);
             this.getData(response.studentID);
+            this.hidePaymentDetails = false;
           } else {
-            this.studentIDNotFound = true;
+            this.hidePaymentDetails = true;
           }
         },
         error => this.error = error
       ).add(() => this.editPaymentProgress = false);
-    } else {
-      this.editPaymentProgress = false;
     }
+    this.editPaymentProgress = false;
   }
 
   toggleProgress() {
@@ -135,25 +130,17 @@ export class EditPaymentComponent implements OnInit {
     return this.paymentForm.get('depositor').get('registrationNumber');
   }
 
-  get bankName() {
-    return this.paymentForm.get('deposit').get('bankName');
-  }
-
-  get slipNumber() {
-    return this.paymentForm.get('deposit').get('slipNumber');
-  }
-
-  get totalPaid() {
-    return this.paymentForm.get('deposit').get('totalPaid');
-  }
-
-  get paymentDate() {
-    return this.paymentForm.get('deposit').get('totalPaid');
-  }
-
   resetForm() {
     this.paymentForm.reset();
+    this.editPaymentProgress = false;
     this.elementRef.nativeElement.querySelector('#course-name').scrollIntoView();
+    this.ngOnInit();
   }
 
+  deleteSelectedPayment(value: any) {
+    console.log('value  =', value);
+    this.hidePaymentDetails = value;
+    // this.resetForm();
+    this.ngOnInit();
+  }
 }

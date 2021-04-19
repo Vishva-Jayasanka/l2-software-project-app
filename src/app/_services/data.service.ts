@@ -179,4 +179,11 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-student-payment-details`, {studentID});
   }
 
+  deletePayment(data) {
+    return this.http.post<any>(`${environment.adminUrl}delete-payment`, data);
+  }
+
+  editPayment(data) {
+    return this.http.post<any>(`${environment.adminUrl}edit-payment`, data);
+  }
 }

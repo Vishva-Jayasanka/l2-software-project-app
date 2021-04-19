@@ -7,6 +7,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 export interface Course {
   courseID: number;
@@ -218,3 +219,57 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
 
 
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// confirm Update payment msg Component
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@Component({
+  selector: 'app-confirm-update-dialog',
+  templateUrl: './confirm-update-dialog.component.html',
+  styleUrls: ['./view-paymentsHome.component.css']
+})
+
+export class ConfirmUpdateDialogComponent implements OnInit {
+
+  progress = false;
+  error;
+  private router: any;
+
+  constructor(
+    public dataService: DataService,
+    public dialogRef: MatDialogRef<ConfirmUpdateDialogComponent>,
+  ) {
+  }
+
+  ngOnInit() {
+  }
+
+}
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// confirm Delete payment msg Component
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@Component({
+  selector: 'app-confirm-delete-dialog',
+  templateUrl: './confirm-delete-dialog.component.html',
+  styleUrls: ['./view-paymentsHome.component.css']
+})
+
+export class ConfirmDeleteDialogComponent implements OnInit {
+
+  progress = false;
+  error;
+  private router: any;
+
+  constructor(
+    public dataService: DataService,
+    public dialogRef: MatDialogRef<ConfirmDeleteDialogComponent>,
+  ) {
+  }
+
+  ngOnInit() {
+  }
+
+}

@@ -5,12 +5,11 @@
     <p class="sub-header">Edit payment details related to any student</p>
   </div>
 
+  <form [formGroup]="paymentForm">
   <div class="card-body">
     <div class="row" style="margin: -20px -20px 10px -20px; height: 5px">
       <mat-progress-bar [hidden]="!editPaymentProgress" mode="query"></mat-progress-bar>
     </div>
-
-    <form [formGroup]="paymentForm">
 
       <h6>Depositor Details</h6>
       <mat-divider style="margin-left: -20px; margin-right: -20px"></mat-divider>
@@ -22,13 +21,13 @@
           <mat-label>Registration Number</mat-label>
           <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput
             formControlName="registrationNumber" placeholder="Ex: 184183R">
-          <mat-error *ngIf="registrationNumber.touched && registrationNumber.errors?.required">This field is required
-          </mat-error>
+          <!-- <mat-error *ngIf="registrationNumber.touched && registrationNumber.errors?.required">This field is required
+          </mat-error> -->
           <mat-error
             *ngIf="registrationNumber.touched && !registrationNumber.errors?.required && registrationNumber.errors?.pattern">
             Invalid input</mat-error>
           <mat-error
-            *ngIf="registrationNumber.touched && !registrationNumber.errors?.required && !registrationNumber.errors?.pattern && studentIDNotFound">
+            *ngIf="registrationNumber.touched && !registrationNumber.errors?.required && !registrationNumber.errors?.pattern && hidePaymentDetails">
             Student ID not found</mat-error>
         </mat-form-field>
 
@@ -40,28 +39,28 @@
       </div>
 
       <div class="row px-1">
-        <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
+        <div *ngIf="hidePaymentDetails" class="alert alert-warning col">No student found with this ID</div>
       </div>
 
-    </form>
   </div>
 
-</div>
-<mat-accordion>
-  <div *ngFor="let data of dataSource">
+<mat-accordion *ngIf="!hidePaymentDetails">
+  <div *ngFor="let item of dataSource" >
     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Installment {{dataSource.indexOf(data)+1}}
+          Installment {{dataSource.indexOf(item)+1}}
         </mat-panel-title>
         <mat-panel-description> 
-          Installment {{dataSource.indexOf(data)+1}} Details {{panelOpenState ? 'open' : 'closed'}}
+          Installment {{dataSource.indexOf(item)+1}} Details {{panelOpenState ? 'open' : 'closed'}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div>
-        <app-view-payment-details [position]="dataSource.indexOf(data)" [data]="data">
+        <app-view-payment-details [position]="dataSource.indexOf(item)" [data]="item" (deleteSelectedPayment)="deleteSelectedPayment($event)">
         </app-view-payment-details>
       </div>
     </mat-expansion-panel>
   </div>
 </mat-accordion>
+</form>
+</div>

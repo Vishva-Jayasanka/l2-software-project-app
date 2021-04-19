@@ -56,10 +56,11 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
-import { ViewPaymentsHomeComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
+import { ViewPaymentsHomeComponent, ConfirmUpdateDialogComponent,ConfirmDeleteDialogComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
 import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,9 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     ViewPaymentDetailsComponent,
     ProfileDetailsDialogComponent,
     ConfirmDetailsDialogComponent,
-    ConfirmUploadDialogComponent
+    ConfirmUploadDialogComponent,
+    ConfirmUpdateDialogComponent,
+    ConfirmDeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -128,6 +131,7 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     AuthenticationGuard,
     UserGuard,
     AuthenticationService,
+    DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
