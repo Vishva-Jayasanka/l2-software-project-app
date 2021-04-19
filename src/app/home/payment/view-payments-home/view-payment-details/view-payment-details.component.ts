@@ -95,7 +95,7 @@ export class ViewPaymentDetailsComponent implements OnInit {
                 this.selectedBank = value.bankID;
               }
             });
-            
+
           }
         },
         error => this.error = error
@@ -151,15 +151,15 @@ export class ViewPaymentDetailsComponent implements OnInit {
     return this.paymentDetailsForm.get('paymentDetailsdepositor').get('slipNumber');
   }
 
-  get fullName() {
+  get fullName(): AbstractControl  {
     return this.paymentDetailsForm.get('paymentDetailsdepositor').get('fullName');
   }
 
-  get registrationNumber() {
+  get registrationNumber(): AbstractControl  {
     return this.paymentDetailsForm.get('paymentDetailsdepositor').get('registrationNumber');
   }
 
-  get courseId() {
+  get courseId(): AbstractControl  {
     return this.paymentDetailsForm.get('paymentDetailsdepositor').get('courseId');
   }
 
@@ -175,11 +175,11 @@ export class ViewPaymentDetailsComponent implements OnInit {
     return this.paymentDetailsForm.get('paymentDetailsdepositor').get('amountPaid');
   }
 
-  // get paymentDate() {
+  // get paymentDate(): AbstractControl  {
   //   return this.paymentDetailsForm.get('paymentDetailsdepositor').get('paymentDate');
   // }
 
-  
+
   openConfirmUpdateDialog(){
     const dialogRef = this.dialog.open(ConfirmUpdateDialogComponent, {
       width: '450px',

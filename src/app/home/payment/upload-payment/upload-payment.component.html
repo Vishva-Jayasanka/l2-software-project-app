@@ -22,7 +22,7 @@
           <mat-form-field class="col-md-4 mx-0 px-1" appearance="outline">
             <mat-label>Registration Number</mat-label>
             <input (keyup)="term$.next($event.target.value)" (ngModelChange)="toggleProgress()" type="text" matInput
-              formControlName="registrationNumber" placeholder="Ex: 184183R" required>
+                   formControlName="registrationNumber" placeholder="Ex: 184183R" required>
             <mat-error *ngIf="registrationNumber.touched && registrationNumber.errors?.required">This field is required
             </mat-error>
             <mat-error
@@ -85,19 +85,19 @@
         </div>
 
         <div class="row mb-2">
-        <mat-form-field class="col mx-0 px-1" appearance="outline">
-          <mat-label>External Note</mat-label>
-          <textarea type="text" matInput formControlName="externalNote" placeholder="External Note"></textarea>
-        </mat-form-field>
+          <mat-form-field class="col mx-0 px-1" appearance="outline">
+            <mat-label>External Note</mat-label>
+            <textarea type="text" matInput formControlName="externalNote" placeholder="External Note"></textarea>
+          </mat-form-field>
 
-      </div>
+        </div>
 
         <div class="row mb-0">
 
           <mat-form-field class="col mx-0 px-1" appearance="outline">
             <mat-label>Amount Paid (Rs.)</mat-label>
             <input matInput type="number" class="example-right-align" formControlName="totalPaid"
-              placeholder="Ex: 456,500.00" required>
+                   placeholder="Ex: 456,500.00" required>
             <mat-error *ngIf="bankName.touched && bankName.errors?.required">This field is required</mat-error>
           </mat-form-field>
 
@@ -115,7 +115,7 @@
           <input type="file" id="fileUpload" hidden />
         </div>
 
-        
+
         <div class="row px-1">
           <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
         </div>

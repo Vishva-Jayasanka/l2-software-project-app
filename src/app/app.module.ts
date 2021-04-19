@@ -59,8 +59,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ViewPaymentsHomeComponent, ConfirmUpdateDialogComponent,ConfirmDeleteDialogComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
-import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
 import { DatePipe } from '@angular/common';
+import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-payments/view-payments.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +90,7 @@ import { DatePipe } from '@angular/common';
     ProfilePictureComponent,
     UploadPaymentComponent,
     ViewPaymentsHomeComponent,
-    ViewPaymentsComponents,
+    ViewPaymentsComponent,
     ComposerComponent,
     RequestComponent,
     AddRequestComponent,
