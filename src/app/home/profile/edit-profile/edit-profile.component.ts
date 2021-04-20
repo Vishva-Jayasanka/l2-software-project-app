@@ -4,6 +4,7 @@ import {DataService} from '../../../_services/data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
 import {UserDataService} from '../../../_services/user-data.service';
 import {Router} from '@angular/router';
+import {PasswordValidator} from '../../../_services/shared.service';
 
 interface EditGeneralSettings {
   email: FieldData;
@@ -28,6 +29,10 @@ export class EditProfileComponent implements OnInit {
   progress: boolean;
   error = '';
 
+  success = false;
+  passwordUpdateError = '';
+  passwordUpdateProgress = false;
+
   currentRecoveryEmail: string;
 
   recoveryEmail: FormControl = new FormControl(['', [Validators.required, Validators.email]]);
@@ -38,6 +43,17 @@ export class EditProfileComponent implements OnInit {
     email: {},
     phone: {},
     address: {}
+  };
+  passwordConstraints = {
+    length: false,
+    capitalLetters: false,
+    numbers: false,
+    symbols: false
+  };
+  passwordVisible = {
+    currentPassword: false,
+    password: false,
+    confirmPassword: false
   };
 
   editPasswordForm: FormGroup;
@@ -53,6 +69,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.progress = true;
     this.userData.getUserDetails().subscribe(
       response => {
@@ -68,6 +85,7 @@ export class EditProfileComponent implements OnInit {
         this.error = error;
       }
     ).add(() => this.progress = false);
+
     this.editGeneralSettings = this.formBuilder.group({
       fullName: ['A.K.V Jayasanka'],
       username: ['184061R'],
@@ -75,11 +93,23 @@ export class EditProfileComponent implements OnInit {
       phone: ['', [Validators.required, Validators.pattern(/^0[1-9]{9}$/)]],
       address: ['', [Validators.required, Validators.minLength(6)]]
     });
+
     this.editPasswordForm = this.formBuilder.group({
-      currentPassword: [''],
-      newPassword: [''],
-      confirmPassword: ['']
+      currentPassword: ['', Validators.required],
+      password: [
+        '',
+        [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/)]
+      ],
+      confirmPassword: ['', Validators.required]
+    }, {validator: PasswordValidator});
+
+    this.password.valueChanges.subscribe(value => {
+      this.passwordConstraints.capitalLetters = /[A-Z]+/.test(value);
+      this.passwordConstraints.numbers = /[0-9]+/.test(value);
+      this.passwordConstraints.length = value.length >= 8;
+      this.passwordConstraints.symbols = /[-@#!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(value);
     });
+
   }
 
   saveGeneralSettingsChanges(target, value: string): void {
@@ -121,6 +151,21 @@ export class EditProfileComponent implements OnInit {
   }
 
   changePassword(): void {
+    this.success = false;
+    this.passwordUpdateError = '';
+    this.passwordUpdateProgress = true;
+    this.userData.changePassword({
+      currentPassword: this.currentPassword.value,
+      newPassword: this.password.value,
+      confirmPassword: this.confirmPassword.value
+    }).subscribe(
+      response => {
+        this.success = true;
+      },
+      error => {
+        this.passwordUpdateError = error;
+      }
+    ).add(() => this.passwordUpdateProgress = false);
   }
 
   get getRole(): string {
@@ -151,8 +196,8 @@ export class EditProfileComponent implements OnInit {
     return this.editPasswordForm.get('currentPassword');
   }
 
-  get newPassword(): AbstractControl {
-    return this.editPasswordForm.get('newPassword');
+  get password(): AbstractControl {
+    return this.editPasswordForm.get('password');
   }
 
   get confirmPassword(): AbstractControl {

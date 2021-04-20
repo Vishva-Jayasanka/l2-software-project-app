@@ -211,4 +211,8 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-detailed-module-attendance`, data);
   }
 
+  deleteMessage(messageID: number): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}delete-message`, {messageID});
+  }
+
 }

@@ -4,6 +4,8 @@ import {FormBuilder} from '@angular/forms';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {UserDataService} from '../../_services/user-data.service';
 import {DataService} from '../../_services/data.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-notification',
@@ -23,7 +25,8 @@ export class NotificationComponent implements OnInit, OnDestroy, DoCheck {
     private authentication: AuthenticationService,
     public userData: UserDataService,
     private data: DataService,
-    private differs: IterableDiffers
+    private differs: IterableDiffers,
+    private snackBar: MatSnackBar
   ) {
     this.differ = differs.find(this.notification.messages).create(null);
   }
@@ -57,6 +60,34 @@ export class NotificationComponent implements OnInit, OnDestroy, DoCheck {
       },
       error => console.log(error)
     );
+  }
+
+  deleteMessage(i: number): void {
+    console.log(this.notification.messages[i]);
+    if (confirm('Are you sure, you want to delete this message?')) {
+      if (this.notification.messages[i].sent) {
+        this.data.deleteMessage(this.notification.messages[i].notificationID).subscribe(
+          response => {
+            this.notification.messages.splice(i, i + 1);
+            this.snackBar.open('Message deleted', 'Close', {
+              duration: 3000
+            });
+          }, error => {
+            this.snackBar.open('Could not delete the message', 'Close', {
+              duration: 3000
+            });
+          }
+        );
+      } else {
+        this.notification.messages.splice(i, i + 1);
+      }
+    }
+  }
+
+  sendAgain(i: number): void {
+    const message = this.notification.messages[i];
+    this.notification.messages.splice(i, i + 1);
+    this.notification.sendMessage(message);
   }
 
   ngOnDestroy() {

@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "~9.1.11",
     "@angular/router": "~9.1.11",
     "@syncfusion/ej2-angular-gantt": "^19.1.54",
-    "@syncfusion/ej2-angular-popups": "^18.2.46",
+    "@syncfusion/ej2-angular-popups": "^18.4.44",
     "@syncfusion/ej2-angular-schedule": "^19.1.54",
     "bootstrap": "^4.5.3",
     "bootstrap-icons": "^1.0.0-alpha5",

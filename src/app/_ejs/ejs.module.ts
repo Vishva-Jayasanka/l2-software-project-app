@@ -6,7 +6,8 @@ import {ScheduleModule} from '@syncfusion/ej2-angular-schedule';
 const ejs = [
   TooltipModule,
   GanttModule,
-  ScheduleModule
+  ScheduleModule,
+  TooltipModule
 ];
 
 @NgModule({

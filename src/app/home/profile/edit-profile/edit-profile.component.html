@@ -145,35 +145,89 @@
             <div class="input-group-prepend" style="width: 160px">
               <span class="input-group-text w-100">Current Password</span>
             </div>
-            <input id="current-password" class="form-control" type="password" formControlName="currentPassword" />
+            <input id="current-password"
+                   [ngClass]="{'form-control': true, 'is-invalid': currentPassword.touched && !currentPassword.valid}"
+                   [type]="passwordVisible.currentPassword ? 'text' : 'password'"
+                   formControlName="currentPassword" />
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+              <button (click)="passwordVisible.currentPassword = !passwordVisible.currentPassword" class="btn btn-outline-secondary">
+                <i [ngClass]="{'fa': true, 'fa-eye-slash': passwordVisible.currentPassword, 'fa-eye': !passwordVisible.currentPassword}"></i>
+              </button>
             </div>
+            <div class="invalid-feedback" *ngIf="currentPassword.touched && currentPassword.errors?.required">This field is required</div>
           </div>
 
-          <div class="input-group mb-3 col-6">
-            <div class="input-group-append" style="width: 160px">
-              <span class="input-group-text w-100">New Password</span>
+          <ejs-tooltip id='tooltip_1' content="tooltip content" target="#new-password-group" position="RightTop">
+            <ng-template #content>
+              <ul style="padding: 0; margin: 5px 10px 5px 10px; list-style-type: none; font-size: 13px">
+                <li>
+                  <i *ngIf="passwordConstraints.capitalLetters" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.capitalLetters" class="fa fa-times text-danger"></i> At least one capital letter
+                </li>
+                <li>
+                  <i *ngIf="passwordConstraints.numbers" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.numbers" class="fa fa-times text-danger"></i> At leas one number
+                </li>
+                <li>
+                  <i *ngIf="passwordConstraints.symbols" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.symbols" class="fa fa-times text-danger"></i> At least one symbol
+                </li>
+                <li>
+                  <i *ngIf="passwordConstraints.length" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.length" class="fa fa-times text-danger"></i> More than 8 characters
+                </li>
+              </ul>
+            </ng-template>
+            <div id="new-password-group" class="input-group mb-3 col-6">
+              <div class="input-group-append" style="width: 160px">
+                <span class="input-group-text w-100">New Password</span>
+              </div>
+                <input id="new-password"
+                       [ngClass]="{'form-control': true, 'is-invalid': password.touched && !password.valid, 'is-valid': password.touched && password.valid}"
+                       [type]="passwordVisible.password ? 'text' : 'password'"
+                       formControlName="password"
+                />
+              <div class="input-group-append">
+                <button (click)="passwordVisible.password = !passwordVisible.password" class="btn btn-outline-secondary">
+                  <i [ngClass]="{'fa': true, 'fa-eye-slash': passwordVisible.password, 'fa-eye': !passwordVisible.password}"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="password.touched && password.errors?.required">This field is required</div>
+              <div class="invalid-feedback" *ngIf="password.touched && !password.errors?.required && password.errors?.pattern">
+                Password must contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+              </div>
             </div>
-            <input id="new-password" class="form-control" type="password" formControlName="newPassword" />
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary"><i class="fa fa-eye-slash"></i></button>
-            </div>
-          </div>
+          </ejs-tooltip>
 
           <div class="input-group mb-3 col-6">
             <div class="input-group-prepend" style="width: 160px">
               <div class="input-group-text w-100">Confirm Password</div>
             </div>
-            <input id="confirm-password" class="form-control" type="password" formControlName="confirmPassword" />
+            <input id="confirm-password"
+                   [ngClass]="{'form-control': true, 'is-invalid': editPasswordForm.errors?.mismatch && confirmPassword.touched, 'is-valid': confirmPassword.touched && confirmPassword.valid && !editPasswordForm.errors?.mismatch}"
+                   [type]="passwordVisible.confirmPassword ? 'text' : 'password'"
+                   formControlName="confirmPassword" />
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary"><i class="fa fa-eye"></i></button>
+              <button (click)="passwordVisible.confirmPassword = !passwordVisible.confirmPassword" class="btn btn-outline-secondary">
+                <i [ngClass]="{'fa': true, 'fa-eye-slash': passwordVisible.confirmPassword, 'fa-eye': !passwordVisible.confirmPassword}"></i>
+              </button>
             </div>
+            <div class="invalid-feedback" *ngIf="password.touched && password.errors?.required">This field is required</div>
+            <div class="invalid-feedback" *ngIf="password.touched && !password.errors?.required && editPasswordForm.errors?.mismatch">Passwords do not match</div>
           </div>
 
           <div class="col-12 mb-3">
-            <button class="mr-2" type="button" mat-raised-button (click)="changePassword()">Change Password</button>
+            <button class="mr-2" type="button" mat-raised-button (click)="changePassword()" [disabled]="editPasswordForm.invalid || passwordUpdateProgress">
+              <span *ngIf="passwordUpdateProgress" class="spinner-border spinner-border-sm"></span>
+              Change Password
+            </button>
             <button type="button" mat-flat-button (click)="editPasswordForm.reset()">Reset</button>
+          </div>
+
+          <div *ngIf="success" class="my-3 mx-3 alert alert-success">Password updated successfully</div>
+
+          <div *ngIf="passwordUpdateError" class="my-3 mx-3 alert alert-danger">
+            {{ passwordUpdateError }}
           </div>
 
         </form>

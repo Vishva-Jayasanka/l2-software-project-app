@@ -1,12 +1,22 @@
 <div style="height: 100%">
 
   <div class="list-group" style="margin-bottom: 70px">
-    <div *ngFor="let message of notification.messages; let i = index" class="list-group-item list-group-item-action flex-column align-items-start" [ngClass]="{'bg-primary': !message.received && message.sent, 'text-white': !message.received || !message.sent, 'bg-danger': !message.sent}">
+    <div *ngFor="let message of notification.messages; let i = index"
+         class="message list-group-item list-group-item-action flex-column align-items-start"
+         [ngClass]="{'bg-primary': !message.received && message.sent, 'text-white': !message.received || !message.sent, 'bg-danger': !message.sent}">
+      <button *ngIf="username === message.username || fullName === message.username" (click)="deleteMessage(i)" class="delete-button" style="position: absolute; top: 2px; right: 2px" mat-icon-button>
+        <mat-icon [style.color]="message.sent ? 'red': 'white'">
+          delete_outline
+        </mat-icon>
+      </button>
       <h5 class="mb-1">{{ message.subject }}</h5>
       <p class="mb-1">{{ message.message }}</p>
       <div class="d-flex w-100 justify-content-between">
         <small>Sent by: {{ username === message.username || fullName === message.username ? 'You' : message.username }}</small>
         <small>{{ message.timeSent | date: 'h:mm a, M/d/yy' }}</small>
+      </div>
+      <div *ngIf="!message.sent">
+        <a (click)="sendAgain(i)" style="font-size: 13px; cursor: pointer"><i><b>Message not sent. Click here to try again</b></i></a>
       </div>
     </div>
   </div>

@@ -66,17 +66,17 @@ export class NotificationService {
   }
 
   public sendMessage(message: MessageBody) {
-    console.log(message);
     const msg: Message = {
       messageType: 'notification',
       messageBody: message
     };
-    this.messages.unshift(message);
     if (this.connected) {
       message.sent = true;
       this.webSocket.send(JSON.stringify(msg));
+    } else {
+      this.messages.unshift(message);
+      console.log(message);
     }
-    console.log(message);
   }
 
   private acknowledgement(messageID: number) {
