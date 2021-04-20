@@ -27,12 +27,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ViewPaymentsComponent implements OnInit {
   @Input('confirmedStudentPaymentDetails') confirmedStudentPaymentDetails;
   displayedColumns: string[] = ['no', 'slipNo', 'bank', 'date', 'paidAmount'];
-  dataSource = ELEMENT_DATA;
+  dataSource = new MatTableDataSource([]);
   filterValue = '';
   viewPaymentForm: FormGroup;
   viewPaymentProgress: boolean;
   success = false;
   error = '';
+
 
 
   constructor(
@@ -48,7 +49,7 @@ export class ViewPaymentsComponent implements OnInit {
   this.data.getStudentPaymentLists().subscribe(
       response => {
         if (response.status) {
-          // this.dataSource = new MatTableDataSource(response.results[0]);
+          this.dataSource = new MatTableDataSource(response.results[0]);
         } else {
           this.viewPaymentProgress = true;
         }
@@ -56,15 +57,15 @@ export class ViewPaymentsComponent implements OnInit {
       error => this.error = error
     ).add(() => this.viewPaymentProgress = false);
   this.viewPaymentProgress = false;
-
  }
+
 
   getData(studentId: string){
     if (studentId) {
     this.data.getStudentPaymentList(studentId).subscribe(
       response => {
         if (response.status) {
-         // this.dataSource = new MatTableDataSource(response.results[0]);
+          this.dataSource = new MatTableDataSource(response.results[0]);
         } else {
           this.viewPaymentProgress = true;
         }
@@ -76,16 +77,15 @@ export class ViewPaymentsComponent implements OnInit {
   }
 }
 
-
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
    // this.dataSource.filter = this.filterValue.trim().toLowerCase();
   }
 
   ngOnInit(): void {
-   console.log('confirmedStudentPaymentDetails = ', this.confirmedStudentPaymentDetails);
    if (this.getRole !== 'Student'){
-    this.getData(this.confirmedStudentPaymentDetails);
+    console.log('confirmedStudentPaymentDetails = ', this.confirmedStudentPaymentDetails);
+    this.getData(this.confirmedStudentPaymentDetails.studentID);
    } else {
     this.getStudentData();
    }

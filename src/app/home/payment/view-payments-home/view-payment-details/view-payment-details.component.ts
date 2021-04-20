@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup,FormsModule, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, Validators} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {DataService} from '../../../../_services/data.service';
 import { ConfirmUpdateDialogComponent, ConfirmDeleteDialogComponent } from '../view-paymentsHome.component';
@@ -27,7 +27,7 @@ export class ViewPaymentDetailsComponent implements OnInit {
   success = false;
   error = '';
   dataSource;
-  date1
+  date1;
   paymentDate: FormControl;
 
 
@@ -37,9 +37,9 @@ export class ViewPaymentDetailsComponent implements OnInit {
   ];
 
   public options2 = [
-    {"id": 1, "name": "a"},
-    {"id": 2, "name": "b"}
-  ]
+    {id: 1, name: 'a'},
+    {id: 2, name: 'b'}
+  ];
   public selectedBank;
 
 
@@ -70,26 +70,28 @@ export class ViewPaymentDetailsComponent implements OnInit {
   }
 
   getData(): void {
-    console.log('data from edit=', this.data);
-    console.log('data.slip no =', this.data.slipNo);
-    
-    this.error = '';
-    this.success = false;
-    this.dataService.getStudentPaymentDetails(this.data.slipNo).subscribe(
+      console.log('data from edit=', this.data);
+      console.log('data.slip no =', this.data.slipNo);
+
+      this.error = '';
+      this.success = false;
+      this.dataService.getStudentPaymentDetails(this.data.slipNo).subscribe(
         response => {
           if (response.status) {
             this.dataSource = response.results[0][0];
 
             this.registrationNumber.setValue(this.dataSource.studentID);
             this.fullName.setValue(this.data.fullName);
-            this.courseId.setValue(this.dataSource.fullName);
+            this.courseId.setValue(this.dataSource.courseName);
             this.academicYear.setValue(this.dataSource.academicYear);
 
             // this.bankName.setValue(this.dataSource.bank);
             this.slipNumber.setValue(this.dataSource.slipNo);
             this.amountPaid.setValue(this.dataSource.amount);
-            // this.paymentDate.setValue(new FormControl(new Date(this.datePipe.transform(new Date(this.dataSource.paymentDate),"dd/MM/yyyy"))));
-            this.paymentDate = new FormControl(new Date(this.datePipe.transform(new Date(this.dataSource.paymentDate),"dd/MM/yyyy")));
+            // tslint:disable-next-line:max-line-length
+            // this.paymentDate.setValue
+            // (new FormControl(new Date(this.datePipe.transform(new Date(this.dataSource.paymentDate),"dd/MM/yyyy"))));
+            this.paymentDate = new FormControl(new Date(this.datePipe.transform(new Date(this.dataSource.paymentDate), 'dd/MM/yyyy')));
             this.banks.forEach((value) => {
               if (this.dataSource.bank.toString().trim() === value.bankName) {
                 this.selectedBank = value.bankID;
@@ -105,16 +107,16 @@ export class ViewPaymentDetailsComponent implements OnInit {
  submitForm() {
     console.log(this.paymentDetailsForm);
     // if (this.paymentDetailsForm.valid) {
-      this.paymentDetailsForm.value.paymentDetailsdepositor.bankName = this.banks[this.selectedBank].bankName;
-      this.paymentDetailsForm.value.paymentDetailsdepositor.paymentDate = this.paymentDate.value;
-      this.dataService.editPayment(this.paymentDetailsForm.value.paymentDetailsdepositor).subscribe(
+    this.paymentDetailsForm.value.paymentDetailsdepositor.bankName = this.banks[this.selectedBank].bankName;
+    this.paymentDetailsForm.value.paymentDetailsdepositor.paymentDate = this.paymentDate.value;
+    this.dataService.editPayment(this.paymentDetailsForm.value.paymentDetailsdepositor).subscribe(
        response => {
         console.log(response);
-         if (response.status){
+        if (response.status){
             this.openConfirmUpdateDialog();
           }
-          this.error = '';
-          this.paymentDetailsForm.reset();
+        this.error = '';
+        this.paymentDetailsForm.reset();
        },
         error => {
          this.success = false;

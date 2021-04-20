@@ -176,10 +176,11 @@ export class DataService {
   }
 
   getStudentPaymentList(studentID: any) {
-    return this.http.post<any>(`${environment.apiUrl}get-student-payment-details`, {studentID});
+    console.log('service: getStudentPaymentDetails, slipNo = ', studentID);
+    return this.http.post<any>(`${environment.adminUrl}get-student-payment-details`, {studentID});
   }
   getStudentPaymentLists() {
-    return this.http.post<any>(`${environment.studentUrl}get-student-payment-details`, {});
+    return this.http.post<any>(`${environment.studentUrl}get-students-payment-details`, {});
   }
 
 
