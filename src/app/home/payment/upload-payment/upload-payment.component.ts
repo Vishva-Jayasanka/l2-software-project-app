@@ -4,6 +4,8 @@ import {DataService} from '../../../_services/data.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ConfirmUploadDialogComponent } from '../payment.component';
 
 export interface Bank {
   bankID: number;
@@ -43,6 +45,7 @@ export class UploadPaymentComponent implements OnInit {
     private data: DataService,
     private elementRef: ElementRef,
     private authentication: AuthenticationService,
+    public dialog: MatDialog
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -68,6 +71,7 @@ export class UploadPaymentComponent implements OnInit {
         deposit: this.formBuilder.group({
           bankName:  ['', [Validators.required]], // this.banks[this.bankName.value].bankName,
           slipNumber: ['', [Validators.required]],
+          externalNote: [''],
           totalPaid: ['', [Validators.required]],
           paymentDate: ['', [Validators.required]],
         }),
@@ -80,11 +84,14 @@ export class UploadPaymentComponent implements OnInit {
     this.uploadAPaymentProgress = true;
     if (this.paymentForm.valid) {
       if (this.getRole !== 'Student'){
+        console.log(this.paymentForm.value);
         this.data.uploadPayment(this.paymentForm.value).subscribe(
           response => {
-            this.success = true;
-            this.error = '';
-            this.paymentForm.reset();
+              if (response.status){
+                this.openDialog();
+              }
+              this.error = '';
+              this.paymentForm.reset();
           },
           error => {
             this.success = false;
@@ -94,7 +101,9 @@ export class UploadPaymentComponent implements OnInit {
       }else if (this.getRole !== 'admin'){
         this.data.uploadStudentPayment(this.paymentForm.value).subscribe(
           response => {
-            this.success = true;
+            if (this.success === true){
+              this.openDialog();
+            }
             this.error = '';
             this.paymentForm.reset();
           },
@@ -174,6 +183,10 @@ export class UploadPaymentComponent implements OnInit {
     return this.paymentForm.get('deposit').get('slipNumber');
   }
 
+  get externalNote() {
+    return this.paymentForm.get('deposit').get('externalNote');
+  }
+
   get totalPaid() {
     return this.paymentForm.get('deposit').get('totalPaid');
   }
@@ -185,5 +198,17 @@ export class UploadPaymentComponent implements OnInit {
   resetForm() {
     this.paymentForm.reset();
     this.elementRef.nativeElement.querySelector('#course-name').scrollIntoView();
+  }
+
+  openDialog(){
+    const dialogRef = this.dialog.open(ConfirmUploadDialogComponent, {
+      width: '450px',
+
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+      }
+    });
   }
 }

@@ -38,7 +38,7 @@ import {ViewRegistrationComponent} from './home/registration/view-registration/v
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { ViewPaymentsHomeComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
-import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
+import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-payments/view-payments.component';
 
 const routes: Routes = [
   {
@@ -162,13 +162,13 @@ const routes: Routes = [
           {
             path: 'view-payments-home',
             component: ViewPaymentsHomeComponent,
-            children:[{
+            children: [{
               path: 'view-payment-details',
               component: ViewPaymentDetailsComponent,
             },
             {
               path: 'view-payments',
-              component: ViewPaymentsComponents,
+              component: ViewPaymentsComponent,
             }]
           },
           {

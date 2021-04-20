@@ -170,12 +170,25 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
   }
 
-  getConfirmedPaymentDetails(): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {});
+  getStudentPaymentDetails(slipNo): Observable<any>  {
+    console.log('service: getStudentPaymentDetails, slipNo = ', slipNo);
+    return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {slipNo});
   }
 
   getStudentPaymentList(studentID: any) {
-    return this.http.post<any>(`${environment.studentUrl}get-student-payment-details`, {studentID});
+    console.log('service: getStudentPaymentDetails, slipNo = ', studentID);
+    return this.http.post<any>(`${environment.adminUrl}get-student-payment-details`, {studentID});
+  }
+  getStudentPaymentLists() {
+    return this.http.post<any>(`${environment.studentUrl}get-students-payment-details`, {});
   }
 
+
+  deletePayment(data) {
+    return this.http.post<any>(`${environment.adminUrl}delete-payment`, data);
+  }
+
+  editPayment(data) {
+    return this.http.post<any>(`${environment.adminUrl}edit-payment`, data);
+  }
 }

@@ -25,7 +25,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
 import {ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
-import {PaymentComponent} from './home/payment/payment.component';
+import {PaymentComponent, ConfirmUploadDialogComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
 import {RegistrationComponent, ProfileDetailsDialogComponent, ConfirmDetailsDialogComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
@@ -56,10 +56,11 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
-import { ViewPaymentsHomeComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
+import { ViewPaymentsHomeComponent, ConfirmUpdateDialogComponent,ConfirmDeleteDialogComponent } from './home/payment/view-payments-home/view-paymentsHome.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
-import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-payments/view-payments.component';
+import { DatePipe } from '@angular/common';
+import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-payments/view-payments.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,7 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     ProfilePictureComponent,
     UploadPaymentComponent,
     ViewPaymentsHomeComponent,
-    ViewPaymentsComponents,
+    ViewPaymentsComponent,
     ComposerComponent,
     RequestComponent,
     AddRequestComponent,
@@ -106,7 +107,10 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     NewRegistrationComponent,
     ViewPaymentDetailsComponent,
     ProfileDetailsDialogComponent,
-    ConfirmDetailsDialogComponent
+    ConfirmDetailsDialogComponent,
+    ConfirmUploadDialogComponent,
+    ConfirmUpdateDialogComponent,
+    ConfirmDeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -127,6 +131,7 @@ import { ViewPaymentsComponents } from './home/payment/view-payments-home/view-p
     AuthenticationGuard,
     UserGuard,
     AuthenticationService,
+    DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
