@@ -5,6 +5,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 
+
 export interface PeriodicElement {
   no: number;
   slipNo: string;
@@ -33,6 +34,9 @@ export class ViewPaymentsComponent implements OnInit {
   viewPaymentProgress: boolean;
   success = false;
   error = '';
+  private total = 0;
+  private value;
+  r;
 
 
 
@@ -77,6 +81,7 @@ export class ViewPaymentsComponent implements OnInit {
   }
 }
 
+
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
    // this.dataSource.filter = this.filterValue.trim().toLowerCase();
@@ -86,7 +91,7 @@ export class ViewPaymentsComponent implements OnInit {
    if (this.getRole !== 'Student'){
     console.log('confirmedStudentPaymentDetails = ', this.confirmedStudentPaymentDetails);
     this.getData(this.confirmedStudentPaymentDetails.studentID);
-   } else {
+   } else if (this.getRole !== 'Admin'){
     this.getStudentData();
    }
   }

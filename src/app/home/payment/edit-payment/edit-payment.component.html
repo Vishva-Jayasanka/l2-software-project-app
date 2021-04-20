@@ -49,14 +49,14 @@
     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Installment {{dataSource.indexOf(item)+1}}
+          Installment {{dataSource.indexOf(item)+1}} 
         </mat-panel-title>
         <mat-panel-description> 
           Installment {{dataSource.indexOf(item)+1}} Details {{panelOpenState ? 'open' : 'closed'}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div>
-        <app-view-payment-details [position]="dataSource.indexOf(item)" [data]="item" (deleteSelectedPayment)="deleteSelectedPayment($event)">
+        <app-view-payment-details [position]="dataSource.indexOf(item)"  [data]="item" (deleteSelectedPayment)="deleteSelectedPayment($event)">
         </app-view-payment-details>
       </div>
     </mat-expansion-panel>

@@ -52,8 +52,8 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   registration: any;
   registrations: any;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+@ViewChild(MatSort, {static: false}) sort: MatSort;
 
 
   constructor(

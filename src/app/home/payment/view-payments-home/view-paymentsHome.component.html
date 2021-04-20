@@ -120,7 +120,7 @@
         <div class="example-element-detail"
             [@detailExpand]="element == expandedElementPending ? 'expanded' : 'collapsed'">
           <div class="example-element-description">
-            <app-view-payment-details></app-view-payment-details>
+            <app-view-payment-details [data]="element" *ngIf="element == expandedElementPending"></app-view-payment-details>
           </div>
         </div>
       </td>
