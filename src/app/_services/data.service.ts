@@ -22,6 +22,10 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-module-details`, {moduleCode});
   }
 
+  getAcademicYears(): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}get-academic-years`, {});
+  }
+
   getAssignments() {
     return this.http.post<any>(`${environment.teacherUrl}get-assignments`, {});
   }

@@ -45,7 +45,7 @@
         <mat-form-field appearance="outline" class="col mx-0 px-1">
           <mat-label>Academic Year</mat-label>
           <mat-select (selectionChange)="checkIfResultsExists()" formControlName="academicYear">
-            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+            <mat-option *ngFor="let year of academicYears" [value]="year">{{ year }}</mat-option>
           </mat-select>
           <mat-error *ngIf="academicYear.touched && academicYear.errors?.required">This field is required</mat-error>
         </mat-form-field>

@@ -32,7 +32,7 @@ export class EnrollComponent implements OnInit {
   studentIDNotFound = false;
   success = false;
 
-  academicYears = YEARS;
+  academicYears;
 
   error = '';
   separatorKeysCodes = [ENTER, COMMA, TAB];
@@ -47,6 +47,7 @@ export class EnrollComponent implements OnInit {
 
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('formRef') formRef;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -83,6 +84,7 @@ export class EnrollComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.enrollProgress = true;
     this.data.getModules().subscribe(
       response => this.allModules = response.modules.map(module => {
@@ -93,6 +95,14 @@ export class EnrollComponent implements OnInit {
       }),
       error => this.error = error
     ).add(() => this.enrollProgress = false);
+
+    this.data.getAcademicYears().subscribe(
+      response => {
+        this.academicYears = response.academicYears;
+      },
+      error => this.error = error
+    );
+
   }
 
   add(event: MatChipInputEvent): void {
@@ -155,13 +165,13 @@ export class EnrollComponent implements OnInit {
     }
   }
 
-  resetForm() {
-    this.enrollmentForm.reset();
+  resetForm(): void {
+    this.formRef.resetForm();
     setTimeout(() => this.enrollProgress = false, 200);
     this.modules = [];
   }
 
-  submitForm() {
+  submitForm(): void {
     this.success = false;
     this.error = '';
     if (this.enrollmentForm.valid) {
@@ -174,6 +184,7 @@ export class EnrollComponent implements OnInit {
             response => {
               this.modules = [];
               this.success = true;
+              this.resetForm();
             }, error => this.error = error
           ).add(() => this.enrollProgress = false);
         }

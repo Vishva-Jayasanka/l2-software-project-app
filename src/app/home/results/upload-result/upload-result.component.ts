@@ -28,7 +28,7 @@ export interface Result {
 
 export class UploadResultComponent implements OnInit {
 
-  years = YEARS;
+  academicYears: [];
   exams: Exam[] = [];
 
   routeParams = '';
@@ -65,6 +65,14 @@ export class UploadResultComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.uploadResultsProgress = true;
+    this.data.getAcademicYears().subscribe(
+      response => {
+        this.academicYears = response.academicYears;
+      },
+      error => this.error = error
+    ).add(() => this.uploadResultsProgress = false);
+
     this.route.params.subscribe(params => {
       this.routeParams = params.moduleCode;
     });

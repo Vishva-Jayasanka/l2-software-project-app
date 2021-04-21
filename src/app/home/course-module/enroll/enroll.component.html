@@ -11,7 +11,7 @@
       <mat-progress-bar [hidden]="!enrollProgress" mode="query"></mat-progress-bar>
     </div>
 
-    <form [formGroup]="enrollmentForm">
+    <form [formGroup]="enrollmentForm" #formRef="ngForm">
 
       <div class="row mb-2">
 
@@ -116,7 +116,7 @@
       </div>
 
       <div class="d-flex flex-row-reverse my-0">
-        <button (click)="submitForm()" type="submit" mat-raised-button color="primary" class="mx-1">Enroll</button>
+        <button (click)="submitForm()" type="submit" mat-raised-button color="primary" class="mx-1" [disabled]="enrollmentForm.invalid">Enroll</button>
         <button (click)="resetForm()" type="button" mat-flat-button class="mx-1">Reset</button>
       </div>
 

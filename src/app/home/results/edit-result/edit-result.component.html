@@ -33,7 +33,7 @@
         <mat-form-field appearance="outline" class="col-3 mx-0 px-1">
           <mat-label>Academic Year</mat-label>
           <mat-select (selectionChange)="checkIfResultsExists()" id="edit_academicYear" formControlName="academicYear">
-            <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
+            <mat-option *ngFor="let year of academicYears" [value]="year">{{ year }}</mat-option>
           </mat-select>
           <mat-error *ngIf="academicYear.touched && academicYear.errors?.required">This field is required</mat-error>
         </mat-form-field>
@@ -60,9 +60,7 @@
 
         <p>Preview of the Results</p>
 
-        <ng-template #notAvailableBlock><p><i>Results will appear here once you select required inputs.</i></p></ng-template>
-
-        <div *ngIf="results.length !== 0">
+        <div>
 
           <mat-form-field class="filter">
             <mat-label>Filter</mat-label>

@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
 import {EventSettingsModel, MonthService, WeekService, WorkWeekService} from '@syncfusion/ej2-angular-schedule';
 import {DataManager, WebApiAdaptor} from '@syncfusion/ej2-data';
+import {AuthenticationService} from '../../../_services/authentication.service';
 
 @Component({
   selector: 'app-academic-timetable',
@@ -16,7 +17,7 @@ export class AcademicTimetableComponent implements OnInit {
 
   public selectedDate: Date = new Date(2021, 3, 3);
   private dataManager: DataManager = new DataManager({
-    url: 'http://localhost:3000/api/get-timetable/100000R/1',
+    url: `http://localhost:3000/api/get-timetable/${this.authentication.details.username}/${this.getRole}`,
     adaptor: new WebApiAdaptor(),
     crossDomain: true
   });
@@ -36,7 +37,8 @@ export class AcademicTimetableComponent implements OnInit {
 
   constructor(
     public router: Router,
-    public data: DataService
+    public data: DataService,
+    private authentication: AuthenticationService
   ) {
   }
 
@@ -79,7 +81,22 @@ export class AcademicTimetableComponent implements OnInit {
     }
   }
 
+  get getRole(): number {
+    const role = this.authentication.details.role;
+    switch (role) {
+      case 'Student':
+        return 3;
+      case 'Teacher':
+        return 2;
+      case 'Admin':
+        return 1;
+      default:
+        return 3;
+    }
+  }
+
   ngOnInit(): void {
+    console.log(this.authentication.details.username);
   }
 
 }

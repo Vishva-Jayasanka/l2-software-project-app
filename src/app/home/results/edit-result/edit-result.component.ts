@@ -15,7 +15,7 @@ import {glow} from '../../../_services/shared.service';
 })
 export class EditResultComponent implements OnInit, OnDestroy {
 
-  YEARS = [2016, 2017, 2018, 2019, 2020];
+  academicYears: [];
 
   editResultsProgress = false;
   buttonProgress = false;
@@ -54,6 +54,11 @@ export class EditResultComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.editResultsProgress = true;
+    this.data.getAcademicYears().subscribe(
+      response => this.academicYears = response.academicYears,
+      error => this.error = error
+    ).add(() => this.editResultsProgress = false);
     this.route.params.subscribe(param => {
       this.roteParameter = param.moduleCode;
     });

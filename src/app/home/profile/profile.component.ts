@@ -16,7 +16,7 @@ export interface User {
   mobile: string;
   home: string;
   academicYear: number;
-  currentGPA: number;
+  currentGPA: number | string;
   company: string;
   designation: string;
   nic: string;
@@ -48,6 +48,7 @@ export class ProfileComponent implements OnInit {
     this.progress = true;
     this.userData.getUserDetails().subscribe(
       response => {
+        console.log(response.details);
         console.log(response.educationQualifications);
         this.userDetails = response.details;
         this.userDetails.educationQualification = response.educationQualifications;

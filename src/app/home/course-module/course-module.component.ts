@@ -35,7 +35,7 @@ export interface Results {
   date: Date;
 }
 
-export const DAYS_OF_WEEK: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+export const DAYS_OF_WEEK: string[] = ['Sunday', 'Saturday'];
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // Module Component

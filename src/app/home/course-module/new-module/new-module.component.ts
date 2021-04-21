@@ -81,10 +81,11 @@ export class NewModuleComponent implements OnInit {
   getModule(moduleCode: string | null) {
     this.dataService.getModuleDetails(moduleCode).subscribe(
       response => {
+        console.log(response);
         this.data = response.moduleDetails;
         this.data.teachers = response.teachers;
         this.data.lectureHours = response.lectureHours;
-        this.data.new = false;
+        this.data.new = !this.data.moduleCode;
       }, error => this.error = error
     ).add(() => {
 
@@ -161,7 +162,7 @@ export class NewModuleComponent implements OnInit {
   }
 
   addNewLectureHour(): void {
-    this.newLectureHours.push(this.newLectureHour(0, '', 'Lecture', 1, 'Lab 1', '08:15', '10:15'));
+    this.newLectureHours.push(this.newLectureHour(0, '', 'Lecture', 0, 'Lab 1', '08:15', '10:15'));
   }
 
   newLectureHour(lectureHourID: number, moduleCode: string, type: string, day: number, lectureHall: string, startingTime: string, endingTime: string): FormGroup {
@@ -169,7 +170,7 @@ export class NewModuleComponent implements OnInit {
       lectureHourID: [lectureHourID],
       moduleCode: [moduleCode],
       type: [type, Validators.required],
-      day: [day, Validators.required],
+      day: [day.toString(), Validators.required],
       lectureHall: [lectureHall, Validators.required],
       startingTime: [startingTime, Validators.required],
       endingTime: [endingTime, Validators.required]
