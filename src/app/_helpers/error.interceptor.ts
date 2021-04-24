@@ -17,7 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(catchError(err => {
       if (err.status === 0) {
         return throwError('Network connection failure');
-      } else if (err.status === 408) {
+      } else if (err.status === 440) {
         this.router.navigate(['/auth/login', {timeout: true}]);
       }
       const error = err.error.message || err.statusText;

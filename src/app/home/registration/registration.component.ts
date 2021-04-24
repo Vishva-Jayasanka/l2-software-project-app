@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {DataService} from '../../_services/data.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -13,8 +14,13 @@ export class RegistrationComponent implements OnInit {
   progress = false;
 
   constructor(
-    private authentication: AuthenticationService
+    private authentication: AuthenticationService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    if (this.getRole !== 'Student') {
+      router.navigate(['./new-registration'], {relativeTo: this.route});
+    }
   }
 
   ngOnInit(): void {
@@ -74,7 +80,6 @@ export class ConfirmDetailsDialogComponent implements OnInit {
 
   progress = false;
   error;
-  private router: any;
 
   constructor(
     public dataService: DataService,

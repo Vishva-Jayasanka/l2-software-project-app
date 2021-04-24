@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {UserDataService} from '../../_services/user-data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 
@@ -33,12 +33,12 @@ export interface User {
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
 
   progress = false;
   userDetails: User;
   error = '';
-  profilePicture: string;
+  profilePicture = 'assets/images/default_profile_picture.png';
 
   @Input() studentID: string;
 
@@ -49,15 +49,15 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.progress = true;
-    console.log(this.studentID);
+
     if (this.studentID) {
       this.userData.getStudentDetails(this.studentID).subscribe(
         response => {
           this.userDetails = response.details;
           this.userDetails.educationQualification = response.educationQualifications;
-          this.profilePicture = `data:image/jpeg;base64,${response.profilePicture}`;
-          console.log(response);
+          this.profilePicture = response.profilePicture ? `data:image/jpeg;base64,${response.profilePicture}` : this.profilePicture;
         },
         error => this.error = error
       ).add(() => this.progress = false);
@@ -66,13 +66,17 @@ export class ProfileComponent implements OnInit {
         response => {
           this.userDetails = response.details;
           this.userDetails.educationQualification = response.educationQualifications;
-          this.profilePicture = this.userData.profilePicture;
-          console.log(this.profilePicture);
         },
         error => {
           this.error = error;
         }
       ).add(() => this.progress = false);
+    }
+  }
+
+  ngAfterViewInit() {
+    if (!this.studentID) {
+      this.profilePicture = this.userData.profilePicture;
     }
   }
 
