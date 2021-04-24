@@ -5,4 +5,5 @@ export const allocationValidator: ValidatorFn = (control: FormGroup): Validation
   const allocation = control.get('allocation').value;
   return allocationAvailable && allocation && (parseInt(allocation, 10) > parseInt(allocationAvailable, 10)) ?
     {invalidAllocation: true} : null;
-}
+};
+

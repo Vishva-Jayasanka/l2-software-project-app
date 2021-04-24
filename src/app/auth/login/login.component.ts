@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,18 +14,27 @@ export class LoginComponent implements OnInit {
   progress = false;
   error = '';
 
+  timeout: boolean;
+
   constructor(
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
+    private route: ActivatedRoute,
     private router: Router
   ) {
   }
 
   ngOnInit(): void {
+
+    this.route.params.subscribe(params => {
+      this.timeout = params.timeout;
+    });
+
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(/^[0-9]{6}[A-Za-z]$/)]],
       password: ['', Validators.required]
     });
+
   }
 
   onSubmit() {

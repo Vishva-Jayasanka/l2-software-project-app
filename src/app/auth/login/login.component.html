@@ -11,6 +11,8 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-card-content>
 
+      <div *ngIf="timeout" class="alert alert-danger mb-3">Your session has timed out. Pleas login.</div>
+
       <mat-form-field appearance="outline" class="input-field">
         <mat-label>Username</mat-label>
         <input type="text" matInput formControlName="username" placeholder="Ex: 184061R" />

@@ -25,6 +25,18 @@ export class VerificationComponent implements OnInit, AfterViewInit {
   token: string;
   recoveryEmail: string;
 
+  passwordConstraints = {
+    length: false,
+    capitalLetters: false,
+    numbers: false,
+    symbols: false
+  };
+
+  passwordVisible = {
+    password: false,
+    confirmPassword: false
+  };
+
   constructor(
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
@@ -42,7 +54,7 @@ export class VerificationComponent implements OnInit, AfterViewInit {
     });
 
     this.newPasswordForm = this.formBuilder.group({
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=(.*[a-z])+)(?=(.*[\d])+)(?=(.*[\W])+)(?!.*\s).{8,}$/)]],
       confirmPassword: ['', [Validators.required]]
     }, {validator: PasswordValidator});
 
@@ -52,6 +64,13 @@ export class VerificationComponent implements OnInit, AfterViewInit {
       } else {
         this.confirmPassword.setErrors(null);
       }
+    });
+
+    this.password.valueChanges.subscribe(value => {
+      this.passwordConstraints.capitalLetters = /[A-Z]+/.test(value);
+      this.passwordConstraints.numbers = /[0-9]+/.test(value);
+      this.passwordConstraints.length = value.length >= 8;
+      this.passwordConstraints.symbols = /[-@#!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(value);
     });
 
   }

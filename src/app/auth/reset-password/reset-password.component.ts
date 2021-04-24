@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PasswordValidator} from '../../_services/shared.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 
@@ -15,17 +15,30 @@ export class ResetPasswordComponent implements OnInit {
   progress = false;
   successful = false;
 
+  passwordConstraints = {
+    length: false,
+    capitalLetters: false,
+    numbers: false,
+    symbols: false
+  };
+
+  passwordVisible = {
+    password: false,
+    confirmPassword: false
+  };
+
   token: string;
   passwordResetForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private authentication: AuthenticationService
   ) {
 
     this.passwordResetForm = this.formBuilder.group({
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=(.*[a-z])+)(?=(.*[\d])+)(?=(.*[\W])+)(?!.*\s).{8,}$/)]],
       confirmPassword: ['', [Validators.required]]
     }, {validator: PasswordValidator});
 
@@ -36,12 +49,26 @@ export class ResetPasswordComponent implements OnInit {
         this.confirmPassword.setErrors(null);
       }
     });
+
+    this.password.valueChanges.subscribe(value => {
+      this.passwordConstraints.capitalLetters = /[A-Z]+/.test(value);
+      this.passwordConstraints.numbers = /[0-9]+/.test(value);
+      this.passwordConstraints.length = value.length >= 8;
+      this.passwordConstraints.symbols = /[-@#!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(value);
+    });
+
   }
 
   ngOnInit(): void {
+
     this.route.params.subscribe(params => {
       this.token = params.token;
     });
+
+    if (!this.token) {
+      this.router.navigate(['/auth/forgot-password']);
+    }
+
   }
 
   resetPassword(): void {

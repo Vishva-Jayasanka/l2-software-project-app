@@ -47,15 +47,45 @@
 
         <form *ngIf="!success; else elseBlock" [formGroup]="newPasswordForm">
 
-          <mat-form-field appearance="outline" class="col-12 mx-0 px-0">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" formControlName="password" />
-            <mat-error *ngIf="password.touched && password.errors?.required">This field is required</mat-error>
-          </mat-form-field>
+          <ejs-tooltip id='tooltip_1' content="tooltip content" target="#verification" position="RightBottom">
+            <ng-template #content>
+              <ul style="padding: 0; margin: 5px 10px 5px 10px; list-style-type: none">
+                <li>
+                  <i *ngIf="passwordConstraints.capitalLetters" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.capitalLetters" class="fa fa-times text-danger"></i> At least one capital letter
+                </li>
+                <li>
+                  <i *ngIf="passwordConstraints.numbers" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.numbers" class="fa fa-times text-danger"></i> At leas one number
+                </li>
+                <li>
+                  <i *ngIf="passwordConstraints.symbols" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.symbols" class="fa fa-times text-danger"></i> At least one symbol
+                </li>
+                <li>
+                  <i *ngIf="passwordConstraints.length" class="fa fa-check text-success"></i>
+                  <i *ngIf="!passwordConstraints.length" class="fa fa-times text-danger"></i> More than 8 characters
+                </li>
+              </ul>
+            </ng-template>
+            <mat-form-field id="verification" appearance="outline" class="col-12 mx-0 px-0" style="font-size: 15px">
+              <mat-label>Password</mat-label>
+              <input matInput [type]="passwordVisible.password ? 'text' : 'password'" formControlName="password" />
+              <button type="button" mat-button matSuffix mat-icon-button (click)="passwordVisible.password = !passwordVisible.password">
+                <mat-icon *ngIf="!passwordVisible.password">visibility</mat-icon>
+                <mat-icon *ngIf="passwordVisible.password">visibility_off</mat-icon>
+              </button>
+              <mat-error *ngIf="password.touched && password.errors?.required">This field is required</mat-error>
+            </mat-form-field>
+          </ejs-tooltip>
 
           <mat-form-field appearance="outline" class="col-12 mx-0 px-0">
             <mat-label>Confirm Password</mat-label>
             <input matInput type="password" formControlName="confirmPassword" />
+            <button type="button" mat-button matSuffix mat-icon-button (click)="passwordVisible.confirmPassword = !passwordVisible.confirmPassword">
+              <mat-icon *ngIf="!passwordVisible.confirmPassword">visibility</mat-icon>
+              <mat-icon *ngIf="passwordVisible.confirmPassword">visibility_off</mat-icon>
+            </button>
             <mat-error *ngIf="confirmPassword.touched && confirmPassword.errors?.required">This field is required</mat-error>
             <mat-error *ngIf="confirmPassword.touched && !confirmPassword.errors?.required && confirmPassword.errors?.incorrect">Passwords do not match</mat-error>
           </mat-form-field>

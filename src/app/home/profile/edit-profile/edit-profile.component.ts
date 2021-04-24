@@ -96,10 +96,7 @@ export class EditProfileComponent implements OnInit {
 
     this.editPasswordForm = this.formBuilder.group({
       currentPassword: ['', Validators.required],
-      password: [
-        '',
-        [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/)]
-      ],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=(.*[a-z])+)(?=(.*[\d])+)(?=(.*[\W])+)(?!.*\s).{8,}$/)]],
       confirmPassword: ['', Validators.required]
     }, {validator: PasswordValidator});
 
