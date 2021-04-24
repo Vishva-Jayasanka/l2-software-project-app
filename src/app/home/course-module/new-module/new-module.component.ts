@@ -1,13 +1,12 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
-import {Course, COURSES} from '../../registration/registration.component';
 import {YEARS} from '../../../_services/shared.service';
 import {MatAutocomplete} from '@angular/material/autocomplete';
 import {DataService} from '../../../_services/data.service';
 import {debounceTime, map, startWith, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DAYS_OF_WEEK, ModuleData, Teacher} from '../course-module.component';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-new-module',
@@ -33,7 +32,6 @@ export class NewModuleComponent implements OnInit {
   filteredTeachers: Observable<Teacher[]>;
   teachers: Teacher[] = [];
   allTeachers: Teacher[] = [];
-  courses: Course[] = COURSES;
   editModuleForm: FormGroup;
   data: ModuleData;
   term$ = new Subject<string>();

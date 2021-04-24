@@ -110,10 +110,6 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}get-profile-picture`, {});
   }
 
-  uploadPayment(paymentForm) {
-    return this.http.post<any>(`${environment.adminUrl}uploadPayment`, {paymentForm});
-  }
-
   registerStudent(studentDetails) {
     return this.http.post<any>(`${environment.adminUrl}register-student`, {studentDetails});
   }
@@ -124,7 +120,6 @@ export class DataService {
 
   getTimetable(): Observable<any> {
     return this.http.get(`${environment.apiUrl}get-timetable`, {responseType: 'text'});
-    // return this.http.post<any>(`${environment.apiUrl}get-timetable`, {});
   }
 
   getStudents() {
@@ -217,6 +212,38 @@ export class DataService {
 
   deleteMessage(messageID: number): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}delete-message`, {messageID});
+  }
+
+  uploadPayment(paymentForm) {
+    return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm});
+  }
+
+  getPaymentList(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
+  }
+
+  getStudentPaymentDetails(slipNo): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {slipNo});
+  }
+
+  getStudentPaymentList(studentID: any): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-student-payment-details`, {studentID});
+  }
+
+  getStudentPaymentLists(): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-students-payment-details`, {});
+  }
+
+  deletePayment(data): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}delete-payment`, data);
+  }
+
+  editPayment(data): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}edit-payment`, data);
+  }
+
+  getRegisteredUsers(data: object) {
+    return this.http.post<any>(`${environment.adminUrl}get-registered-users`, data);
   }
 
 }

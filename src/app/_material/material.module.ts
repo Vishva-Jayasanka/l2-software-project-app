@@ -27,6 +27,7 @@ import {MaterialFileInputModule} from 'ngx-material-file-input';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 const Material = [
   MatButtonModule,
@@ -57,7 +58,8 @@ const Material = [
   MaterialFileInputModule,
   MatRadioModule,
   MatSnackBarModule,
-  MatBadgeModule
+  MatBadgeModule,
+  MatPaginatorModule
 ];
 
 @NgModule({

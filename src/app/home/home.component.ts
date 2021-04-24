@@ -92,8 +92,8 @@ export class HomeComponent implements OnInit {
       icon: 'monetization_on',
       label: 'Payment',
       children: [{
-        component: 'ViewPaymentComponent',
-        route: 'view-payment',
+        component: 'ViewPaymentHomeComponent',
+        route: 'view-payments-home',
         label: 'View Payment'
       }, {
         component: 'UploadPaymentComponent',
@@ -123,7 +123,18 @@ export class HomeComponent implements OnInit {
       route: 'registration',
       icon: 'how_to_reg',
       label: 'Registration',
-      children: []
+      children: [
+        {
+          component: 'NewRegistrationComponent',
+          route: 'new-registration',
+          label: 'New Registration'
+        },
+        {
+          component: 'ViewRegistrationComponent',
+          route: 'view-registration',
+          label: 'View Registration'
+        }
+      ]
     }
   ];
 

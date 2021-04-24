@@ -18,7 +18,6 @@ import {PaymentComponent} from './home/payment/payment.component';
 import {RegistrationComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
-import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ProfileComponent} from './home/profile/profile.component';
 import {RequestComponent} from './home/request/request.component';
 import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
@@ -30,7 +29,6 @@ import {EditResultComponent} from './home/results/edit-result/edit-result.compon
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {ViewResultComponent} from './home/results/view-result/view-result.component';
 import {ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
-import {PaymentDetailsComponent} from './home/payment/payment-details/payment-details.component';
 import {EditPaymentComponent} from './home/payment/edit-payment/edit-payment.component';
 import {SubmitedRequestsComponent} from './home/request/submited-requests/submited-requests.component';
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
@@ -41,6 +39,11 @@ import {AcademicCalenderComponent} from './home/timetable/academic-calender/acad
 import {DeactivateGuard} from './_helpers/deactivate.guard';
 import {EditProfileComponent} from './home/profile/edit-profile/edit-profile.component';
 import {ChangeRecoveryEmailComponent} from './auth/change-recovery-email/change-recovery-email.component';
+import {ViewPaymentsHomeComponent} from './home/payment/view-payments-home/view-payments-home.component';
+import {ViewPaymentDetailsComponent} from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
+import {ViewPaymentsComponent} from './home/payment/view-payments-home/view-payments/view-payments.component';
+import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
+import {NewRegistrationComponent} from './home/registration/new-registration/new-registration.component';
 
 const routes: Routes = [
   {
@@ -177,17 +180,18 @@ const routes: Routes = [
         component: PaymentComponent,
         children: [
           {
-            path: 'payment-details',
-            component: PaymentDetailsComponent
-          },
-          {
-            path: '',
-            redirectTo: 'payment-details',
-            pathMatch: 'full'
-          },
-          {
-            path: 'view-payment',
-            component: ViewPaymentComponent
+            path: 'view-payments-home',
+            component: ViewPaymentsHomeComponent,
+            children: [
+              {
+                path: 'view-payment-details',
+                component: ViewPaymentDetailsComponent,
+              },
+              {
+                path: 'view-payments',
+                component: ViewPaymentsComponent,
+              }
+            ]
           },
           {
             path: 'upload-payment',
@@ -201,7 +205,17 @@ const routes: Routes = [
       },
       {
         path: 'registration',
-        component: RegistrationComponent
+        component: RegistrationComponent,
+        children: [
+          {
+            path: 'view-registration',
+            component: ViewRegistrationComponent
+          },
+          {
+            path: 'new-registration',
+            component: NewRegistrationComponent
+          }
+        ]
       },
       {
         path: 'profile',

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {UserDataService} from '../../_services/user-data.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 
@@ -37,6 +37,10 @@ export class ProfileComponent implements OnInit {
 
   progress = false;
   userDetails: User;
+  error = '';
+  profilePicture: string;
+
+  @Input() studentID: string;
 
   constructor(
     public userData: UserDataService,
@@ -46,17 +50,30 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.progress = true;
-    this.userData.getUserDetails().subscribe(
-      response => {
-        console.log(response.details);
-        console.log(response.educationQualifications);
-        this.userDetails = response.details;
-        this.userDetails.educationQualification = response.educationQualifications;
-      },
-      error => {
-        console.log(error);
-      }
-    ).add(() => this.progress = false);
+    console.log(this.studentID);
+    if (this.studentID) {
+      this.userData.getStudentDetails(this.studentID).subscribe(
+        response => {
+          this.userDetails = response.details;
+          this.userDetails.educationQualification = response.educationQualifications;
+          this.profilePicture = `data:image/jpeg;base64,${response.profilePicture}`;
+          console.log(response);
+        },
+        error => this.error = error
+      ).add(() => this.progress = false);
+    } else {
+      this.userData.getUserDetails().subscribe(
+        response => {
+          this.userDetails = response.details;
+          this.userDetails.educationQualification = response.educationQualifications;
+          this.profilePicture = this.userData.profilePicture;
+          console.log(this.profilePicture);
+        },
+        error => {
+          this.error = error;
+        }
+      ).add(() => this.progress = false);
+    }
   }
 
   get getRole(): string {

@@ -25,9 +25,13 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upload-attendance.component';
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
 import {DetailedModuleAttendanceComponent, ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
-import {PaymentComponent} from './home/payment/payment.component';
+import {ConfirmUploadDialogComponent, PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
-import {RegistrationComponent} from './home/registration/registration.component';
+import {
+  ConfirmDetailsDialogComponent,
+  ProfileDetailsDialogComponent,
+  RegistrationComponent
+} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
@@ -35,8 +39,6 @@ import {ViewResultComponent} from './home/results/view-result/view-result.compon
 import {ProfileComponent} from './home/profile/profile.component';
 import {ProfilePictureComponent} from './home/profile/profile-picture/profile-picture.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
-import {UploadPaymentComponent} from './home/payment/upload-payment/upload-payment.component';
-import {ViewPaymentComponent} from './home/payment/view-payment/view-payment.component';
 import {ComposerComponent} from './home/notification/composer/composer.component';
 import {RequestComponent} from './home/request/request.component';
 import {AddRequestComponent} from './home/request/add-request/add-request.component';
@@ -47,8 +49,6 @@ import {ModuleDetailComponent} from './home/course-module/module-detail/module-d
 import {UserGuard} from './_helpers/user.guard';
 import {ExamResultsComponent} from './home/results/exam-results/exam-results.component';
 import {AttendanceDialogComponent, ModuleAttendanceComponent} from './home/attendance/module-attendance/module-attendance.component';
-import {EditPaymentComponent} from './home/payment/edit-payment/edit-payment.component';
-import {PaymentDetailsComponent} from './home/payment/payment-details/payment-details.component';
 import {SubmitedRequestsComponent} from './home/request/submited-requests/submited-requests.component';
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 import {AcademicTimetableComponent} from './home/timetable/academic-timetable/academic-timetable.component';
@@ -57,6 +57,18 @@ import {DayMarkersService, EditService, FilterService, SelectionService, SortSer
 import {DeactivateGuard} from './_helpers/deactivate.guard';
 import { EditProfileComponent } from './home/profile/edit-profile/edit-profile.component';
 import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/change-recovery-email.component';
+import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.component';
+import { UploadPaymentComponent } from './home/payment/upload-payment/upload-payment.component';
+import {
+  ConfirmDeleteDialogComponent,
+  ConfirmUpdateDialogComponent,
+  ViewPaymentsHomeComponent
+} from './home/payment/view-payments-home/view-payments-home.component';
+import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
+import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-payments/view-payments.component';
+import {DatePipe} from '@angular/common';
+import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
+import { ViewRegistrationComponent } from './home/registration/view-registration/view-registration.component';
 
 
 @NgModule({
@@ -85,8 +97,6 @@ import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/chang
     ViewResultComponent,
     ProfileComponent,
     ProfilePictureComponent,
-    UploadPaymentComponent,
-    ViewPaymentComponent,
     ComposerComponent,
     RequestComponent,
     AddRequestComponent,
@@ -96,8 +106,6 @@ import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/chang
     ModuleDetailComponent,
     ExamResultsComponent,
     ModuleAttendanceComponent,
-    EditPaymentComponent,
-    PaymentDetailsComponent,
     SubmitedRequestsComponent,
     ResetPasswordComponent,
     AcademicTimetableComponent,
@@ -105,7 +113,19 @@ import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/chang
     NewAcademicYearDialogComponent,
     DetailedModuleAttendanceComponent,
     EditProfileComponent,
-    ChangeRecoveryEmailComponent
+    ChangeRecoveryEmailComponent,
+    EditPaymentComponent,
+    UploadPaymentComponent,
+    ViewPaymentsHomeComponent,
+    ConfirmUploadDialogComponent,
+    ConfirmUpdateDialogComponent,
+    ConfirmDeleteDialogComponent,
+    ViewPaymentDetailsComponent,
+    ViewPaymentsComponent,
+    NewRegistrationComponent,
+    ViewRegistrationComponent,
+    ConfirmDetailsDialogComponent,
+    ProfileDetailsDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -124,6 +144,7 @@ import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/chang
     DeactivateGuard,
     UserGuard,
     AuthenticationService,
+    DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
