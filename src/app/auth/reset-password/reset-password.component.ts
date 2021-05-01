@@ -77,7 +77,6 @@ export class ResetPasswordComponent implements OnInit {
       password: this.password.value,
       token: this.token
     };
-    console.log(data);
     this.authentication.resetPassword(data).subscribe(
       response => this.successful = true,
       error => this.error = error

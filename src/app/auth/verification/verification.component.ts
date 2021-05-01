@@ -107,9 +107,11 @@ export class VerificationComponent implements OnInit, AfterViewInit {
       password: this.password.value,
       token: this.token
     };
-    this.authentication.changePassword(data).subscribe(
+    this.authentication.changePasswordVerification(data).subscribe(
       response => {
         this.success = true;
+        this.wait = 5;
+        this.redirect();
       },
       error => {
         this.success = false;
@@ -123,6 +125,17 @@ export class VerificationComponent implements OnInit, AfterViewInit {
       this.wait -= 1;
       if (this.wait !== 0) {
         this.countDown();
+      }
+    }, 1000);
+  }
+
+  redirect(): void {
+    setTimeout(() => {
+      this.wait -= 1;
+      if (this.wait !== 0) {
+        this.redirect();
+      } else {
+        this.router.navigate(['/']);
       }
     }, 1000);
   }

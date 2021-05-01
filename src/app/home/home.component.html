@@ -24,7 +24,7 @@
 </mat-toolbar>
 
 <!--*ngIf="userData.openComposer"-->
-<div *ngIf="getRole !== 'student' && userData.openComposer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'" class="composer" >
+<div *ngIf="getRole !== 'Student' && userData.openComposer" [style.right]="!widthSidenav || notifications.opened ? '370px' : '20px'" class="composer" >
   <app-composer></app-composer>
 </div>
 
@@ -34,14 +34,14 @@
 
     <mat-selection-list [multiple]="false" class="accordion" id="accordionCourseModule" style="cursor: pointer">
 
-      <div *ngFor="let route of ROUTS">
+      <div *ngFor="let route of ROUTS[getRole]">
 
         <mat-list-option [routerLink]="['/' + route.route]" [selected]="activeRoute === route.component" [class.selected]="activeRoute === route.component">
           <mat-icon mat-list-icon>{{ route.icon }}</mat-icon>
           <div mat-line>{{ route.label }}</div>
         </mat-list-option>
 
-        <div [hidden]="getRole !== 'Admin' && route.route !== 'timetable'" class="list-group list-group-flush rounded-0 ml-4 sub-menu" [class.sub-menu-hidden]="activeRoute !== route.component" [style.height]="activeRoute === route.component ? (50 * route.children.length) + 'px' : 0">
+        <div class="list-group list-group-flush rounded-0 ml-4 sub-menu" [class.sub-menu-hidden]="activeRoute !== route.component" [style.height]="activeRoute === route.component ? (50 * route.children.length) + 'px' : 0">
           <a *ngFor="let child of route.children" [routerLink]="['/' + route.route + '/' + child.route]" [ngClass]="childRoute !== child.route ? ['list-group-item', 'list-group-item-action'] : ['list-group-item', 'list-group-item-action', 'active']">{{ child.label }}</a>
         </div>
 

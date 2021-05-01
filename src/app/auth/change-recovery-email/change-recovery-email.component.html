@@ -17,6 +17,10 @@
         Recovery email changed successfully. Redirecting to home page in {{ wait }}s.
       </div>
 
+      <div class="row mx-1 d-flex justify-content-end">
+        <button class="mb-3" mat-raised-button routerLink="/">Home Page</button>
+      </div>
+
       <div *ngIf="error" class="alert alert-danger my-3">
         {{ error }}
       </div>
@@ -29,7 +33,7 @@
 
   <ng-template #elseBlock>
 
-    <mat-card-content>
+    <mat-card-content class="pt-2">
 
       <mat-card-subtitle>
         In case you forget your password, we'll send an email to this email address that contains instructions to reset the password.

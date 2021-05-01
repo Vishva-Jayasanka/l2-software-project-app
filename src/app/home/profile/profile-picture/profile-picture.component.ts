@@ -40,7 +40,6 @@ export class ProfilePictureComponent implements OnInit {
         this.userData.changeProfilePicture(this.croppedImageBase64);
       },
       error => {
-        console.log(error);
         this.error = error;
       }
     ).add(() => this.savingData = false);

@@ -44,6 +44,7 @@ import {ViewPaymentDetailsComponent} from './home/payment/view-payments-home/vie
 import {ViewPaymentsComponent} from './home/payment/view-payments-home/view-payments/view-payments.component';
 import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import {NewRegistrationComponent} from './home/registration/new-registration/new-registration.component';
+import {PaymentHistoryComponent} from './home/payment/payment-history/payment-history.component';
 
 const routes: Routes = [
   {
@@ -179,6 +180,15 @@ const routes: Routes = [
         path: 'payment',
         component: PaymentComponent,
         children: [
+          {
+            path: '',
+            redirectTo: 'payment-history',
+            pathMatch: 'full'
+          },
+          {
+            path: 'payment-history',
+            component: PaymentHistoryComponent
+          },
           {
             path: 'view-payments-home',
             component: ViewPaymentsHomeComponent,

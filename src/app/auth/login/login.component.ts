@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
       },
       error => {
         this.error = error;
+        console.log(error);
       }
     ).add(
       () => this.progress = false

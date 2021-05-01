@@ -38,10 +38,6 @@ export class UserDataService {
     return this.http.post<any>(`${environment.apiUrl}update-user-data`, data);
   }
 
-  changePassword(data: object): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}change-password-current`, data);
-  }
-
   getStudentDetails(studentID: string): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-student-details`, {studentID});
   }

@@ -90,7 +90,7 @@ export class EditProfileComponent implements OnInit {
       fullName: ['A.K.V Jayasanka'],
       username: ['184061R'],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern(/^0[1-9]{9}$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^(0[1-9]{9})|(\+94[1-9]{9})$/)]],
       address: ['', [Validators.required, Validators.minLength(6)]]
     });
 
@@ -151,7 +151,7 @@ export class EditProfileComponent implements OnInit {
     this.success = false;
     this.passwordUpdateError = '';
     this.passwordUpdateProgress = true;
-    this.userData.changePassword({
+    this.authentication.changePassword({
       currentPassword: this.currentPassword.value,
       newPassword: this.password.value,
       confirmPassword: this.confirmPassword.value

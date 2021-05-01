@@ -217,7 +217,7 @@
           </div>
 
           <div class="col-12 mb-3">
-            <button class="mr-2" type="button" mat-raised-button (click)="changePassword()" [disabled]="editPasswordForm.invalid || passwordUpdateProgress">
+            <button class="mr-2" type="button" mat-raised-button (click)="changePassword()" color="primary" [disabled]="editPasswordForm.invalid || passwordUpdateProgress">
               <span *ngIf="passwordUpdateProgress" class="spinner-border spinner-border-sm"></span>
               Change Password
             </button>

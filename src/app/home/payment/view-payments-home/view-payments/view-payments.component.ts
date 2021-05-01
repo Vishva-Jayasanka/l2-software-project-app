@@ -84,14 +84,12 @@ export class ViewPaymentsComponent implements OnInit {
 
   applyFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
-    // this.dataSource.filter = this.filterValue.trim().toLowerCase();
   }
 
   ngOnInit(): void {
-    if (this.getRole !== 'Student'){
-      console.log('confirmedStudentPaymentDetails = ', this.confirmedStudentPaymentDetails);
+    if (this.getRole === 'Admin'){
       this.getData(this.confirmedStudentPaymentDetails.studentID);
-    } else if (this.getRole !== 'Admin'){
+    } else if (this.getRole === 'Student') {
       this.getStudentData();
     }
   }

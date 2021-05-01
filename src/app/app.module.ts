@@ -69,6 +69,7 @@ import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-pa
 import {DatePipe} from '@angular/common';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { ViewRegistrationComponent } from './home/registration/view-registration/view-registration.component';
+import { PaymentHistoryComponent } from './home/payment/payment-history/payment-history.component';
 
 
 @NgModule({
@@ -125,7 +126,8 @@ import { ViewRegistrationComponent } from './home/registration/view-registration
     NewRegistrationComponent,
     ViewRegistrationComponent,
     ConfirmDetailsDialogComponent,
-    ProfileDetailsDialogComponent
+    ProfileDetailsDialogComponent,
+    PaymentHistoryComponent
   ],
   imports: [
     BrowserModule,

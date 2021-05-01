@@ -159,6 +159,7 @@ export class AttendanceDialogComponent implements OnInit {
               status: session.status
             });
           }
+          console.log(this.data.attendance);
         }, error => {
           this.error = true;
         }

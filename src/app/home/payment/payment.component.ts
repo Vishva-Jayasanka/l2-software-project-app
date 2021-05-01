@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {DataService} from '../../_services/data.service';
 import {MatDialogRef} from '@angular/material/dialog';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -13,7 +14,9 @@ export class PaymentComponent implements OnInit {
   progress = false;
 
   constructor(
-    private authentication: AuthenticationService
+    private authentication: AuthenticationService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
   }
 
