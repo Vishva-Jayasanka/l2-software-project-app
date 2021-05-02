@@ -44,6 +44,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   studentIDNotFound = false;
   public show = false;
   public buttonName: any = 'Show';
+  defaultYear = new Date().getFullYear();
 
 
   error = '';

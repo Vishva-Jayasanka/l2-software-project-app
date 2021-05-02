@@ -1,10 +1,10 @@
-import {Component, HostListener, OnInit, Sanitizer} from '@angular/core';
-import {AuthenticationService} from '../_services/authentication.service';
-import {MatDialog} from '@angular/material/dialog';
-import {ProfilePictureComponent} from './profile/profile-picture/profile-picture.component';
-import {DataService} from '../_services/data.service';
-import {UserDataService} from '../_services/user-data.service';
-import {NavigationEnd, Router} from '@angular/router';
+import { Component, HostListener, OnInit, Sanitizer } from '@angular/core';
+import { AuthenticationService } from '../_services/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfilePictureComponent } from './profile/profile-picture/profile-picture.component';
+import { DataService } from '../_services/data.service';
+import { UserDataService } from '../_services/user-data.service';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -141,53 +141,61 @@ export class HomeComponent implements OnInit {
       route: 'course-modules',
       icon: 'grade',
       label: 'Course Modules',
-      children: []
+      children: [{
+        component: 'NewModuleComponent',
+        route: 'new-module',
+        label: 'Add New Module'
+      }, {
+        component: 'EnrollComponent',
+        route: 'enroll',
+        label: 'Enroll Students'
+      }]
     }, {
       component: 'ResultsComponent',
       route: 'results',
       icon: 'assessment',
       label: 'Exam Results',
-      children: []
+      children: [{
+        component: 'ViewResultComponent',
+        route: 'view-results',
+        label: 'View Results'
+      }]
     }, {
       component: 'AttendanceComponent',
       route: 'attendance',
       icon: 'assignment_turned_in',
       label: 'Attendance',
-      children: []
+      children: [{
+        component: 'ViewAttendance',
+        route: 'view-attendance',
+        label: 'View Attendance'
+      }]
     }, {
       component: 'TimetableComponent',
       route: 'timetable',
       icon: 'watch_later',
       label: 'Timetable',
-      children: [{
-        component: 'AcademicTimetableComponent',
-        route: 'academic-timetable',
-        label: 'Academic Timetable'
-      }, {
-        component: 'AcademicCalenderComponent',
-        route: 'academic-calender',
-        label: 'Academic Calender'
-      }]
+      children: []
     }, {
       component: 'PaymentComponent',
       route: 'payment',
       icon: 'monetization_on',
-      label: 'Payments',
+      label: 'Payment',
       children: [{
+        component: 'ViewPaymentViewPaymentsHomeComponentsHomeComponent',
+        route: 'view-payments-home',
+        label: 'View Payments '
+      },
+      {
         component: 'UploadPaymentComponent',
         route: 'upload-payment',
         label: 'Upload Payment'
-      }]
+      },]
     }, {
       component: 'RequestComponent',
       route: 'request',
       icon: 'description',
       label: 'Requests',
-      children: [{
-        component: 'AddRequestComponent',
-        route: 'add-request',
-        label: 'Add Request'
-      }]
     }],
     Teacher: [{
       component: 'CourseModuleComponent',

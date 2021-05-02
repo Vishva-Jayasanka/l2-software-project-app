@@ -35,7 +35,7 @@
 
               <mat-form-field class="col-4 px-1" appearance="outline" id="academicYear">
                 <mat-label>Academic Year</mat-label>
-                <mat-select id="action" formControlName="academicYear">
+                <mat-select id="action" formControlName="academicYear"  [(ngModel)]='defaultYear'>
                   <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
                 </mat-select>
               </mat-form-field>

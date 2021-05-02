@@ -70,7 +70,8 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   public buttonName: any = 'Show';
   public buttonNamePending = 'Show';
   courses: Course[] = COURSES;
-  years = YEARS;
+  years;
+  defaultYear = new Date().getFullYear();
   user;
 
   error = '';

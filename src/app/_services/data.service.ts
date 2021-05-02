@@ -115,7 +115,7 @@ export class DataService {
   }
 
   checkStudentID(studentID) {
-    return this.http.post<any>(`${environment.adminUrl}check-student-id`, {studentID});
+    return this.http.post<any>(`${environment.apiUrl}check-student-id`, {studentID});
   }
 
   getTimetable(): Observable<any> {
@@ -214,8 +214,11 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}delete-message`, {messageID});
   }
 
-  uploadPayment(paymentForm) {
-    return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm});
+  uploadPayment(paymentForm,role) {
+    if(role=='Admin')
+      return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm});
+    else if (role=='Student')
+      return this.http.post<any>(`${environment.studentUrl}upload-payment`, {paymentForm});
   }
 
   getPaymentList(data: any): Observable<any> {
@@ -231,7 +234,7 @@ export class DataService {
   }
 
   getStudentPaymentLists(): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-students-payment-details`, {});
+    return this.http.post<any>(`${environment.studentUrl}get-students-payment-details`, {});
   }
 
   deletePayment(data): Observable<any> {

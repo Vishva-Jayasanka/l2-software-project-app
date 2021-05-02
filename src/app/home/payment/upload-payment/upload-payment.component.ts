@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
@@ -40,7 +40,8 @@ export class UploadPaymentComponent implements OnInit {
     private data: DataService,
     private elementRef: ElementRef,
     private authentication: AuthenticationService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    // @Inject(MAT_DIALOG_DATA) public userData
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -72,6 +73,10 @@ export class UploadPaymentComponent implements OnInit {
         }),
       }
     );
+    if (this.getRole == 'Student') {
+      this.getUseDetails();
+      this.toggleProgress();
+    }
   }
 
 
@@ -80,7 +85,7 @@ export class UploadPaymentComponent implements OnInit {
     this.error = '';
     this.success = false;
     if (this.paymentForm.valid) {
-      this.data.uploadPayment(this.paymentForm.value).subscribe(
+      this.data.uploadPayment(this.paymentForm.value, this.getRole).subscribe(
         response => {
           if (response.status) {
             this.openDialog();
@@ -128,6 +133,11 @@ export class UploadPaymentComponent implements OnInit {
 
   get getRole() {
     return this.authentication.details.role;
+  }
+
+  getUseDetails() {
+    this.registrationNumber.setValue(this.authentication.details.username);
+    this.checkStudentID(this.authentication.details.username);
   }
 
   clickFileUpload() {
