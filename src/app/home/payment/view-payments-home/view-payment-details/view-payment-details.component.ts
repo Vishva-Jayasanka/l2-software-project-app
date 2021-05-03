@@ -77,8 +77,8 @@ export class ViewPaymentDetailsComponent implements OnInit {
           this.academicYear.setValue(this.dataSource.academicYear);
           this.slipNumber.setValue(this.dataSource.slipNo);
           this.amountPaid.setValue(this.dataSource.amount);
-          this.bankName.setValue(this.banks.find(bank => bank.bankName.trim() === this.data.bank.trim()).bankID);
-          this.paymentDate.setValue(this.data.paymentDate);
+          this.bankName.setValue(this.banks.find(bank => bank.bankName.trim() === this.dataSource.bank.trim()).bankID);
+          this.paymentDate.setValue(this.dataSource.paymentDate);
         }
       },
       error => this.error = error

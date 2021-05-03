@@ -27,7 +27,7 @@
 
               <mat-form-field class="col-8 px-1" appearance="outline" id="course-name">
                 <mat-label>Course Name</mat-label>
-                <mat-select formControlName="courseName">
+                <mat-select (selectionChange)="onChange()" formControlName="courseName">
                   <mat-option *ngFor="let course of courses" [value]="course.courseID">{{course.courseName}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="courseName.touched && courseName.errors?.required">This field is required</mat-error>
@@ -35,7 +35,7 @@
 
               <mat-form-field class="col-4 px-1" appearance="outline" id="academicYear">
                 <mat-label>Academic Year</mat-label>
-                <mat-select id="action" formControlName="academicYear"  [(ngModel)]='defaultYear'>
+                <mat-select (selectionChange)="onChange()" id="action" formControlName="academicYear"  [(ngModel)]='defaultYear'>
                   <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -43,19 +43,19 @@
             </div>
 
             <div class="row mx-2 mb-3">
-              <button mat-raised-button color="primary" (click)="getConfirmedPaymentsList()" type="button" class="px-1">Show</button>
+              <button mat-raised-button color="primary" (click)="toggleConfirmedPaymentsList()" type="button" class="px-1">{{buttonName}}</button>
             </div>
 
           </form>
 
           <div class="row mx-1 px-0">
 
-            <mat-form-field class="mx-2"  *ngIf="show">
+            <mat-form-field class="mx-2"  *ngIf="showConfimed">
               <mat-label>Filter</mat-label>
               <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
             </mat-form-field>
 
-            <table mat-table #TableOneSort [dataSource]="dataSourceConfirmed" multiTemplateDataRows class="mat-elevation-z8" *ngIf="show" >
+            <table mat-table #TableOneSort [dataSource]="dataSourceConfirmed" multiTemplateDataRows class="mat-elevation-z8" *ngIf="showConfimed" >
 
               <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayConfirmed">
                 <th mat-header-cell *matHeaderCellDef> {{column}} </th>
@@ -80,7 +80,7 @@
 
             </table>
 
-            <mat-paginator class="w-100" #TableOnePaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!show"></mat-paginator>
+            <mat-paginator class="w-100" #TableOnePaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!showConfimed"></mat-paginator>
 
           </div>
 
@@ -98,7 +98,7 @@
           <button mat-raised-button color="primary" (click)="getPendingPaymentsList()" class="mx-2" type="button"> View </button>
         </div>
 
-        <mat-form-field  *ngIf="view">
+        <mat-form-field  *ngIf="showPending">
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilterPending($event)" placeholder="Filter" #input>
         </mat-form-field>
@@ -128,7 +128,7 @@
 
         </table>
 
-        <mat-paginator #TableTwoPaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!view"></mat-paginator>
+        <mat-paginator #TableTwoPaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!showPending"></mat-paginator>
 
         </div>
 

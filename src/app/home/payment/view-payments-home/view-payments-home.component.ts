@@ -1,14 +1,12 @@
-import {OnInit, Component, ElementRef, ViewChild, AfterViewInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {YEARS} from '../../../_services/shared.service';
-import {DataService} from '../../../_services/data.service';
-import {MatTableDataSource} from '@angular/material/table';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {AuthenticationService} from 'src/app/_services/authentication.service';
-import {MatDialogRef} from '@angular/material/dialog';
-import {DataSource} from '@angular/cdk/collections';
+import { OnInit, Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataService } from '../../../_services/data.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 export interface Course {
   courseID: number;
@@ -16,8 +14,8 @@ export interface Course {
 }
 
 export const COURSES: Course[] = [
-  {courseID: 1, courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY'},
-  {courseID: 2, courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY'},
+  { courseID: 1, courseName: 'MSC/PG DIPLOMA IN INFORMATION TECHNOLOGY' },
+  { courseID: 2, courseName: 'MSC/PG DIPLOMA IN MULTIMEDIA TECHNOLOGY' },
 ];
 
 export interface PeriodicElement {
@@ -46,8 +44,8 @@ export interface PeriodicElementPending {
   styleUrls: ['./view-payments-home.component.css'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
@@ -65,8 +63,8 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   expandedElementPending: PeriodicElementPending | null;
   viewPaymentsForm: FormGroup;
   viewPaymentsProgress: boolean;
-  public show = false;
-  public view = false;
+  public showConfimed = false;
+  public showPending = false;
   public buttonName: any = 'Show';
   public buttonNamePending = 'Show';
   courses: Course[] = COURSES;
@@ -77,16 +75,15 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   error = '';
   success = false;
 
-  @ViewChild('TableOnePaginator', {static: true}) tableOnePaginator: MatPaginator;
-  @ViewChild('TableTwoPaginator', {static: true}) tableTwoPaginator: MatPaginator;
-  @ViewChild('TableOneSort', {static: true}) tableOneSort: MatSort;
-  @ViewChild('TableTwoSort', {static: true}) tableTwoSort: MatSort;
+  @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
+  @ViewChild('TableTwoPaginator', { static: true }) tableTwoPaginator: MatPaginator;
+  @ViewChild('TableOneSort', { static: true }) tableOneSort: MatSort;
+  @ViewChild('TableTwoSort', { static: true }) tableTwoSort: MatSort;
 
 
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef,
     private authentication: AuthenticationService,
   ) {
   }
@@ -119,16 +116,18 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.user = this.authentication.details;
   }
 
-  getConfirmedPaymentsList() {
-    this.show = true;
-    this.viewPaymentsProgress = true;
-    this.error = '';
-    this.success = false;
-    this.data.getPaymentList({
-      courseID: this.courseName.value,
-      academicYear: this.academicYear.value,
-      type: 'confirmed'
-    }).subscribe(response => {
+  toggleConfirmedPaymentsList() {
+    this.showConfimed = !this.showConfimed;
+    if (this.showConfimed) {
+      this.buttonName = 'Hide';
+      this.viewPaymentsProgress = true;
+      this.error = '';
+      this.success = false;
+      this.data.getPaymentList({
+        courseID: this.courseName.value,
+        academicYear: this.academicYear.value,
+        type: 'confirmed'
+      }).subscribe(response => {
         console.log(response);
         this.dataSourceConfirmed = new MatTableDataSource(response.results[0]);
         this.confirmedStudentList = response.results[0];
@@ -136,13 +135,18 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
         this.dataSourceConfirmed.filter = '';
         this.viewPaymentsProgress = false;
       },
-      error => console.log(error)
-    ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
+        error => console.log(error)
+      ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
+    }
+    else {
+      this.buttonName = 'Show';
+    }
+
   }
 
   togglePending() {
-    this.view = !this.view;
-    if (this.view) {
+    this.showPending = !this.showPending;
+    if (this.showPending) {
       this.buttonNamePending = 'Hide';
       this.getPendingPaymentsList();
     } else {
@@ -154,24 +158,31 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
   }
 
+  onChange() {
+    console.log('onchange');
+    this.showConfimed = false;
+    this.buttonName = 'Show';
+  }
+
+
   getPendingPaymentsList() {
     this.viewPaymentsProgress = true;
-    this.data.getPaymentList({type: 'pending'}
+    this.data.getPaymentList({ type: 'pending' }
     ).subscribe(response => {
-        this.dataSourcePending = new MatTableDataSource(response.results[0]);
-        this.filterValue = '';
-        this.dataSourcePending.filter = '';
-        this.viewPaymentsProgress = false;
-      },
+      this.dataSourcePending = new MatTableDataSource(response.results[0]);
+      this.filterValue = '';
+      this.dataSourcePending.filter = '';
+      this.viewPaymentsProgress = false;
+    },
       error => console.log(error)
     ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
   }
 
   ngAfterViewInit() {
-    this.dataSourceConfirmed.paginator = this.tableOnePaginator;
-    this.dataSourcePending.paginator = this.tableTwoPaginator;
-    this.dataSourceConfirmed.sort = this.tableOneSort;
-    this.dataSourcePending.sort = this.tableTwoSort;
+    // this.dataSourceConfirmed.paginator = this.tableOnePaginator;
+    // this.dataSourcePending.paginator = this.tableTwoPaginator;
+    // this.dataSourceConfirmed.sort = this.tableOneSort;
+    // this.dataSourcePending.sort = this.tableTwoSort;
   }
 
 
