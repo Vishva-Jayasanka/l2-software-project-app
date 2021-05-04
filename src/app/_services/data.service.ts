@@ -214,19 +214,30 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}delete-message`, {messageID});
   }
 
-  uploadPayment(paymentForm,role) {
-    if(role=='Admin')
+  uploadPayment(paymentForm, role) {
+    if (role === 'Admin') {
       return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm});
-    else if (role=='Student')
+    }
+    else if (role === 'Student') {
       return this.http.post<any>(`${environment.studentUrl}upload-payment`, {paymentForm});
+   }
   }
 
   getPaymentList(data: any): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
   }
 
+  getPrintList(data: any): Observable<any> {
+        return this.http.post<any>(`${environment.adminUrl}get-print-list`, data);
+  }
+
   getStudentPaymentDetails(slipNo): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {slipNo});
+  }
+
+  getStudentPaymentTot(studentID: any) {
+      console.log('service: getStudentPaymenTot, slipNo = ', studentID);
+      return this.http.post<any>(`${environment.adminUrl}get-student-payment-tot`, {studentID});
   }
 
   getStudentPaymentList(studentID: any): Observable<any> {
