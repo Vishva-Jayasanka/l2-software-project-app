@@ -18,6 +18,7 @@ export interface Request {
     reviewedBy: number;
     status: number;
     reason: string;
+    reviewer: string;
   }[];
   reasons: {
     reasonID: number;

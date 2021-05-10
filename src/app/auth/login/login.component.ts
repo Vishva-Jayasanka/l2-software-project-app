@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   error = '';
 
   timeout: boolean;
+  passwordVisible = false;
 
   constructor(
     private formBuilder: FormBuilder,

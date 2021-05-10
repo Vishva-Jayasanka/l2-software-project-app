@@ -3,15 +3,13 @@ import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/com
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {AuthenticationService} from '../_services/authentication.service';
 
 @Injectable()
 
 export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(
-    private router: Router,
-    private authentication: AuthenticationService
+    private router: Router
   ) {
   }
 
@@ -20,7 +18,8 @@ export class ErrorInterceptor implements HttpInterceptor {
       if (err.status === 0) {
         return throwError('Network connection failure');
       } else if (err.status === 440) {
-        this.authentication.logout();
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/auth/login', {timeout: true}]);
       }
       const error = err.error.message || err.statusText;
       return throwError(error);

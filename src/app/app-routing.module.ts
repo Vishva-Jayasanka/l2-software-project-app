@@ -45,6 +45,7 @@ import {ViewPaymentsComponent} from './home/payment/view-payments-home/view-paym
 import {ViewRegistrationComponent} from './home/registration/view-registration/view-registration.component';
 import {NewRegistrationComponent} from './home/registration/new-registration/new-registration.component';
 import {PaymentHistoryComponent} from './home/payment/payment-history/payment-history.component';
+import {NewRequestsComponent} from './home/request/new-requests/new-requests.component';
 
 const routes: Routes = [
   {
@@ -245,7 +246,7 @@ const routes: Routes = [
           },
           {
             path: '',
-            redirectTo: 'submitted-requests',
+            redirectTo: 'new-requests',
             pathMatch: 'full'
           },
           {
@@ -255,6 +256,10 @@ const routes: Routes = [
           {
             path: 'update-status',
             component: UpdateStatusComponent
+          },
+          {
+            path: 'new-requests',
+            component: NewRequestsComponent
           }
         ]
       },

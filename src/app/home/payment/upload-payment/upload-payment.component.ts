@@ -134,7 +134,6 @@ export class UploadPaymentComponent implements OnInit {
     document.getElementById('fileUpload').click();
   }
 
-
   toggleProgress() {
     this.uploadAPaymentProgress = true;
   }

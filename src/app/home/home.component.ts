@@ -109,7 +109,11 @@ export class HomeComponent implements OnInit {
       route: 'request',
       icon: 'description',
       label: 'Requests',
-      children: [{
+      children: [ {
+        component: 'NewRequestsComponent',
+        route: 'new-requests',
+        label: 'New Requests'
+      }, {
         component: 'AddRequestComponent',
         route: 'add-request',
         label: 'Add Request'

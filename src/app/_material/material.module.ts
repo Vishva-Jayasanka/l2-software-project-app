@@ -46,7 +46,6 @@ const Material = [
   MatDialogModule,
   MatTableModule,
   MatSortModule,
-  MatSortModule,
   MatChipsModule,
   MatTooltipModule,
   MatProgressSpinnerModule,

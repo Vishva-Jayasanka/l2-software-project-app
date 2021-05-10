@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpEvent} from '@angular/common/http';
 
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
@@ -143,7 +143,14 @@ export class DataService {
   }
 
   uploadRequest(requestForm: object): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}upload-request`, requestForm);
+    return this.http.post(`${environment.apiUrl}upload-request`, requestForm, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
+  getAllRequests(): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-all-requests`, {});
   }
 
   enrollStudent(enrollmentForm: object): Observable<any> {
@@ -163,7 +170,7 @@ export class DataService {
   }
 
   getRequestTypes(): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-request-types`, {});
+    return this.http.post<any>(`${environment.apiUrl}get-request-types`, {});
   }
 
   getRequestsBrief(studentID: string): Observable<any> {
@@ -171,7 +178,7 @@ export class DataService {
   }
 
   getRequestDetails(requestID: number): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-request-details`, {requestID});
+    return this.http.post<any>(`${environment.apiUrl}get-request-details`, {requestID});
   }
 
   updateRequestStatus(data: object): Observable<any> {
@@ -180,6 +187,10 @@ export class DataService {
 
   getRequests(): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}get-requests`, {});
+  }
+
+  deleteRequests(requestIDs: number[]): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}delete-requests`, {requestIDs});
   }
 
   getAcademicCalenders(): Observable<any> {

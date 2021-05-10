@@ -22,7 +22,13 @@
 
       <mat-form-field appearance="outline" class="input-field">
         <mat-label>Password</mat-label>
-        <input type="password" formControlName="password" matInput placeholder="Enter your password" />
+        <input [type]="passwordVisible ? 'text' : 'password'" formControlName="password" matInput placeholder="Enter your password" />
+        <button type="button" matSuffix mat-icon-button aria-label="View" (click)="passwordVisible = !passwordVisible">
+          <mat-icon *ngIf="passwordVisible; else passwordHidden">visibility_off</mat-icon>
+          <ng-template #passwordHidden>
+            <mat-icon>visibility</mat-icon>
+          </ng-template>
+        </button>
         <mat-error *ngIf='password.touched && password.invalid'>Please enter your password</mat-error>
       </mat-form-field>
 

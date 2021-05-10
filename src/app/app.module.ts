@@ -41,7 +41,7 @@ import {ProfilePictureComponent} from './home/profile/profile-picture/profile-pi
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {ComposerComponent} from './home/notification/composer/composer.component';
 import {RequestComponent} from './home/request/request.component';
-import {AddRequestComponent} from './home/request/add-request/add-request.component';
+import {AddRequestComponent, ImagePreviewDialogComponent} from './home/request/add-request/add-request.component';
 import {UpdateStatusComponent} from './home/request/update-status/update-status.component';
 import {EnrollComponent} from './home/course-module/enroll/enroll.component';
 import {NewModuleComponent} from './home/course-module/new-module/new-module.component';
@@ -70,6 +70,7 @@ import {DatePipe} from '@angular/common';
 import { NewRegistrationComponent } from './home/registration/new-registration/new-registration.component';
 import { ViewRegistrationComponent } from './home/registration/view-registration/view-registration.component';
 import { PaymentHistoryComponent } from './home/payment/payment-history/payment-history.component';
+import { NewRequestsComponent } from './home/request/new-requests/new-requests.component';
 
 
 @NgModule({
@@ -127,7 +128,9 @@ import { PaymentHistoryComponent } from './home/payment/payment-history/payment-
     ViewRegistrationComponent,
     ConfirmDetailsDialogComponent,
     ProfileDetailsDialogComponent,
-    PaymentHistoryComponent
+    PaymentHistoryComponent,
+    ImagePreviewDialogComponent,
+    NewRequestsComponent
   ],
   imports: [
     BrowserModule,
