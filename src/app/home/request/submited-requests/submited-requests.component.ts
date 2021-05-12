@@ -21,7 +21,6 @@ export class SubmitedRequestsComponent implements OnInit, AfterViewInit {
   requests: Request[];
   filter: FormControl = new FormControl('');
   requestID: number;
-  requestDeleted: boolean;
 
   constructor(
     private router: Router,
@@ -34,11 +33,10 @@ export class SubmitedRequestsComponent implements OnInit, AfterViewInit {
 
     this.route.params.subscribe(params => {
       this.requestID = params.requestID;
-      this.requestDeleted = params.requestDeleted;
     });
 
     if (this.getRole !== 'Student') {
-      router.navigate(['../update-status'], {relativeTo: this.route});
+      router.navigate(['../new-requests'], {relativeTo: this.route});
     }
   }
 
@@ -47,7 +45,6 @@ export class SubmitedRequestsComponent implements OnInit, AfterViewInit {
     this.data.getRequests().subscribe(
       response => {
         this.requests = response.requests;
-        console.log(this.requests);
         if (this.requestID) {
           setTimeout(() => {
             glow(this.elementRef, 'request' + this.requestID, 'purple');
@@ -63,9 +60,6 @@ export class SubmitedRequestsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.requestDeleted) {
-      this.snackBar.open('Request deleted', 'Close', {duration: 3000});
-    }
   }
 
   confirmDelete(requestID: number, index: number): void {

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {DataService} from '../../../_services/data.service';
@@ -12,7 +12,7 @@ import {FormControl} from '@angular/forms';
   templateUrl: './module-detail.component.html',
   styleUrls: ['./module-detail.component.css', '../course-module.component.css']
 })
-export class ModuleDetailComponent implements OnInit {
+export class ModuleDetailComponent implements OnInit, AfterViewInit {
 
   progress = false;
 
@@ -39,11 +39,14 @@ export class ModuleDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.progress = true;
+    this.getData();
+  }
+
+  ngAfterViewInit() {
     this.route.params.subscribe(params => {
       this.moduleCode = params.moduleCode;
     });
-    this.progress = true;
-    this.getData();
   }
 
   getData() {

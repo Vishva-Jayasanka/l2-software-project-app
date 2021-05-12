@@ -6,10 +6,8 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MaterialModule} from './_material/material.module';
 import {EjsModule} from './_ejs/ejs.module';
 import {AppRoutingModule} from './app-routing.module';
-
 import {AuthenticationService} from './_services/authentication.service';
 import {AuthenticationGuard} from './_helpers/authentication.guard';
-
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
 import {LoginComponent} from './auth/login/login.component';
@@ -27,11 +25,7 @@ import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-at
 import {DetailedModuleAttendanceComponent, ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {ConfirmUploadDialogComponent, PaymentComponent} from './home/payment/payment.component';
 import {NotificationComponent} from './home/notification/notification.component';
-import {
-  ConfirmDetailsDialogComponent,
-  ProfileDetailsDialogComponent,
-  RegistrationComponent
-} from './home/registration/registration.component';
+import {ConfirmDetailsDialogComponent, ProfileDetailsDialogComponent, RegistrationComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
 import {EditResultComponent} from './home/results/edit-result/edit-result.component';
@@ -59,11 +53,7 @@ import { EditProfileComponent } from './home/profile/edit-profile/edit-profile.c
 import { ChangeRecoveryEmailComponent } from './auth/change-recovery-email/change-recovery-email.component';
 import { EditPaymentComponent } from './home/payment/edit-payment/edit-payment.component';
 import { UploadPaymentComponent } from './home/payment/upload-payment/upload-payment.component';
-import {
-  ConfirmDeleteDialogComponent,
-  ConfirmUpdateDialogComponent,
-  ViewPaymentsHomeComponent
-} from './home/payment/view-payments-home/view-payments-home.component';
+import {ConfirmDeleteDialogComponent, ConfirmUpdateDialogComponent, ViewPaymentsHomeComponent} from './home/payment/view-payments-home/view-payments-home.component';
 import { ViewPaymentDetailsComponent } from './home/payment/view-payments-home/view-payment-details/view-payment-details.component';
 import { ViewPaymentsComponent } from './home/payment/view-payments-home/view-payments/view-payments.component';
 import {DatePipe} from '@angular/common';
@@ -71,6 +61,8 @@ import { NewRegistrationComponent } from './home/registration/new-registration/n
 import { ViewRegistrationComponent } from './home/registration/view-registration/view-registration.component';
 import { PaymentHistoryComponent } from './home/payment/payment-history/payment-history.component';
 import { NewRequestsComponent } from './home/request/new-requests/new-requests.component';
+
+import { HashLocationStrategy, LocationStrategy} from '@angular/common';
 
 
 @NgModule({
@@ -160,7 +152,10 @@ import { NewRequestsComponent } from './home/request/new-requests/new-requests.c
       useClass: ErrorInterceptor,
       multi: true
     },
-
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    },
     EditService,
     FilterService,
     SortService,

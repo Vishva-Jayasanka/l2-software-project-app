@@ -92,3 +92,8 @@ button:focus {
   overflow: hidden;
 }
 
+.active {
+  background-color: rgb(100, 60, 180);
+  border: none;
+}
+

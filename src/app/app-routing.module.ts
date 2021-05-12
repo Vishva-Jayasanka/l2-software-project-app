@@ -101,16 +101,7 @@ const routes: Routes = [
             pathMatch: 'full'
           },
           {
-            path: 'module-details/:moduleCode',
-            component: ModuleDetailComponent
-          },
-          {
             path: 'new-module',
-            component: NewModuleComponent,
-            canActivate: [UserGuard]
-          },
-          {
-            path: 'new-module/:moduleCode',
             component: NewModuleComponent,
             canActivate: [UserGuard]
           },
@@ -246,7 +237,7 @@ const routes: Routes = [
           },
           {
             path: '',
-            redirectTo: 'new-requests',
+            redirectTo: 'submitted-requests',
             pathMatch: 'full'
           },
           {

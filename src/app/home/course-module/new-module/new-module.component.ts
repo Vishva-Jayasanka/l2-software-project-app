@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {YEARS} from '../../../_services/shared.service';
@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   templateUrl: './new-module.component.html',
   styleUrls: ['./new-module.component.css']
 })
-export class NewModuleComponent implements OnInit {
+export class NewModuleComponent implements OnInit, AfterViewInit {
 
   selectable = true;
   removable = true;
@@ -70,10 +70,10 @@ export class NewModuleComponent implements OnInit {
       newLectureHours: this.formBuilder.array([])
     });
 
-    this.route.params.subscribe(params => {
-      this.getModule(params.moduleCode);
-    });
+  }
 
+  ngAfterViewInit() {
+    this.route.params.subscribe(params => this.getModule(params.moduleCode));
   }
 
   getModule(moduleCode: string | null) {

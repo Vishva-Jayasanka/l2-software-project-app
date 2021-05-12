@@ -119,9 +119,9 @@
                     </div>
                   </li>
 
-                  <li class="list-group-item list-group-item-action d-flex result" *ngIf="getRole === 'Admin'">
-                    <button [routerLink]="['../new-module', module.moduleCode]" mat-raised-button color="primary" style="margin-right: 10px">Edit</button>
-                    <button mat-button color="warn" (click)="openDeleteModuleDialog(module)">Delete</button>
+                  <li class="mx-0 px-1 list-group-item list-group-item-action d-flex" *ngIf="getRole === 'Admin'">
+                    <button [routerLink]="['../new-module', {moduleCode: module.moduleCode}]" mat-raised-button color="primary" class="mx-1">Edit</button>
+                    <button mat-button color="warn" (click)="openDeleteModuleDialog(module)" class="mx-1">Delete</button>
                   </li>
 
                 </ul>

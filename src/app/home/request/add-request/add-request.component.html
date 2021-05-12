@@ -1,3 +1,9 @@
+<div class="row" class="mx-0 mb-2 px-1" *ngIf="getRole === 'Admin'">
+  <button mat-button color="primary" routerLink="../new-requests">
+    <mat-icon>arrow_back_ios_new</mat-icon> Request List
+  </button>
+</div>
+
 <div class="card">
 
   <div class="card-header" id="top">
@@ -125,11 +131,17 @@
             </button>
             <img class="image" [attr.src]="document" [attr.alt]="'Image ' + (i + 1)" />
           </div>
-          <p class="text-secondary mt-3" *ngIf="documents.length === 0">No items selected</p>
+          <p class="text-secondary mt-3" *ngIf="documents.length === 0 && !documentDownloadError && documentDownloadProgress === 0">No items selected.</p>
+          <p class="text-danger mt-3" *ngIf="documentDownloadError">Could not load documents. {{ documentDownloadError }} <u><a style="cursor: pointer" (click)="downloadDocuments()">Try again</a></u></p>
+          <p class="text-secondary mt-3" *ngIf="documentDownloadProgress > 0 && documentDownloadProgress < 100">Please wait while the documents are being downloaded...</p>
         </div>
 
-        <div class="row mx-0 px-0" *ngIf="imageUploadProgress">
-          <mat-progress-bar style="width: calc(100% + 30px); margin: 0 -15px 0 -15px" mode="determinate" [value]="imageUploadProgress"></mat-progress-bar>
+        <div class="row mx-0 px-0" *ngIf="documentDownloadProgress > 0 && documentDownloadProgress < 100">
+          <mat-progress-bar style="width: calc(100% + 30px); margin: 0 -15px 0 -15px" mode="determinate" [value]="documentDownloadProgress"></mat-progress-bar>
+        </div>
+
+        <div class="row mx-0 px-0" *ngIf="documentUploadProgress">
+          <mat-progress-bar style="width: calc(100% + 30px); margin: 0 -15px 0 -15px" mode="determinate" [value]="documentUploadProgress"></mat-progress-bar>
         </div>
 
         <div class="row mt-3">
@@ -142,7 +154,7 @@
         <div class="alert alert-danger col-12">Error saving data. {{ error }}.</div>
       </div>
 
-      <div *ngIf="imageUploadProgress > 0 && imageUploadProgress < 100" class="row px-1 mt-3 mb-0">
+      <div *ngIf="documentUploadProgress > 0 && documentUploadProgress < 100" class="row px-1 mt-3 mb-0">
         <div class="alert alert-secondary col-12">Please wait while images are being uploaded...</div>
       </div>
 
@@ -156,7 +168,7 @@
           Reset
         </button>
 
-        <button *ngIf="requestID" (click)="deleteRequest()" [disabled]="deleteRequestProgress" type="button" mat-button color="warn" class="ml-1">
+        <button *ngIf="requestID" (click)="deleteRequest()" [disabled]="deleteRequestProgress || uploadRequestProgress" type="button" mat-button color="warn" class="ml-1">
           <span *ngIf="deleteRequestProgress" class="spinner-border spinner-border-sm"></span> Delete
         </button>
 

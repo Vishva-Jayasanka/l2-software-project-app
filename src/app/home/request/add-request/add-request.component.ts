@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
@@ -8,6 +8,8 @@ import {UserDataService} from '../../../_services/user-data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpEventType} from '@angular/common/http';
+import {glow, scrollToFirstInvalidElement} from '../../../_services/shared.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface RequestType {
   requestTypeID: number;
@@ -19,11 +21,16 @@ export interface RequestType {
   templateUrl: './add-request.component.html',
   styleUrls: ['./add-request.component.css', '../request.component.css']
 })
-export class AddRequestComponent implements OnInit {
+export class AddRequestComponent implements OnInit, AfterViewInit {
 
   uploadRequestProgress = false;
   deleteRequestProgress = false;
-  imageUploadProgress: number;
+
+  documentUploadProgress = 0;
+
+  documentDownloadProgress = 0;
+  documentDownloadError = '';
+
   studentIDNotFound = false;
   success = false;
 
@@ -50,7 +57,8 @@ export class AddRequestComponent implements OnInit {
     private userData: UserDataService,
     private authentication: AuthenticationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
 
     this.searchSubscription = this.term$.pipe(
@@ -88,36 +96,65 @@ export class AddRequestComponent implements OnInit {
       error => this.error = error
     );
 
-    this.uploadRequestProgress = true;
-    if (this.requestID) {
-      this.data.getRequestDetails(this.requestID).subscribe(
-        response => {
-          this.submissionDate.setValue(response.request[0].date);
-          this.remarks.setValue(response.request[0].remarks);
-          this.request.setValue(response.requestsMade.map(type => type.requestTypeID));
-          this.reasons.controls = [];
-          for (const reason of response.reasons) {
-            this.reasons.push(new FormControl(reason.reason, [Validators.required]));
-          }
-        }, error => this.error = error
-      ).add(() => this.uploadRequestProgress = false);
-    } else {
-      this.uploadRequestProgress = false;
-    }
-
     if (this.getRole === 'Student') {
       this.userData.getUserDetails().subscribe(
         response => {
           this.studentName.setValue(response.details.fullName);
           this.course.setValue(response.details.courseName);
           this.studentID.setValue(response.details.username);
-          this.uploadRequestProgress = false;
         }, error => {
           this.error = error;
         }
-      );
+      ).add(() => this.uploadRequestProgress = false);
     }
 
+  }
+
+  ngAfterViewInit() {
+    console.log(this.requestID);
+    this.uploadRequestProgress = true;
+    if (this.requestID) {
+      this.data.getRequestDetails(this.requestID).subscribe(
+        response => {
+          if (response.request) {
+            this.submissionDate.setValue(response.request[0].date);
+            this.remarks.setValue(response.request[0].remarks);
+            this.request.setValue(response.requestsMade.map(type => type.requestTypeID));
+            this.reasons.controls = [];
+            for (const reason of response.reasons) {
+              this.reasons.push(new FormControl(reason.reason, [Validators.required]));
+            }
+            this.downloadDocuments();
+          } else {
+            this.requestID = null;
+          }
+        }, error => this.error = error
+      ).add(() => this.uploadRequestProgress = false);
+    } else {
+      this.uploadRequestProgress = false;
+    }
+  }
+
+  downloadDocuments() {
+    this.documentDownloadProgress = 0;
+    this.error = '';
+    this.documents = [];
+    const data = {
+      requestID: this.requestID,
+      studentID: this.studentID.value
+    };
+    this.data.getRequestDocuments(data).subscribe(
+      response => {
+        if (response.type === HttpEventType.DownloadProgress) {
+          this.documentDownloadProgress = Math.round(100 * response.loaded / response.total);
+        } else if (response.type === HttpEventType.Response) {
+          if (response.body.status) {
+            this.documents = response.body.documents.map(document => 'data:image/png;base64,' + document);
+          }
+        }
+      },
+      error => this.documentDownloadError = error
+    ).add(() => this.documentDownloadProgress = 0);
   }
 
   checkStudentID(studentID: string): void {
@@ -149,10 +186,10 @@ export class AddRequestComponent implements OnInit {
     this.error = '';
     this.success = false;
     this.uploadRequestProgress = true;
-    this.imageUploadProgress = 0;
-    // if (this.requestForm.valid) {
-    //   // if (this.documents.length > 0) {
-    //   if (confirm('Are you sure you want to submit this form?')) {
+    this.documentUploadProgress = 0;
+    if (this.requestForm.valid) {
+      if (this.documents.length > 0) {
+      if (confirm('Are you sure you want to submit this form?')) {
     const data = this.requestForm.value;
     data.requestID = this.requestID;
     data.new = !this.requestID;
@@ -160,16 +197,15 @@ export class AddRequestComponent implements OnInit {
     this.data.uploadRequest(data).subscribe(
       response => {
         if (response.type === HttpEventType.DownloadProgress || response.type === HttpEventType.UploadProgress) {
-          this.imageUploadProgress = Math.round(100 * response.loaded / response.total);
+          this.documentUploadProgress = Math.round(100 * response.loaded / response.total);
         } else if (response.type === HttpEventType.Response) {
           this.success = true;
           if (this.getRole === 'Admin') {
-            this.reasons.controls = [new FormControl('', [Validators.required])];
-            this.requestFormRef.resetForm();
-            this.imageUploadProgress = 0;
-            this.documents = [];
+            this.router.navigate(['../new-requests', {activeTab: 0}], {relativeTo: this.route}).then(
+              () => this.snackBar.open('Request uploaded successfully', 'Close', {duration: 3000})
+            );
           } else {
-            this.router.navigate(['../submitted-requests', {requestID: response.requestID}], {relativeTo: this.route});
+            this.router.navigate(['../submitted-requests', {requestID: response.body.requestID}], {relativeTo: this.route});
           }
         }
       },
@@ -177,32 +213,34 @@ export class AddRequestComponent implements OnInit {
         this.error = error;
       }
     ).add(() => this.uploadRequestProgress = false);
-    // }
-    // } else {
-    //   this.uploadRequestProgress = false;
-    //   glow(this.elementRef, 'documents', 'rgb(255,0,0)');
-    //   setTimeout(() => {
-    //     this.elementRef.nativeElement.querySelector('#documents').scrollIntoView({behavior: 'smooth'});
-    //   }, 2000);
-    // }
-    // } else {
-    //   this.uploadRequestProgress = false;
-    //   scrollToFirstInvalidElement(this.elementRef);
-    // }
+    }
+    } else {
+      this.uploadRequestProgress = false;
+      glow(this.elementRef, 'documents', 'rgb(255,0,0)');
+      setTimeout(() => {
+        this.elementRef.nativeElement.querySelector('#documents').scrollIntoView({behavior: 'smooth'});
+      }, 2000);
+    }
+    } else {
+      this.uploadRequestProgress = false;
+      scrollToFirstInvalidElement(this.elementRef);
+    }
   }
 
   resetForm(): void {
     this.elementRef.nativeElement.querySelector('#top').scrollIntoView({behavior: 'smooth'});
+    this.requestID = null;
     this.ngOnInit();
   }
 
   onFileUpload(event: any): void {
+    this.error = '';
     const uploadedImages = event.target.files;
     if (uploadedImages.length !== 0) {
       for (const image of uploadedImages) {
         const mimeType = image.type;
         if (mimeType.match(/image\/*/) == null) {
-          console.log('File type not supported');
+          this.error = 'File type not supported';
         } else {
           const reader = new FileReader();
           reader.readAsDataURL(image);
@@ -211,8 +249,6 @@ export class AddRequestComponent implements OnInit {
           };
         }
       }
-    } else {
-      console.log('No files uploaded');
     }
   }
 
@@ -221,9 +257,13 @@ export class AddRequestComponent implements OnInit {
       this.data.deleteRequests([this.requestID]).subscribe(
         response => {
           if (this.getRole === 'Admin') {
-            this.router.navigate(['../submitted-requests', {requestDeleted: true}], {relativeTo: this.route});
+            this.router.navigate(['../submitted-requests'], {relativeTo: this.route}).then(
+              () => this.snackBar.open('Request deleted successfully', 'Close', {duration: 3000})
+            );
           } else {
-            this.router.navigate(['../submitted-requests', {requestDeleted: true}], {relativeTo: this.route});
+            this.router.navigate(['../submitted-requests'], {relativeTo: this.route}).then(
+              () => this.snackBar.open('Request deleted successfully', 'Close', {duration: 3000})
+            );
           }
         },
         error => {

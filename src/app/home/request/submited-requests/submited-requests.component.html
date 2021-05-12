@@ -30,14 +30,14 @@
               <ul class="list-group">
 
                 <li class="list-group-item list-group-item-action d-flex justify-content-start">
-                  <div style="width: 15%">REQUESTS</div>
+                  <div style="width: 20%">REQUESTS</div>
                   <ul style="padding-left: 15px">
                     <li *ngFor="let requestType of request.requestTypes" style="font-weight: 550; list-style-type: disc">{{ requestType.request }}<br/></li>
                   </ul>
                 </li>
 
                 <li class="list-group-item list-group-item-action d-flex justify-content-start">
-                  <div style="width: 15%">REASONS</div>
+                  <div style="width: 20%">REASONS</div>
                   <div>
                     <ul style="padding-left: 15px">
                       <li *ngFor="let reason of request.reasons" style="font-weight: 550; list-style-type: disc">{{ reason.reason }}</li>
@@ -46,12 +46,12 @@
                 </li>
 
                 <li class="list-group-item list-group-item-action d-flex justify-content-start">
-                  <div style="width: 15%">REMARKS</div>
+                  <div style="width: 20%">REMARKS</div>
                   <div><p style="font-weight: 550">{{ request.remarks }}</p></div>
                 </li>
 
                 <li class="list-group-item list-group-item-action d-flex justify-content-start">
-                  <div style="width: 15%">PROGRESS</div>
+                  <div style="width: 20%">PROGRESS</div>
                   <div *ngIf="request.reviewedBy.length !== 0; else elseBlock" style="width: 100%; margin: -20px -21px -13px 0">
                     <mat-list>
                       <mat-list-item *ngFor="let step of request.reviewedBy"
@@ -72,6 +72,15 @@
                   <ng-template #elseBlock>
                     <div><p class="text-secondary"><i>No progress for this request yet.</i></p></div>
                   </ng-template>
+                </li>
+
+                <li class="list-group-item list-group-item-action d-flex justify-content-start">
+                  <div style="width: 20%">FINAL DECISION</div>
+                  <div>
+                    <p *ngIf="request.finalDecision === 0" style="font-weight: 550" class="text-danger">Denied</p>
+                    <p *ngIf="request.finalDecision === 1" style="font-weight: 550" class="text-success">Approved</p>
+                    <p *ngIf="request.finalDecision === 2" style="font-weight: 550" class="text-secondary">Pending</p>
+                  </div>
                 </li>
 
               </ul>

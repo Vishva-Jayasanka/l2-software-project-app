@@ -11,7 +11,9 @@
       <mat-progress-bar [hidden]="!editModuleProgress" mode="query"></mat-progress-bar>
     </div>
 
-    <mat-spinner style="margin: 100px auto auto" [hidden]="!progress"></mat-spinner>
+    <div class="row">
+      <mat-spinner class="mx-auto my-4" [hidden]="!progress"></mat-spinner>
+    </div>
 
     <form [formGroup]="editModuleForm" [hidden]="progress">
 
@@ -273,16 +275,16 @@
 
       </div>
 
-      <div class="row px-1 mt-3 mb-0 ">
-        <div *ngIf="savingError" class="alert alert-danger col">Error saving data. {{ savingError }}.</div>
+      <div *ngIf="savingError" class="row px-1 mt-3 mb-0 ">
+        <div class="alert alert-danger col">Error saving data. {{ savingError }}.</div>
       </div>
 
-      <div class="d-flex flex-row-reverse mt-0">
-        <button mat-raised-button color="primary" (click)="submitForm()">
+      <div class="row mx-0 px-1 mb-3 d-flex flex-row-reverse mt-0">
+        <button mat-raised-button color="primary" class="mx-1" (click)="submitForm()">
           <span *ngIf="editModuleProgress" class="spinner-border spinner-border-sm mr-1"></span>
           Save
         </button>
-        <button mat-flat-button>Cancel</button>
+        <button mat-flat-button routerLink="../module-details" class="mx-1">Cancel</button>
       </div>
 
     </form>

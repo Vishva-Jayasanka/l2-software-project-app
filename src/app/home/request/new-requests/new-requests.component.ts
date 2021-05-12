@@ -7,6 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormControl} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {MatTabChangeEvent} from '@angular/material/tabs';
+import {ActivatedRoute, Router} from '@angular/router';
 
 export interface Request {
   requestID: number;
@@ -38,12 +39,16 @@ export class NewRequestsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('tabGroup') tabGroup;
+  selectedIndex = 0;
 
   constructor(
     private snackBar: MatSnackBar,
-    private data: DataService
+    private data: DataService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.filter.valueChanges.subscribe(value => this.applyFilter(value));
+    this.route.params.subscribe(params => this.selectedIndex = params.activeTab ? +params.activeTab : 0);
   }
 
   ngOnInit(): void {
@@ -51,7 +56,7 @@ export class NewRequestsComponent implements OnInit, AfterViewInit {
     this.data.getAllRequests().subscribe(
       response => {
         this.allRequests = response.requests;
-        this.filterData(0);
+        this.filterData(this.selectedIndex);
         this.ngAfterViewInit();
       }, error => {
         this.error = error;
@@ -64,8 +69,8 @@ export class NewRequestsComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  viewDetails(index: number): void {
-    console.log(index);
+  viewDetails(request: Request): void {
+    this.router.navigate(['../update-status', {studentID: request.submittedBy, requestID: request.requestID}], {relativeTo: this.route});
   }
 
   filterData(value: number | MatTabChangeEvent): void {
@@ -76,12 +81,16 @@ export class NewRequestsComponent implements OnInit, AfterViewInit {
 
   deleteItems(): void {
     if (confirm('Are you sure, you want to delete selected items?')) {
-      this.selection.selected.forEach(item => {
-        this.allRequests.splice(this.allRequests.indexOf(item), 1);
-        this.filterData(this.tabGroup.selectedIndex);
-        this.selection.clear();
-      });
-      this.snackBar.open('Items deleted successfully', 'Close', {duration: 3000});
+      this.data.deleteRequests(this.selection.selected.map(request => request.requestID)).subscribe(
+        response => {
+          this.selection.selected.forEach(item => {
+            this.allRequests.splice(this.allRequests.indexOf(item), 1);
+            this.filterData(this.tabGroup.selectedIndex);
+            this.selection.clear();
+          });
+          this.snackBar.open('Items deleted successfully', 'Close', {duration: 3000});
+        }, error => this.snackBar.open('Error deleting selected items', 'Close', {duration: 3000})
+      );
     }
   }
 

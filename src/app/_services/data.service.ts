@@ -193,6 +193,13 @@ export class DataService {
     return this.http.post<any>(`${environment.apiUrl}delete-requests`, {requestIDs});
   }
 
+  getRequestDocuments(data: {}): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-request-documents`, data, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
   getAcademicCalenders(): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}get-academic-calenders`, {});
   }
