@@ -4,6 +4,7 @@ import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {DataService} from '../../../_services/data.service';
 import {MatDialogRef} from '@angular/material/dialog';
 import {UserDataService} from '../../../_services/user-data.service';
+import {HttpEventType} from '@angular/common/http';
 
 @Component({
   selector: 'app-profile-picture',
@@ -16,6 +17,8 @@ export class ProfilePictureComponent implements OnInit {
 
   imageChangedEvent: any = '';
   croppedImageBase64: any = '';
+
+  imageUploadProgress = 0;
 
   error = '';
 
@@ -36,13 +39,20 @@ export class ProfilePictureComponent implements OnInit {
     const formData = new FormData();
     this.data.uploadProfilePicture(this.croppedImageBase64).subscribe(
       response => {
-        this.dialogRef.close(false);
-        this.userData.changeProfilePicture(this.croppedImageBase64);
+        if (response.type === HttpEventType.UploadProgress) {
+          this.imageUploadProgress = Math.round(100 * response.loaded / response.total);
+        } else if (response.type === HttpEventType.Response) {
+          this.dialogRef.close(false);
+          this.userData.changeProfilePicture(this.croppedImageBase64);
+        }
       },
       error => {
         this.error = error;
       }
-    ).add(() => this.savingData = false);
+    ).add(() => {
+      this.savingData = false;
+      this.imageUploadProgress = 0;
+    });
   }
 
   clickFileUpload() {

@@ -103,7 +103,10 @@ export class DataService {
   }
 
   uploadProfilePicture(profilePicture) {
-    return this.http.post<any>(`${environment.apiUrl}upload-profile-picture`, {profilePicture});
+    return this.http.post<any>(`${environment.apiUrl}upload-profile-picture`, {profilePicture}, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
   getProfilePicture() {
