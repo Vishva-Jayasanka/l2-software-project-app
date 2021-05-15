@@ -47,6 +47,23 @@ export class ViewPaymentsComponent implements OnInit {
     this.viewPaymentProgress = false;
   }
 
+getTot(studentId: string){
+  if (studentId) {
+  this.data.getStudentPaymentTot(studentId).subscribe(
+    response => {
+      if (response.status) {
+        console.log('tot');
+      } else {
+        this.viewPaymentProgress = true;
+      }
+    },
+    error => this.error = error
+  ).add(() => this.viewPaymentProgress = false);
+} else {
+  this.viewPaymentProgress = false;
+}
+}
+
 
   getData(studentId: string) {
     if (studentId) {
@@ -72,6 +89,7 @@ export class ViewPaymentsComponent implements OnInit {
   ngOnInit(): void {
     if (this.getRole === 'Admin' && this.confirmedStudentPaymentDetails) {
       this.getData(this.confirmedStudentPaymentDetails.studentID);
+      this.getTot(this.confirmedStudentPaymentDetails.studentID);
     } else if (this.getRole === 'Student') {
       this.getStudentData();
     }

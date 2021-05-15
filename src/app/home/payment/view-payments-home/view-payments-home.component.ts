@@ -37,6 +37,25 @@ export interface PeriodicElementPending {
   courseName: string;
 }
 
+export interface PeriodicElementprint {
+  studentID: string;
+  title: string;
+  name: string;
+  regFee: number;
+  slipNumber: number;
+  date: string;
+  paymentAmount: number;
+}
+const ELEMENT_DATA: PeriodicElementprint[] = [
+  {slipNumber: 1, studentID: '184183R', title: 'Mr', name: 'Hydrogen', regFee: 6500, date: '2021-04-12', paymentAmount: 56000},
+  {slipNumber: 2, studentID: '184183R', title: 'Mr', name: 'Helium', regFee: 6500, date: '2021-04-12',  paymentAmount: 100000},
+  {slipNumber: 3, studentID: '184183R', title: 'Mr', name: 'Lithium', regFee: 6500, date: '2021-04-12', paymentAmount: 150000},
+  {slipNumber: 4, studentID: '184183R', title: 'Mr', name: 'Beryllium', regFee: 6500, date: '2021-04-12', paymentAmount: 50000},
+  {slipNumber: 5, studentID: '184183R', title: 'Mr', name: 'Boron', regFee: 6500, date: '2021-04-12', paymentAmount: 450000},
+  {slipNumber: 6, studentID: '184183R', title: 'Mr', name: 'Carbon', regFee: 6500, date: '2021-04-12', paymentAmount: 300000},
+  {slipNumber: 7, studentID: '184183R', title: 'Mr', name: 'Nitrogen', regFee: 6500, date: '2021-04-12', paymentAmount: 100000},
+];
+
 
 @Component({
   selector: 'app-view-payments-home',
@@ -56,17 +75,24 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   confirmedStudentList = new MatTableDataSource([]);
   columnsToDisplayConfirmed = ['studentID', 'title', 'fullName', 'totalPayment', 'courseName'];
   expandedElementConfirmed: PeriodicElement | null;
+  displayedColumnsprint = ['studentID', 'title', 'name', 'regFee', 'slipNumber', 'date', 'paymentAmount', 'slipNumber', 'date', 'paymentAmount', 'star'];
+  dataSource;
   filterValue = '';
   filterValuePending = '';
   dataSourcePending;
-  columnsToDisplayPending = ['position', 'studentID', 'title', 'fullName', 'amount', 'courseName'];
+  columnsToDisplayPending = ['studentID', 'title', 'fullName', 'amount', 'courseName'];
   expandedElementPending: PeriodicElementPending | null;
   viewPaymentsForm: FormGroup;
   viewPaymentsProgress: boolean;
+  public show = false;
+  public view = false;
+  public shows = false;
+  public buttonNameprint: any = 'print';
+  public buttonNamePending = 'Show';
   public showConfimed = false;
   public showPending = false;
   public buttonName: any = 'Show';
-  public buttonNamePending = 'Show';
+
   courses: Course[] = COURSES;
   years;
   defaultYear = new Date().getFullYear();
@@ -158,13 +184,6 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
   }
 
-  onChange() {
-    console.log('onchange');
-    this.showConfimed = false;
-    this.buttonName = 'Show';
-  }
-
-
   getPendingPaymentsList() {
     this.viewPaymentsProgress = true;
     this.data.getPaymentList({ type: 'pending' }
@@ -176,6 +195,37 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     },
       error => console.log(error)
     ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
+  }
+
+  onChange(){
+        console.log('onchange');
+        this.showConfimed = false;
+        this.buttonName = 'Show';
+  }
+
+  togglePrint() {
+        this.shows = !this.shows;
+        if (this.shows) {
+            this.buttonNameprint = 'print';
+            this.getPrint();
+          }
+        else {
+            this.buttonNameprint = 'Sw';
+          }
+  }
+
+  getPrint(){
+        this.viewPaymentsProgress = true;
+        this.data.getPrintList({
+           courseID: this.courseName.value,
+           academicYear: this.academicYear.value,
+            type: 'confirmed'
+         }).subscribe(response => {
+               this.dataSource = new MatTableDataSource(response.results[0]);
+               this.viewPaymentsProgress = false;
+            },
+          error => console.log(error)
+      ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
   }
 
   ngAfterViewInit() {
@@ -222,7 +272,6 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   get amount() {
     return this.viewPaymentsForm.get('amount');
   }
-
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
