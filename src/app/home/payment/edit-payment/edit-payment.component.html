@@ -60,7 +60,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="mt-3" style="margin-right: -20px; margin-left: -20px">
-          <app-view-payment-details [position]="dataSource.indexOf(item)" [data]="item" (deleteSelectedPayment)="deleteSelectedPayment($event)"></app-view-payment-details>
+          <app-view-payment-details [edit]="true" [position]="dataSource.indexOf(item)" [data]="item" (deleteSelectedPayment)="deleteSelectedPayment($event)"></app-view-payment-details>
         </div>
       </mat-expansion-panel>
     </div>

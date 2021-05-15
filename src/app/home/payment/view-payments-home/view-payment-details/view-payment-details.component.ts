@@ -19,6 +19,7 @@ export interface Bank {
 export class ViewPaymentDetailsComponent implements OnInit {
 
   @Input() data: any;
+  @Input() edit: any;
   @Input() position: number;
   @Output() deleteSelectedPayment = new EventEmitter<any>();
 
