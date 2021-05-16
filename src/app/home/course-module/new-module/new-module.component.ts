@@ -7,6 +7,7 @@ import {DataService} from '../../../_services/data.service';
 import {debounceTime, map, startWith, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {DAYS_OF_WEEK, ModuleData, Teacher} from '../course-module.component';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-module',
@@ -17,7 +18,6 @@ export class NewModuleComponent implements OnInit, AfterViewInit {
 
   selectable = true;
   removable = true;
-  progress = false;
   editModuleProgress = false;
   moduleExists = false;
 
@@ -44,7 +44,8 @@ export class NewModuleComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private elementRef: ElementRef,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
@@ -58,10 +59,10 @@ export class NewModuleComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.progress = true;
+    this.editModuleProgress = true;
     this.data = {moduleCode: '', moduleName: '', description: '', credits: 0, teachers: [], lectureHours: [], new: true};
     this.editModuleForm = this.formBuilder.group({
-      moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{4}/)]],
+      moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: ['', [Validators.required, Validators.minLength(6)]],
       description: ['', [Validators.required, Validators.minLength(6)]],
       credits: ['', [Validators.required, Validators.pattern(/^(([1-9])|([0-9]\.[1-9]))$/)]],
@@ -116,7 +117,7 @@ export class NewModuleComponent implements OnInit, AfterViewInit {
         error => this.error = error
       ).add(() => {
         this.editModuleProgress = false;
-        this.progress = false;
+        this.editModuleProgress = false;
       });
     });
   }
@@ -202,7 +203,11 @@ export class NewModuleComponent implements OnInit, AfterViewInit {
               new: this.data.new
             }).subscribe(
               () => {
-                this.router.navigate(['course-modules/module-details', {moduleCode: this.moduleCode.value}]);
+                this.router.navigate(['../module-details', {moduleCode: this.moduleCode.value}], {relativeTo: this.route})
+                  .then(() => this.snackBar.open(
+                    `Module successfully ${this.data.new ? 'created' : 'updated'}.`,
+                    'Close',
+                    {duration: 3000}));
               },
               error => this.savingError = error
             ).add(() => this.editModuleProgress = false);
@@ -227,12 +232,6 @@ export class NewModuleComponent implements OnInit, AfterViewInit {
   scrollToFirstInvalidControl() {
     const firstInvalidControl: HTMLElement = this.elementRef.nativeElement.querySelector('form .ng-invalid');
     firstInvalidControl.scrollIntoView({behavior: 'smooth'});
-  }
-
-  checkbox() {
-    if (this.disabled.value) {
-      this.teacher.setErrors(null);
-    }
   }
 
   get moduleCode() {

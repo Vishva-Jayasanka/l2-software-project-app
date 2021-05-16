@@ -35,6 +35,10 @@ export class HomeComponent implements OnInit {
         component: 'EnrollComponent',
         route: 'enroll',
         label: 'Enroll Students'
+      }, {
+        component: 'ViewEnrollmentComponent',
+        route: 'view-enrollments',
+        label: 'View Enrollments'
       }]
     }, {
       component: 'ResultsComponent',

@@ -60,10 +60,14 @@ export class ModuleAttendanceComponent implements OnInit {
       if (this.moduleCode) {
         setTimeout(() => {
           try {
-            const element = this.elementRef.nativeElement.querySelector('#' + this.moduleCode);
+            const element = this.elementRef.nativeElement.querySelector(`[id^='${this.moduleCode}']`);
             if (element) {
-              this.elementRef.nativeElement.querySelector('#' + this.moduleCode).scrollIntoView({behavior: 'smooth'});
-              glow(this.elementRef, this.moduleCode, 'purple');
+              element.scrollIntoView({behavior: 'smooth'});
+              element.style.boxShadow = '0 0 0 2px purple';
+              setTimeout(
+                () => element.style.boxShadow = '0 0 0 2px white',
+                2000
+              );
             } else {
               this.snackBar.open(`No Attendance Details Available for ${this.moduleCode}`, 'Close', {duration: 4000});
             }
@@ -114,8 +118,7 @@ export class ModuleAttendanceComponent implements OnInit {
       moduleCode,
       moduleName,
       type,
-      batch,
-      attendance: [{}]
+      batch
     };
     this.dialog.open(AttendanceDialogComponent, {
       width: '500px',
@@ -149,22 +152,21 @@ export class AttendanceDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.data.attendance.length <= 0) {
+    if (!this.data.attendance) {
       this.progress = true;
       this.dataService.getDetailedAttendance(this.data.moduleCode, this.data.type, this.data.batch).subscribe(
         response => {
+          this.data.attendance = [];
           for (const session of response) {
             this.data.attendance.push({
               date: session.date,
               status: session.status
             });
           }
-          console.log(this.data.attendance);
         }, error => {
           this.error = true;
         }
       ).add(() => this.progress = false);
-      this.data.attendance.shift();
     }
   }
 

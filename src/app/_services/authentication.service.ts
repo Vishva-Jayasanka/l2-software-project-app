@@ -30,7 +30,6 @@ export class AuthenticationService {
   login(userCredentials) {
     return this.http.post<any>(`${environment.auth}login`, userCredentials).pipe(map(user => {
       const currentUser: CurrentUser = user;
-      console.log(currentUser);
       if (currentUser && currentUser.token) {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
       }

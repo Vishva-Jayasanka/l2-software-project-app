@@ -41,7 +41,7 @@
 </div>
 
 <div class="row mx-0">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 100%">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100">
 
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef style="width: 65px">
@@ -77,25 +77,29 @@
       <td mat-cell *matCellDef="let request"> {{request.requests}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="dateSubmitted" style="width: 85px">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Submitted Date </th>
+    <ng-container matColumnDef="dateSubmitted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 85px"> Submitted Date </th>
       <td mat-cell *matCellDef="let request"> {{request.date | date: 'MMM dd, yyyy'}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="details" style="width: 65px">
-      <th mat-header-cell *matHeaderCellDef>Details</th>
-      <td mat-cell *matCellDef="let request; let i = index"><button mat-icon-button color="primary" (click)="viewDetails(request)"><mat-icon>menu</mat-icon></button></td>
+    <ng-container matColumnDef="details">
+      <th mat-header-cell *matHeaderCellDef style="width: 65px">Details</th>
+      <td mat-cell *matCellDef="let request; let i = index">
+        <button mat-icon-button color="primary" (click)="viewDetails(request)">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="loading">
       <td mat-footer-cell *matFooterCellDef colspan="6" style="height: 200px">
-        <mat-spinner class="my-auto mx-auto"></mat-spinner>
+        <mat-spinner class="m-auto"></mat-spinner>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="noData">
       <td mat-footer-cell *matFooterCellDef colspan="6">
-        <span style="color: brown"><i>No data found.</i></span>
+        <span class="text-secondary"><i>No data found.</i></span>
       </td>
     </ng-container>
 

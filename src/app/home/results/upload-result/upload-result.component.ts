@@ -164,12 +164,13 @@ export class UploadResultComponent implements OnInit {
       } else {
         isValid = false;
       }
+      console.log(isValid);
       if (isValid) {
         this.resultsFile.sort((a, b) => a.index > b.index ? 1 : -1);
         glow(this.elementRef, 'upload_preview', 'rgb(100, 60, 180)');
       } else {
         this.resultsFile = [];
-        glow(this.elementRef, 'upload_result', 'red');
+        glow(this.elementRef, 'upload_preview', 'red');
       }
       this.fileError = !isValid;
     };

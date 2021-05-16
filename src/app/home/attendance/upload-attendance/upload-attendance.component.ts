@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit} from '@angular/core';
 import {LectureHour} from '../../course-module/course-module.component';
 import {Session} from '../attendance.component';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
 import {AuthenticationService} from '../../../_services/authentication.service';
 import * as XLSX from 'xlsx';
@@ -15,9 +15,9 @@ import {glow} from '../../../_services/shared.service';
   templateUrl: './upload-attendance.component.html',
   styleUrls: ['./upload-attendance.component.css', '../attendance.component.css']
 })
-export class UploadAttendanceComponent implements OnInit {
+export class UploadAttendanceComponent implements OnInit, AfterViewInit {
 
-  YEARS = [2016, 2017, 2018, 2019, 2020];
+  academicYears = [2016, 2017, 2018, 2019, 2020];
 
   lectureHours: LectureHour[] = [];
   sessions: Session[] = [];
@@ -43,6 +43,7 @@ export class UploadAttendanceComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private data: DataService,
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
@@ -59,6 +60,7 @@ export class UploadAttendanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.uploadAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [''],
@@ -68,6 +70,24 @@ export class UploadAttendanceComponent implements OnInit {
       session: [{value: '', disabled: true}, [Validators.required]],
       date: [{value: '', disabled: true}, [Validators.required]],
       time: [{value: '', disabled: true}, [Validators.required]]
+    });
+
+    this.uploadAttendanceProgress = true;
+    this.data.getAcademicYears().subscribe(
+      response => {
+        console.log(response);
+        this.academicYears = response.academicYears;
+      },
+      error => this.error = error
+    ).add(() => this.uploadAttendanceProgress = false);
+  }
+
+  ngAfterViewInit() {
+    this.route.params.subscribe(params => {
+      if (params.moduleCode) {
+        this.moduleCode.setValue(params.moduleCode);
+        this.getLectureHours(params.moduleCode);
+      }
     });
   }
 

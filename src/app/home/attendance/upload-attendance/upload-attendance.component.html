@@ -50,7 +50,7 @@
         <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Batch</mat-label>
           <mat-select (selectionChange)="getSessions()" id="batch" formControlName="batch">
-            <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
+            <mat-option *ngFor="let year of academicYears" [value]="year">{{ year }}</mat-option>
           </mat-select>
           <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
         </mat-form-field>

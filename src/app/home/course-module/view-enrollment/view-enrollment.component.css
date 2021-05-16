@@ -7,14 +7,11 @@ tr.enrollment-details-row {
 }
 
 tr.enrollment-row:not(.example-expanded-row):hover {
-  background: rgb(196, 145, 145);
+  background: whitesmoke;
 }
 
 tr.enrollment-row:not(.example-expanded-row):active {
-  background: rgb(196, 145, 145);
-}
-.example-expanded-row{
-  background: rgb(196, 145, 145);
+  background: #efefef;
 }
 
 .enrollment-row td {
@@ -35,8 +32,14 @@ tr.enrollment-row:not(.example-expanded-row):active {
   height: 104px;
 }
 
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
 .example-element-description {
-  padding: 5px;
+  padding: 16px;
 }
 
 .example-element-description-attribution {

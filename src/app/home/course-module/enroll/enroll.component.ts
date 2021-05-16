@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild, Inject, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild, Inject, OnInit, AfterViewInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
@@ -9,6 +9,8 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {scrollToFirstInvalidElement, YEARS} from '../../../_services/shared.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ActivatedRoute, Router} from '@angular/router';
 
 export interface Student {
   studentID: string;
@@ -26,7 +28,7 @@ export interface Module {
   templateUrl: './enroll.component.html',
   styleUrls: ['./enroll.component.css', '../course-module.component.css']
 })
-export class EnrollComponent implements OnInit {
+export class EnrollComponent implements OnInit, AfterViewInit {
 
   enrollProgress = false;
   studentIDNotFound = false;
@@ -45,6 +47,9 @@ export class EnrollComponent implements OnInit {
   modules: Module[] = [];
   allModules: Module[] = [];
 
+  new = true;
+  enrollmentID: number;
+
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   @ViewChild('formRef') formRef;
@@ -52,7 +57,10 @@ export class EnrollComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
 
     this.searchSubscription = this.term$.pipe(
@@ -87,12 +95,29 @@ export class EnrollComponent implements OnInit {
 
     this.enrollProgress = true;
     this.data.getModules().subscribe(
-      response => this.allModules = response.modules.map(module => {
-        return {
-          moduleCode: module.moduleCode,
-          moduleName: module.moduleName
-        };
-      }),
+      response => {
+        this.allModules = response.modules.map(module => {
+          return {
+            moduleCode: module.moduleCode,
+            moduleName: module.moduleName
+          };
+        });
+        console.log(true);
+        this.route.params.subscribe(params => {
+          if (params.studentID && params.semester && params.academicYear) {
+            this.enrollProgress = true;
+            this.enrollmentID = params.enrollmentID;
+            this.studentID.setValue(params.studentID);
+            this.checkStudentID(params.studentID);
+            this.semester.setValue(parseInt(params.semester, 10));
+            this.academicYear.setValue(params.academicYear);
+            for (const moduleCode of params.modules.split(/,/)) {
+              this.modules.push(this.allModules.find(value => value.moduleCode === moduleCode));
+            }
+            this.new = false;
+          }
+        });
+      },
       error => this.error = error
     ).add(() => this.enrollProgress = false);
 
@@ -103,6 +128,9 @@ export class EnrollComponent implements OnInit {
       error => this.error = error
     );
 
+  }
+
+  ngAfterViewInit() {
   }
 
   add(event: MatChipInputEvent): void {
@@ -131,7 +159,11 @@ export class EnrollComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.modules.push(this.allModules.find(module => module.moduleCode === event.option.value));
+    if (!this.modules.find(module => module.moduleCode === event.option.value)) {
+      this.modules.push(this.allModules.find(module => module.moduleCode === event.option.value));
+    } else {
+      this.snackBar.open('Module already added', 'Close', {duration: 2000});
+    }
     this.fruitInput.nativeElement.value = '';
     this.inputModule.setValue(null);
   }
@@ -167,6 +199,8 @@ export class EnrollComponent implements OnInit {
 
   resetForm(): void {
     this.formRef.resetForm();
+    this.new = true;
+    this.enrollmentID  = null;
     setTimeout(() => this.enrollProgress = false, 200);
     this.modules = [];
   }
@@ -179,12 +213,14 @@ export class EnrollComponent implements OnInit {
         if (confirm('Are you sure you want to submit the form?')) {
           this.enrollProgress = true;
           const request = this.enrollmentForm.value;
+          request.enrollmentID = this.enrollmentID ? this.enrollmentID : 0;
           request.modules = this.modules;
+          request.new = this.new;
           this.data.enrollStudent(request).subscribe(
             response => {
-              this.modules = [];
-              this.success = true;
-              this.resetForm();
+              this.router.navigate(['../view-enrollments'], {relativeTo: this.route}).then(
+                () => this.snackBar.open(`Enrollment ${this.new ? 'added' : 'updated'} successfully`, 'Close', {duration: 3000})
+              );
             }, error => this.error = error
           ).add(() => this.enrollProgress = false);
         }

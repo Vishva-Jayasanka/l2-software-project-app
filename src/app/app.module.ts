@@ -24,7 +24,7 @@ import {UploadAttendanceComponent} from './home/attendance/upload-attendance/upl
 import {EditAttendanceComponent} from './home/attendance/edit-attendance/edit-attendance.component';
 import {DetailedModuleAttendanceComponent, ViewAttendanceComponent} from './home/attendance/view-attendance/view-attendance.component';
 import {ConfirmUploadDialogComponent, PaymentComponent} from './home/payment/payment.component';
-import {NotificationComponent} from './home/notification/notification.component';
+import {NotificationComponent, NotificationDialogComponent} from './home/notification/notification.component';
 import {ConfirmDetailsDialogComponent, ProfileDetailsDialogComponent, RegistrationComponent} from './home/registration/registration.component';
 import {ResultsComponent} from './home/results/results.component';
 import {UploadResultComponent} from './home/results/upload-result/upload-result.component';
@@ -63,6 +63,7 @@ import { PaymentHistoryComponent } from './home/payment/payment-history/payment-
 import { NewRequestsComponent } from './home/request/new-requests/new-requests.component';
 
 import { HashLocationStrategy, LocationStrategy} from '@angular/common';
+import { ViewEnrollmentComponent } from './home/course-module/view-enrollment/view-enrollment.component';
 
 
 @NgModule({
@@ -122,7 +123,9 @@ import { HashLocationStrategy, LocationStrategy} from '@angular/common';
     ProfileDetailsDialogComponent,
     PaymentHistoryComponent,
     ImagePreviewDialogComponent,
-    NewRequestsComponent
+    NewRequestsComponent,
+    NotificationDialogComponent,
+    ViewEnrollmentComponent
   ],
   imports: [
     BrowserModule,

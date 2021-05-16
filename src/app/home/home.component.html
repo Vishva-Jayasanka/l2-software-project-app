@@ -51,7 +51,7 @@
 
   </mat-sidenav>
 
-  <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthSidenav" class="notification-bar">
+  <mat-sidenav #notifications position="end" [mode]="widthNotification ? 'over' : 'side'" [opened]="!widthSidenav && !widthNotification" class="notification-bar">
     <app-notification (newNotifications)="newNotifications = $event"></app-notification>
   </mat-sidenav>
 

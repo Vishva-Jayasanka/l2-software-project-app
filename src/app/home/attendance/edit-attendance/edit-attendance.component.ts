@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {DataService} from '../../../_services/data.service';
@@ -22,7 +22,7 @@ export interface ModifiedAttendance {
 })
 export class EditAttendanceComponent implements OnInit, OnDestroy {
 
-  YEARS = [2016, 2017, 2018, 2019, 2020];
+  academicYears = [2016, 2017, 2018, 2019, 2020];
 
   lectureHours = [];
   attendance = [];
@@ -62,6 +62,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.editAttendanceForm = this.formBuilder.group({
       moduleCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [],
@@ -69,6 +70,13 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
       batch: [{value: '', disabled: true}, [Validators.required]],
       session: [{value: '', disabled: true}, [Validators.required]]
     });
+
+    this.editAttendanceProgress = true;
+    this.data.getAcademicYears().subscribe(
+      response => this.academicYears = response.academicYears,
+        error => this.error = error
+    ).add(() => this.editAttendanceProgress = false);
+
   }
 
   ngOnDestroy() {
@@ -128,6 +136,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   }
 
   getSession() {
+    this.error = '';
     this.editAttendanceProgress = true;
     this.session.disable();
     this.data.getSessions(this.lectureHour.value, this.batch.value).subscribe(
@@ -148,6 +157,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   }
 
   getAttendance() {
+    this.error = '';
     this.successfullySaved = false;
     let res = true;
     if (this.updated && this.attendance.length !== 0) {
@@ -210,6 +220,7 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
   }
 
   saveChanges() {
+    this.error = '';
     this.editAttendanceProgress = true;
     this.buttonProgress = true;
     if (confirm('Are you sure you wand to save changes')) {
@@ -227,13 +238,22 @@ export class EditAttendanceComponent implements OnInit, OnDestroy {
           this.updated = false;
           glow(this.elementRef, 'attendance_preview', 'rgb(100, 60, 180)');
         },
-        error => this.error = error
+        error => {
+          glow(this.elementRef, 'attendance_preview', 'red');
+          this.error = error;
+        }
       ).add(() => {
-        glow(this.elementRef, 'attendance_preview', 'red');
         this.editAttendanceProgress = false;
         this.buttonProgress = false;
       });
     }
+  }
+
+  resetForm(): void {
+    this.elementRef.nativeElement.querySelector('#top').scrollIntoView({behavior: 'smooth'});
+    this.attendance = [];
+    this.filteredAttendance = [];
+    this.ngOnInit();
   }
 
   toggleProgress() {

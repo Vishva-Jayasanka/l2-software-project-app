@@ -17,7 +17,7 @@ export interface DetailedAttendance {
   moduleName: string;
   type: string;
   batch: number;
-  attendance: [{}];
+  attendance?: {}[];
 }
 
 export interface Session {

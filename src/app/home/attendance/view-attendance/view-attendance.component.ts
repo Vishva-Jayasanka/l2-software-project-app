@@ -271,9 +271,11 @@ export class DetailedModuleAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('this.data');
   }
 
   onNoClick() {
+    console.log('close');
     this.dialogRef.close();
   }
 

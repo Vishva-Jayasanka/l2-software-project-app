@@ -5,7 +5,7 @@
     <h1 *ngIf="getRole === 'Student'" class="mat-h2">{{ courseName }}</h1>
 
     <div class="d-flex flex-row-reverse">
-      <mat-form-field>
+      <mat-form-field class="col-4">
         <mat-label>Filter</mat-label>
         <input type="search" matInput [formControl]="filter">
         <button mat-button *ngIf="filter.value" matSuffix mat-icon-button aria-labelledby="Clear" (click)="filter.setValue('')">
@@ -119,12 +119,13 @@
                     </div>
                   </li>
 
-                  <li class="mx-0 px-1 list-group-item list-group-item-action d-flex" *ngIf="getRole === 'Admin'">
-                    <button [routerLink]="['../new-module', {moduleCode: module.moduleCode}]" mat-raised-button color="primary" class="mx-1">Edit</button>
-                    <button mat-button color="warn" (click)="openDeleteModuleDialog(module)" class="mx-1">Delete</button>
-                  </li>
-
                 </ul>
+
+                <mat-divider></mat-divider>
+
+                <div class="row mx-0 d-flex justify-content-end" *ngIf="getRole === 'Admin'">
+                  <button [routerLink]="['../new-module', {moduleCode: module.moduleCode}]" mat-stroked-button color="primary" class="mx-2 my-2">Edit</button>
+                </div>
 
               </div>
             </div>

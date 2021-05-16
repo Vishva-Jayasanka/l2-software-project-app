@@ -114,10 +114,10 @@ export class EditResultComponent implements OnInit, OnDestroy {
         if (response.status) {
           const res = confirm('No previously uploaded results found for this module and academic year. Do you want to upload results?');
           if (res) {
-            this.router.navigate(['home/results/upload-results', {
+            this.router.navigate(['../upload-results', {
               moduleCode: this.moduleCode.value,
               academicYear: this.academicYear.value
-            }]);
+            }], {relativeTo: this.route});
           }
         } else {
           this.resultsFound = true;

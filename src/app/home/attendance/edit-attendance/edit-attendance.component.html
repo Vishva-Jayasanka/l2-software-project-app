@@ -50,7 +50,7 @@
         <mat-form-field appearance="outline" class="col-4 mx-0 px-1">
           <mat-label>Batch</mat-label>
           <mat-select (selectionChange)="getSession()" id="batch" formControlName="batch">
-            <mat-option *ngFor="let year of YEARS" [value]="year">{{ year }}</mat-option>
+            <mat-option *ngFor="let year of academicYears" [value]="year">{{ year }}</mat-option>
           </mat-select>
           <mat-error *ngIf="batch.touched && batch.errors?.required">This field is required</mat-error>
         </mat-form-field>
@@ -72,12 +72,12 @@
         </button>
       </div>
 
-      <div class="row px-1">
-        <div *ngIf="!lectureHoursFound" class="alert alert-warning col">No lecture hours found for this module!</div>
+      <div *ngIf="!lectureHoursFound" class="row px-1">
+        <div class="alert alert-warning col">No lecture hours found for this module!</div>
       </div>
 
-      <div class="row px-1">
-        <div *ngIf="!sessionsFound" class="alert alert-warning col">No sessions found for this lecture hour!</div>
+      <div *ngIf="!sessionsFound" class="row px-1">
+        <div class="alert alert-warning col">No sessions found for this lecture hour!</div>
       </div>
 
       <div id="attendance_preview" style="margin: 15px -10px 0 -10px">
@@ -128,23 +128,27 @@
 
         </ng-template>
 
+        <div class="row mx-1 my-2 d-flex justify-content-end" style="overflow: hidden">
+          <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" class="mx-1">Reset Changes</button>
+        </div>
+
       </div>
 
-      <div class="row px-1 mt-2 mb-0">
-        <div *ngIf="successfullySaved" class="alert alert-success col">Attendance saved successfully!</div>
+      <div *ngIf="successfullySaved" class="row px-1 mt-2 mb-0">
+        <div class="alert alert-success col">Attendance saved successfully!</div>
       </div>
 
-      <div class="row px-1 mt-2 mb-0">
-        <div *ngIf="error" class="alert alert-warning col">{{ error }}</div>
+      <div *ngIf="error" class="row px-1 mt-2 mb-0">
+        <div class="alert alert-warning col">{{ error }}</div>
       </div>
 
-      <div class="d-flex flex-row-reverse my-0">
-        <button [disabled]="!updated" (click)="resetAttendance()" mat-flat-button type="button" class="mx-1">Reset
-        </button>
-        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button"
-                class="mx-1">
+      <div class="d-flex flex-row-reverse my-3 mx-0">
+        <button [disabled]="!updated" (click)="saveChanges()" mat-raised-button color="primary" type="button" class="ml-1">
           <span *ngIf="buttonProgress" class="spinner-border spinner-border-sm mr-1"></span>
           Save
+        </button>
+        <button mat-button color="worn" (click)="resetForm()">
+          Reset
         </button>
       </div>
 

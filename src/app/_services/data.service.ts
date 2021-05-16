@@ -267,4 +267,12 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}get-registered-users`, data);
   }
 
+  getEnrollments(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-enrollments`, data);
+  }
+
+  deleteEnrollments(enrollmentIDs: number[]): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}delete-enrollments`, {enrollmentIDs});
+  }
+
 }

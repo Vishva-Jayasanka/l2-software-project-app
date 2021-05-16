@@ -1,3 +1,7 @@
+<div class="row mx-0 mb-2">
+  <button mat-button color="primary" routerLink="../view-enrollments"><mat-icon>arrow_back_ios</mat-icon> View Enrollments</button>
+</div>
+
 <div class="card">
 
   <div class="card-header">
@@ -36,10 +40,6 @@
 
       </div>
 
-      <div class="row px-1">
-        <div *ngIf="studentIDNotFound" class="alert alert-warning col">No student found with this ID</div>
-      </div>
-
       <div class="row mb-2">
 
         <mat-form-field class="col-md-12 mx-0 px-1" appearance="outline">
@@ -49,11 +49,15 @@
 
       </div>
 
+      <div *ngIf="studentIDNotFound" class="row px-1">
+        <div class="alert alert-warning col">No student found with this ID</div>
+      </div>
+
       <div class="row mb-2">
 
         <mat-form-field class="col-md-6 mx-0 px-1" appearance="outline">
           <mat-label>Semester</mat-label>
-          <mat-select formControlName="semester">
+          <mat-select formControlName="semester" [disabled]="!new">
             <mat-option [value]="1">Level 1 Semester 1</mat-option>
             <mat-option [value]="2">Level 1 Semester 2</mat-option>
             <mat-option [value]="3">Level 2 Semester 1</mat-option>
@@ -64,7 +68,7 @@
 
         <mat-form-field class="col-md-6 mx-0 px-1" appearance="outline">
           <mat-label>Academic Year</mat-label>
-          <mat-select formControlName="academicYear">
+          <mat-select formControlName="academicYear" [disabled]="!new">
             <mat-option *ngFor="let year of academicYears" [value]="year">{{ year }}</mat-option>
           </mat-select>
           <mat-error *ngIf="academicYear.touched && academicYear.errors?.required">This field is required</mat-error>
@@ -116,8 +120,10 @@
       </div>
 
       <div class="d-flex flex-row-reverse my-0">
-        <button (click)="submitForm()" type="submit" mat-raised-button color="primary" class="mx-1" [disabled]="enrollmentForm.invalid">Enroll</button>
-        <button (click)="resetForm()" type="button" mat-flat-button class="mx-1">Reset</button>
+        <button (click)="submitForm()" type="submit" mat-raised-button color="primary" class="mx-1" [disabled]="enrollmentForm.invalid">
+          <span *ngIf="enrollProgress" class="spinner-border spinner-border-sm"></span> {{ new ? 'Enroll' : 'Update' }}
+        </button>
+        <button [disabled]="enrollProgress" (click)="resetForm()" type="button" mat-flat-button class="mx-1">Reset</button>
       </div>
 
     </form>

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
 
 export interface Message {
@@ -13,33 +13,52 @@ export interface MessageBody {
   subject: string;
   message: string;
   timeSent: Date;
+  timeStamp?: number;
   received: boolean;
-  sent: boolean;
+  status: 'sent' | 'sending' | 'failed';
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService {
+export class NotificationService implements OnDestroy {
 
   url = 'ws://localhost:3000';
   webSocket: WebSocket;
   messages: MessageBody[] = [];
   token;
 
-  connected = true;
+  connected = false;
+  timeout = 0;
+  retries = 0;
+  displayConnectedMessage = 0;
+
+  timeoutIDCountdown: number;
+  timeoutIDReconnect: number;
 
   constructor(
     private authentication: AuthenticationService
   ) {
-    this.token = this.authentication.token;
   }
 
   public openWebSocket() {
 
+    clearTimeout(this.timeoutIDCountdown);
+    clearTimeout(this.timeoutIDReconnect)
+    this.connected = false;
+    this.timeout = 0;
+    this.displayConnectedMessage = 0;
     this.webSocket = new WebSocket('ws://localhost:3000', this.token);
+
     this.webSocket.onopen = (event) => {
+
+      this.retries = 0;
       this.connected = true;
+      this.displayConnectedMessage = 3;
+      this.countDown();
+
+      this.messages.filter(message => message.status === 'failed').forEach(msg => this.resendMessage(msg));
+
     };
 
     this.webSocket.onmessage = (event) => {
@@ -48,35 +67,71 @@ export class NotificationService {
         message.messageBody.sent = true;
         this.messages.unshift(message.messageBody);
         this.acknowledgement(message.messageBody.notificationID);
-      } else {
+      } else if (message.messageType === 'acknowledgement') {
+        setTimeout(
+          () => {
+            const temp = this.messages.find(msg => msg.timeStamp === message.timeStamp);
+            temp.status = message.status;
+            temp.notificationID = message.notificationID;
+          },
+          2000
+        );
       }
     };
 
     this.webSocket.onerror = (error) => {
       if (this.webSocket.readyState === 1) {
-        console.log(error);
+        this.connected = false;
       }
     };
 
     this.webSocket.onclose = (event) => {
       this.connected = false;
-      setTimeout(() => this.openWebSocket(), 2000);
+      this.timeout = this.retries * 15;
+      if (this.retries++ <= 3) {
+        this.reconnect();
+      }
     };
 
   }
 
-  public sendMessage(message: MessageBody) {
+  countDown() {
+    this.timeoutIDCountdown = setTimeout(() => {
+      this.displayConnectedMessage--;
+      if (this.displayConnectedMessage > 0) {
+        this.countDown();
+      }
+    }, 1000);
+  }
+
+  reconnect(): void {
+
+    this.timeoutIDReconnect = setTimeout(() => {
+      if (this.timeout-- > 0) {
+        this.reconnect();
+      } else {
+        this.openWebSocket();
+      }
+    }, 1000);
+
+  }
+
+  resendMessage(message: MessageBody) {
+    message.status = 'sending';
     const msg: Message = {
       messageType: 'notification',
       messageBody: message
     };
     if (this.connected) {
-      message.sent = true;
       this.webSocket.send(JSON.stringify(msg));
     } else {
-      this.messages.unshift(message);
-      console.log(message);
+      message.status = 'failed';
     }
+  }
+
+  public sendMessage(message: MessageBody) {
+    this.resendMessage(message);
+    this.messages.unshift(message);
   }
 
   private acknowledgement(messageID: number) {
@@ -84,7 +139,6 @@ export class NotificationService {
       messageType: 'acknowledgement',
       messageBody: messageID
     };
-    console.log(JSON.stringify(acknowledgement));
     this.webSocket.send(JSON.stringify(acknowledgement));
   }
 
@@ -94,6 +148,10 @@ export class NotificationService {
 
   get username() {
     return this.authentication.details.username;
+  }
+
+  ngOnDestroy() {
+    this.webSocket.close();
   }
 
 }

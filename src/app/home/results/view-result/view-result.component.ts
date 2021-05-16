@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
@@ -6,6 +6,7 @@ import {DataService} from '../../../_services/data.service';
 import {glow, YEARS} from '../../../_services/shared.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
+import {ActivatedRoute} from '@angular/router';
 
 interface Result {
   moduleCode: string;
@@ -52,7 +53,8 @@ export class ViewResultComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private route: ActivatedRoute
   ) {
 
     this.searchModuleCode = this.termModuleCode$.pipe(

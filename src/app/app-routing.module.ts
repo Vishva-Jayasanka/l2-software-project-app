@@ -46,6 +46,7 @@ import {ViewRegistrationComponent} from './home/registration/view-registration/v
 import {NewRegistrationComponent} from './home/registration/new-registration/new-registration.component';
 import {PaymentHistoryComponent} from './home/payment/payment-history/payment-history.component';
 import {NewRequestsComponent} from './home/request/new-requests/new-requests.component';
+import {ViewEnrollmentComponent} from './home/course-module/view-enrollment/view-enrollment.component';
 
 const routes: Routes = [
   {
@@ -109,7 +110,13 @@ const routes: Routes = [
             path: 'enroll',
             component: EnrollComponent,
             canActivate: [UserGuard]
-          }]
+          },
+          {
+            path: 'view-enrollments',
+            component: ViewEnrollmentComponent,
+            canActivate: [UserGuard]
+          }
+        ]
       },
       {
         path: 'results',

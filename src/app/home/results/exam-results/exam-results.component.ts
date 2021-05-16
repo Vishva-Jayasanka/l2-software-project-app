@@ -52,6 +52,7 @@ export class ExamResultsComponent implements OnInit {
         for (let i = 0; i < 4; i++) {
           this.results[getSemester(i)] = response.results.filter(result => result.semester === i + 1);
         }
+        console.log(response);
         Object.assign(this.filteredResults, this.results);
         this.resultsFound = !this.isEmpty();
       },
@@ -61,10 +62,14 @@ export class ExamResultsComponent implements OnInit {
       if (this.moduleCode) {
         setTimeout(() => {
           try {
-            const element = this.elementRef.nativeElement.querySelector('#collapse' + this.moduleCode);
+            const element = this.elementRef.nativeElement.querySelector(`[id^='${this.moduleCode}']`);
             if (element) {
               element.scrollIntoView({behavior: 'smooth'});
-              glow(this.elementRef, this.moduleCode, 'purple');
+              element.style.boxShadow = '0 0 0 2px purple';
+              setTimeout(
+                () => element.style.boxShadow = '0 0 0 2px white',
+                2000
+              );
             } else {
               this.snackBar.open(`No Exam Results Available for ${this.moduleCode}`, 'Close', {duration: 4000});
             }

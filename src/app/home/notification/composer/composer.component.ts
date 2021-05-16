@@ -77,8 +77,9 @@ export class ComposerComponent implements OnInit {
       subject: this.subject.value,
       message: this.messageText.value,
       timeSent: new Date(),
-      received: true,
-      sent: false
+      timeStamp: +new Date(),
+      received: false,
+      status: 'sending'
     });
     this.recipient.reset();
     this.subject.reset();
