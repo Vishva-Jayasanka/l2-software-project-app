@@ -159,7 +159,7 @@
           <input matInput (keyup)="applyFilterPending($event)" placeholder="Filter" #input>
         </mat-form-field>
 
-        <table mat-table #TableTwoSort [dataSource]="dataSourcePending" multiTemplateDataRows class="mat-elevation-z8" *ngIf="view">
+        <table mat-table #TableTwoSort [dataSource]="dataSourcePending" multiTemplateDataRows class="mat-elevation-z8" *ngIf="showPending">
           <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayPending">
             <th mat-header-cell *matHeaderCellDef> {{column}} </th>
             <td mat-cell *matCellDef="let element"> {{element[column]}} </td>

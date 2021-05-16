@@ -79,7 +79,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   dataSource;
   filterValue = '';
   filterValuePending = '';
-  dataSourcePending;
+  dataSourcePending= new MatTableDataSource([]);
   columnsToDisplayPending = ['studentID', 'title', 'fullName', 'amount', 'courseName'];
   expandedElementPending: PeriodicElementPending | null;
   viewPaymentsForm: FormGroup;
@@ -179,9 +179,6 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
       this.buttonNamePending = 'Show';
     }
 
-    this.filterValuePending = '';
-    this.dataSourcePending.filter = '';
-
   }
 
   getPendingPaymentsList() {
@@ -189,7 +186,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.data.getPaymentList({ type: 'pending' }
     ).subscribe(response => {
       this.dataSourcePending = new MatTableDataSource(response.results[0]);
-      this.filterValue = '';
+      this.filterValuePending = '';
       this.dataSourcePending.filter = '';
       this.viewPaymentsProgress = false;
     },

@@ -85,14 +85,6 @@
 
         </div>
 
-        <div class="row mb-2">
-          <mat-form-field class="col mx-0 px-1" appearance="outline">
-            <mat-label>External Note</mat-label>
-            <textarea type="text" matInput formControlName="externalNote" placeholder="External Note"></textarea>
-          </mat-form-field>
-
-        </div>
-
         <div class="row mb-0">
 
           <mat-form-field class="col mx-0 px-1" appearance="outline">
@@ -110,11 +102,36 @@
 
         </div>
 
-        <div style="overflow: hidden" class="row px-4 pb-2">
+        
+        <div class="row mb-2">
+          <mat-form-field class="col mx-0 px-1" appearance="outline">
+            <mat-label>External Note</mat-label>
+            <textarea type="text" matInput formControlName="externalNote" placeholder="External Note"></textarea>
+          </mat-form-field>
+
+        </div>
+
+
+        <!-- <div style="overflow: hidden" class="row px-4 pb-2" hidden>
           <button type="button" (click)="clickFileUpload()" id="addFile" class="btn btn-success mt-1">upload slip
           </button>
           <input type="file" id="fileUpload" hidden />
+        </div> -->
+        <image-cropper *ngIf="imageChangedEvent" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" format="png" (imageCropped)="imageCropped($event)" class="card-image p-0" ></image-cropper>
+
+        <input type="file" class="file-input"
+       [accept]="requiredFileType"
+       (change)="onFileSelected($event)" #fileUpload formControlName="payslip">
+
+        <div style="overflow: hidden" class="row px-4 pb-2">
+          {{ fileName || " upload slip &nbsp;"}}
+          <button mat-mini-fab color="primary" class="upload-btn" (click)="clickFileUpload()">
+            <mat-icon>attach_file</mat-icon>
+        
+          </button>
         </div>
+
+        <image-cropper *ngIf="fileName" [maintainAspectRatio]="true" [aspectRatio]="1" format="png" (imageCropped)="imageCropped($event)" class="card-image p-0" hidden></image-cropper>
 
 
         <div class="row px-1">

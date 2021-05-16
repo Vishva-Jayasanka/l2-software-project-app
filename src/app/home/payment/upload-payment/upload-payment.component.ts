@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../_services/data.service';
 import {EMPTY, Subject, Subscription} from 'rxjs';
@@ -6,6 +6,8 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {AuthenticationService} from 'src/app/_services/authentication.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ConfirmUploadDialogComponent} from '../payment.component';
+import { HttpClient } from '@angular/common/http';
+import {ImageCroppedEvent} from 'ngx-image-cropper';
 
 export interface Bank {
   bankID: number;
@@ -18,10 +20,14 @@ export interface Bank {
   styleUrls: ['./upload-payment.component.css']
 })
 export class UploadPaymentComponent implements OnInit {
-
+  @ViewChild('fileUpload') fileUploadClick: ElementRef;
   uploadAPaymentProgress = false;
   studentIDNotFound = false;
   success = false;
+  fileName = '';
+  requiredFileType="image/png";
+  imageChangedEvent: any = '';
+  uploadedImageBase64: any = '';
 
   error = '';
 
@@ -41,6 +47,7 @@ export class UploadPaymentComponent implements OnInit {
     private elementRef: ElementRef,
     private authentication: AuthenticationService,
     public dialog: MatDialog,
+    private http: HttpClient,
     // @Inject(MAT_DIALOG_DATA) public userData
   ) {
     this.searchSubscription = this.term$.pipe(
@@ -85,7 +92,7 @@ export class UploadPaymentComponent implements OnInit {
     this.error = '';
     this.success = false;
     if (this.paymentForm.valid) {
-      this.data.uploadPayment(this.paymentForm.value, this.getRole).subscribe(
+      this.data.uploadPayment(this.paymentForm.value, this.getRole,this.uploadedImageBase64).subscribe(
         response => {
           if (response.status) {
             this.openDialog();
@@ -141,7 +148,7 @@ export class UploadPaymentComponent implements OnInit {
   }
 
   clickFileUpload() {
-    document.getElementById('fileUpload').click();
+    this.fileUploadClick.nativeElement.click();
   }
 
 
@@ -182,11 +189,17 @@ export class UploadPaymentComponent implements OnInit {
   }
 
   get paymentDate() {
-    return this.paymentForm.get('deposit').get('totalPaid');
+    return this.paymentForm.get('deposit').get('paymentDate');
   }
 
   resetForm() {
-    this.paymentForm.reset();
+    this.bankName.setValue(null);
+    this.slipNumber.setValue(null);
+    this.externalNote.setValue(null);
+    this.totalPaid.setValue(null);
+    this.paymentDate.setValue(null);
+    this.fileName=null;
+    
     this.elementRef.nativeElement.querySelector('#course-name').scrollIntoView();
   }
 
@@ -199,6 +212,14 @@ export class UploadPaymentComponent implements OnInit {
       if (response) {
       }
     });
+  }
+
+  onFileSelected(event) {
+    this.imageChangedEvent = event;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.uploadedImageBase64 = event.base64;
   }
 
 }

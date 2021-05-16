@@ -214,12 +214,12 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}delete-message`, {messageID});
   }
 
-  uploadPayment(paymentForm, role) {
+  uploadPayment(paymentForm, role, paymentSlip) {
     if (role === 'Admin') {
-      return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm});
+      return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm,paymentSlip});
     }
     else if (role === 'Student') {
-      return this.http.post<any>(`${environment.studentUrl}upload-payment`, {paymentForm});
+      return this.http.post<any>(`${environment.studentUrl}upload-payment`, {paymentForm,paymentSlip});
    }
   }
 
