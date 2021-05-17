@@ -1,6 +1,5 @@
 import {OnInit, Component, ElementRef, ViewChild, AfterViewInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {YEARS} from '../../../_services/shared.service';
 import {DataService} from '../../../_services/data.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -8,7 +7,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {AuthenticationService} from 'src/app/_services/authentication.service';
 import {MatDialogRef} from '@angular/material/dialog';
-import {DataSource} from '@angular/cdk/collections';
 
 export interface Course {
   courseID: number;
@@ -22,6 +20,7 @@ export const COURSES: Course[] = [
 
 export interface PeriodicElement {
   position: number;
+  paymentID: number;
   regNo: string;
   title: string;
   name: string;
@@ -29,9 +28,9 @@ export interface PeriodicElement {
   courseName: string;
 }
 
-
 export interface PeriodicElementPending {
   position: number;
+  id: number;
   regNo: string;
   title: string;
   name: string;
@@ -39,6 +38,15 @@ export interface PeriodicElementPending {
   courseName: string;
 }
 
+export interface PeriodicElementprint {
+  studentID: string;
+  title: string;
+  name: string;
+  regFee: number;
+  slipNumber: number;
+  date: string;
+  paymentAmount: number;
+}
 
 @Component({
   selector: 'app-view-payments-home',
@@ -58,19 +66,27 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   confirmedStudentList = new MatTableDataSource([]);
   columnsToDisplayConfirmed = ['studentID', 'title', 'fullName', 'totalPayment', 'courseName'];
   expandedElementConfirmed: PeriodicElement | null;
+  displayedColumnsprint = ['studentID', 'title', 'name', 'regFee', 'slipNumber', 'date', 'paymentAmount', 'slipNumber', 'date', 'paymentAmount', 'star'];
+  dataSource;
   filterValue = '';
   filterValuePending = '';
-  dataSourcePending;
-  columnsToDisplayPending = ['position', 'studentID', 'title', 'fullName', 'amount', 'courseName'];
+  dataSourcePending = new MatTableDataSource<PeriodicElementPending>([]);
+  columnsToDisplayPending = ['studentID', 'title', 'fullName', 'amount', 'courseName'];
   expandedElementPending: PeriodicElementPending | null;
   viewPaymentsForm: FormGroup;
   viewPaymentsProgress: boolean;
   public show = false;
   public view = false;
-  public buttonName: any = 'Show';
+  public shows = false;
+  public buttonNameprint: any = 'print';
   public buttonNamePending = 'Show';
+  public showConfimed = false;
+  public showPending = false;
+  public buttonName: any = 'Show';
+
   courses: Course[] = COURSES;
-  years = YEARS;
+  years;
+  defaultYear = new Date().getFullYear();
   user;
 
   error = '';
@@ -85,7 +101,6 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
-    private elementRef: ElementRef,
     private authentication: AuthenticationService,
   ) {
   }
@@ -118,38 +133,41 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.user = this.authentication.details;
   }
 
-  getConfirmedPaymentsList() {
-    this.show = true;
-    this.viewPaymentsProgress = true;
-    this.error = '';
-    this.success = false;
-    this.data.getPaymentList({
-      courseID: this.courseName.value,
-      academicYear: this.academicYear.value,
-      type: 'confirmed'
-    }).subscribe(response => {
-        console.log(response);
-        this.dataSourceConfirmed = new MatTableDataSource(response.results[0]);
-        this.confirmedStudentList = response.results[0];
-        this.filterValue = '';
-        this.dataSourceConfirmed.filter = '';
-        this.viewPaymentsProgress = false;
-      },
-      error => console.log(error)
-    ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
+  toggleConfirmedPaymentsList() {
+    this.showConfimed = !this.showConfimed;
+    if (this.showConfimed) {
+      this.buttonName = 'Hide';
+      this.viewPaymentsProgress = true;
+      this.error = '';
+      this.success = false;
+      this.data.getPaymentList({
+        courseID: this.courseName.value,
+        academicYear: this.academicYear.value,
+        type: 'confirmed'
+      }).subscribe(response => {
+          console.log(response);
+          this.dataSourceConfirmed = new MatTableDataSource(response.results[0]);
+          this.confirmedStudentList = response.results[0];
+          this.filterValue = '';
+          this.dataSourceConfirmed.filter = '';
+          this.viewPaymentsProgress = false;
+        },
+        error => console.log(error)
+      ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
+    } else {
+      this.buttonName = 'Show';
+    }
+
   }
 
   togglePending() {
-    this.view = !this.view;
-    if (this.view) {
+    this.showPending = !this.showPending;
+    if (this.showPending) {
       this.buttonNamePending = 'Hide';
       this.getPendingPaymentsList();
     } else {
       this.buttonNamePending = 'Show';
     }
-
-    this.filterValuePending = '';
-    this.dataSourcePending.filter = '';
 
   }
 
@@ -157,8 +175,9 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     this.viewPaymentsProgress = true;
     this.data.getPaymentList({type: 'pending'}
     ).subscribe(response => {
+        console.log(response);
         this.dataSourcePending = new MatTableDataSource(response.results[0]);
-        this.filterValue = '';
+        this.filterValuePending = '';
         this.dataSourcePending.filter = '';
         this.viewPaymentsProgress = false;
       },
@@ -166,11 +185,41 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
     ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
   }
 
+  onChange() {
+    console.log('onchange');
+    this.showConfimed = false;
+    this.buttonName = 'Show';
+  }
+
+  togglePrint() {
+    this.shows = !this.shows;
+    if (this.shows) {
+      this.buttonNameprint = 'print';
+      this.getPrint();
+    } else {
+      this.buttonNameprint = 'Sw';
+    }
+  }
+
+  getPrint() {
+    this.viewPaymentsProgress = true;
+    this.data.getPrintList({
+      courseID: this.courseName.value,
+      academicYear: this.academicYear.value,
+      type: 'confirmed'
+    }).subscribe(response => {
+        this.dataSource = new MatTableDataSource(response.results[0]);
+        this.viewPaymentsProgress = false;
+      },
+      error => console.log(error)
+    ).add(() => setTimeout(() => this.viewPaymentsProgress = false, 1000));
+  }
+
   ngAfterViewInit() {
-    this.dataSourceConfirmed.paginator = this.tableOnePaginator;
-    this.dataSourcePending.paginator = this.tableTwoPaginator;
-    this.dataSourceConfirmed.sort = this.tableOneSort;
-    this.dataSourcePending.sort = this.tableTwoSort;
+    // this.dataSourceConfirmed.paginator = this.tableOnePaginator;
+    // this.dataSourcePending.paginator = this.tableTwoPaginator;
+    // this.dataSourceConfirmed.sort = this.tableOneSort;
+    // this.dataSourcePending.sort = this.tableTwoSort;
   }
 
 
@@ -210,7 +259,6 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   get amount() {
     return this.viewPaymentsForm.get('amount');
   }
-
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------

@@ -235,16 +235,42 @@ export class DataService {
     return this.http.post<any>(`${environment.adminUrl}delete-message`, {messageID});
   }
 
-  uploadPayment(paymentForm) {
-    return this.http.post<any>(`${environment.adminUrl}upload-payment`, {paymentForm});
+  uploadPayment(paymentForm: {}): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}upload-payment`, paymentForm, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
+  getPayments(): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}get-payments`, {});
+  }
+
+  getPaymentSlip(data: {}): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}get-payment-slip`, data, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
+  getPaymentDetails(paymentID: number): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}get-payment-details-payment-id`, {paymentID});
   }
 
   getPaymentList(data: any): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-payment-list`, data);
   }
 
+  getPrintList(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.adminUrl}get-print-list`, data);
+  }
+
   getStudentPaymentDetails(slipNo): Observable<any> {
     return this.http.post<any>(`${environment.adminUrl}get-payment-details`, {slipNo});
+  }
+
+  getStudentPaymentTot(studentID: any) {
+    return this.http.post<any>(`${environment.adminUrl}get-student-payment-tot`, {studentID});
   }
 
   getStudentPaymentList(studentID: any): Observable<any> {
@@ -252,7 +278,7 @@ export class DataService {
   }
 
   getStudentPaymentLists(): Observable<any> {
-    return this.http.post<any>(`${environment.adminUrl}get-students-payment-details`, {});
+    return this.http.post<any>(`${environment.studentUrl}get-students-payment-details`, {});
   }
 
   deletePayment(data): Observable<any> {

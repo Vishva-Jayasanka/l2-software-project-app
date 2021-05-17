@@ -27,7 +27,6 @@ export class AddRequestComponent implements OnInit, AfterViewInit {
   deleteRequestProgress = false;
 
   documentUploadProgress = 0;
-
   documentDownloadProgress = 0;
   documentDownloadError = '';
 
@@ -111,7 +110,6 @@ export class AddRequestComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.requestID);
     this.uploadRequestProgress = true;
     if (this.requestID) {
       this.data.getRequestDetails(this.requestID).subscribe(
@@ -189,38 +187,38 @@ export class AddRequestComponent implements OnInit, AfterViewInit {
     this.documentUploadProgress = 0;
     if (this.requestForm.valid) {
       if (this.documents.length > 0) {
-      if (confirm('Are you sure you want to submit this form?')) {
-    const data = this.requestForm.value;
-    data.requestID = this.requestID;
-    data.new = !this.requestID;
-    data.documents = this.documents;
-    this.data.uploadRequest(data).subscribe(
-      response => {
-        if (response.type === HttpEventType.DownloadProgress || response.type === HttpEventType.UploadProgress) {
-          this.documentUploadProgress = Math.round(100 * response.loaded / response.total);
-        } else if (response.type === HttpEventType.Response) {
-          this.success = true;
-          if (this.getRole === 'Admin') {
-            this.router.navigate(['../new-requests', {activeTab: 0}], {relativeTo: this.route}).then(
-              () => this.snackBar.open('Request uploaded successfully', 'Close', {duration: 3000})
-            );
-          } else {
-            this.router.navigate(['../submitted-requests', {requestID: response.body.requestID}], {relativeTo: this.route});
-          }
+        if (confirm('Are you sure you want to submit this form?')) {
+          const data = this.requestForm.value;
+          data.requestID = this.requestID;
+          data.new = !this.requestID;
+          data.documents = this.documents;
+          this.data.uploadRequest(data).subscribe(
+            response => {
+              if (response.type === HttpEventType.DownloadProgress || response.type === HttpEventType.UploadProgress) {
+                this.documentUploadProgress = Math.round(100 * response.loaded / response.total);
+              } else if (response.type === HttpEventType.Response) {
+                this.success = true;
+                if (this.getRole === 'Admin') {
+                  this.router.navigate(['../new-requests', {activeTab: 0}], {relativeTo: this.route}).then(
+                    () => this.snackBar.open('Request uploaded successfully', 'Close', {duration: 3000})
+                  );
+                } else {
+                  this.router.navigate(['../submitted-requests', {requestID: response.body.requestID}], {relativeTo: this.route});
+                }
+              }
+            },
+            error => {
+              this.error = error;
+            }
+          ).add(() => this.uploadRequestProgress = false);
         }
-      },
-      error => {
-        this.error = error;
+      } else {
+        this.uploadRequestProgress = false;
+        glow(this.elementRef, 'documents', 'rgb(255,0,0)');
+        setTimeout(() => {
+          this.elementRef.nativeElement.querySelector('#documents').scrollIntoView({behavior: 'smooth'});
+        }, 2000);
       }
-    ).add(() => this.uploadRequestProgress = false);
-    }
-    } else {
-      this.uploadRequestProgress = false;
-      glow(this.elementRef, 'documents', 'rgb(255,0,0)');
-      setTimeout(() => {
-        this.elementRef.nativeElement.querySelector('#documents').scrollIntoView({behavior: 'smooth'});
-      }, 2000);
-    }
     } else {
       this.uploadRequestProgress = false;
       scrollToFirstInvalidElement(this.elementRef);

@@ -4,6 +4,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, Valid
 import {MatDialog} from '@angular/material/dialog';
 import {DataService} from '../../../../_services/data.service';
 import {ConfirmUpdateDialogComponent, ConfirmDeleteDialogComponent} from '../view-payments-home.component';
+import {HttpEventType} from '@angular/common/http';
 
 export interface Bank {
   bankID: number;
@@ -19,6 +20,7 @@ export interface Bank {
 export class ViewPaymentDetailsComponent implements OnInit {
 
   @Input() data: any;
+  @Input() edit: any;
   @Input() position: number;
   @Output() deleteSelectedPayment = new EventEmitter<any>();
 
@@ -28,6 +30,8 @@ export class ViewPaymentDetailsComponent implements OnInit {
   dataSource;
   date1;
   maxDate = new Date();
+
+  slip: string;
 
   banks: Bank[] = [
     {bankID: 0, bankName: 'BOC'},
@@ -43,7 +47,6 @@ export class ViewPaymentDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.data);
     this.resetForm();
     this.paymentDetailsForm = this.formBuilder.group({
         paymentDetailsDepositor: this.formBuilder.group({
@@ -77,8 +80,17 @@ export class ViewPaymentDetailsComponent implements OnInit {
           this.academicYear.setValue(this.dataSource.academicYear);
           this.slipNumber.setValue(this.dataSource.slipNo);
           this.amountPaid.setValue(this.dataSource.amount);
-          this.bankName.setValue(this.banks.find(bank => bank.bankName.trim() === this.data.bank.trim()).bankID);
-          this.paymentDate.setValue(this.data.paymentDate);
+          this.bankName.setValue(this.banks.find(bank => bank.bankName.trim() === this.dataSource.bank.trim()).bankID);
+          this.paymentDate.setValue(this.dataSource.paymentDate);
+          this.dataService.getPaymentSlip({studentID: this.data.studentID, paymentID: this.data.id}).subscribe(
+            response1 => {
+              if (response1.type === HttpEventType.Response) {
+                this.slip = response1.body.paymentSlip ? 'data:image/png;base64,' + response1.body.paymentSlip : null;
+              }
+            }, error1 => {
+              this.error = error1;
+            }
+          );
         }
       },
       error => this.error = error
@@ -160,12 +172,9 @@ export class ViewPaymentDetailsComponent implements OnInit {
   openConfirmUpdateDialog() {
     const dialogRef = this.dialog.open(ConfirmUpdateDialogComponent, {
       width: '450px',
-
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(response => {
-      if (response) {
-      }
     });
   }
 

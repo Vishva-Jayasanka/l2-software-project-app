@@ -1,12 +1,11 @@
 <div class="card">
 
   <div class="card-header">
-    <h5 class="sub-header">payment related details</h5>
+    <h5 class="sub-header">Payment related details</h5>
   </div>
 
   <div class="card-body px-0 m-0 w-100">
 
-    <form [formGroup]="viewPaymentForm">
       <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="overflow-x:scroll;">
 
         <ng-container matColumnDef="no">
@@ -55,7 +54,6 @@
         </tr>
 
       </table>
-    </form>
 
   </div>
 
