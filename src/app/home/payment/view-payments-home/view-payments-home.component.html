@@ -51,12 +51,12 @@
 
         <div class="row mx-0 px-0">
 
-            <mat-form-field class="mx-2"  *ngIf="showConfimed">
+            <mat-form-field class="mx-2"  *ngIf="showConfirmed">
               <mat-label>Filter</mat-label>
               <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
             </mat-form-field>
 
-            <table mat-table #TableOneSort [dataSource]="dataSourceConfirmed" multiTemplateDataRows class="w-100" *ngIf="showConfimed" >
+            <table mat-table #TableOneSort [dataSource]="dataSourceConfirmed" multiTemplateDataRows class="w-100" *ngIf="showConfirmed" >
 
               <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayConfirmed">
                 <th mat-header-cell *matHeaderCellDef> {{column}} </th>
@@ -81,14 +81,14 @@
 
             </table>
 
-            <mat-paginator class="w-100" #TableOnePaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!showConfimed"></mat-paginator>
+            <mat-paginator *ngIf="showConfirmed" [pageSizeOptions]="[5, 10, 20]" showConfirmedFirstLastButtons></mat-paginator>
 
         </div>
             <div class="row mx-2 mb-3">
-                  <button mat-raised-button color="primary" class="mx-2" (click)="togglePrint()" type="button" [hidden]="!showConfimed">{{buttonNameprint}}</button>
+                  <button mat-raised-button color="primary" class="mx-2" (click)="togglePrint()" type="button" [hidden]="!showConfirmed">{{buttonNameprint}}</button>
             </div>
 
-                <table mat-table [dataSource]="dataSource" [hidden]="!shows" *ngIf="showConfimed">
+                <table mat-table [dataSource]="dataSource" [hidden]="!shows" *ngIf="showConfirmed">
 
                   <ng-container matColumnDef="studentID" sticky>
                     <th mat-header-cell *matHeaderCellDef> Student ID </th>
@@ -140,13 +140,15 @@
                   <tr mat-header-row *matHeaderRowDef="displayedColumnsprint"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumnsprint;"></tr>
                 </table>
+                <!-- <mat-paginator *ngIf="showConfirmed" [pageSizeOptions]="[5, 10, 20]" showConfirmedFirstLastButtons></mat-paginator> -->
+                
           </div>
 
       </div>
 
     </mat-tab>
 
-    <mat-tab label="Pending Payments">
+    <mat-tab label="Pending Payments" >
 
       <div class="card px-0 m-0 overflow-hidden">
 
@@ -186,7 +188,7 @@
 
         </table>
 
-        <mat-paginator #TableTwoPaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" [hidden]="!showPending"></mat-paginator>
+        <mat-paginator *ngIf="showPending" [pageSizeOptions]="[5, 10, 20]" showPendingFirstLastButtons></mat-paginator>
 
         </div>
 

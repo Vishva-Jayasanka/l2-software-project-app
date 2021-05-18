@@ -206,6 +206,7 @@ export class UploadPaymentComponent implements OnInit, AfterViewInit {
         this.data.uploadPayment(paymentDetails).subscribe(
           response => {
             if (response.type === HttpEventType.DownloadProgress || response.type === HttpEventType.UploadProgress) {
+              this.openDialog();
               this.slipUploadProgress = Math.round(100 * response.loaded / response.total);
             } else if (response.type === HttpEventType.Response) {
               this.success = true;

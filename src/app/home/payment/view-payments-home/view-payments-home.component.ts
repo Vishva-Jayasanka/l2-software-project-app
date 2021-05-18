@@ -80,7 +80,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   public shows = false;
   public buttonNameprint: any = 'print';
   public buttonNamePending = 'Show';
-  public showConfimed = false;
+  public showConfirmed = false;
   public showPending = false;
   public buttonName: any = 'Show';
 
@@ -92,8 +92,8 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   error = '';
   success = false;
 
-  @ViewChild('TableOnePaginator', {static: true}) tableOnePaginator: MatPaginator;
-  @ViewChild('TableTwoPaginator', {static: true}) tableTwoPaginator: MatPaginator;
+  @ViewChild(MatPaginator) confirmedPaginator: MatPaginator;
+  @ViewChild(MatPaginator) pendingPaginator: MatPaginator;
   @ViewChild('TableOneSort', {static: true}) tableOneSort: MatSort;
   @ViewChild('TableTwoSort', {static: true}) tableTwoSort: MatSort;
 
@@ -134,8 +134,8 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
   }
 
   toggleConfirmedPaymentsList() {
-    this.showConfimed = !this.showConfimed;
-    if (this.showConfimed) {
+    this.showConfirmed = !this.showConfirmed;
+    if (this.showConfirmed) {
       this.buttonName = 'Hide';
       this.viewPaymentsProgress = true;
       this.error = '';
@@ -150,6 +150,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
           this.confirmedStudentList = response.results[0];
           this.filterValue = '';
           this.dataSourceConfirmed.filter = '';
+          this.dataSourceConfirmed.paginator = this.confirmedPaginator;
           this.viewPaymentsProgress = false;
         },
         error => console.log(error)
@@ -179,6 +180,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
         this.dataSourcePending = new MatTableDataSource(response.results[0]);
         this.filterValuePending = '';
         this.dataSourcePending.filter = '';
+        this.dataSourcePending.paginator = this.pendingPaginator;
         this.viewPaymentsProgress = false;
       },
       error => console.log(error)
@@ -187,7 +189,7 @@ export class ViewPaymentsHomeComponent implements OnInit, AfterViewInit {
 
   onChange() {
     console.log('onchange');
-    this.showConfimed = false;
+    this.showConfirmed = false;
     this.buttonName = 'Show';
   }
 
@@ -285,7 +287,6 @@ export class ConfirmUpdateDialogComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------

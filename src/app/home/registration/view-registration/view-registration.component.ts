@@ -51,7 +51,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   registration: any;
   registrations: any;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
 
@@ -92,8 +92,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    
   }
 
   getData(){
@@ -105,6 +104,8 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(response.results[0]);
         this.filterValue = '';
         this.dataSource.filter = '';
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
         this.viewRegistrationProgress = false;
       },
       error => console.log(error)
