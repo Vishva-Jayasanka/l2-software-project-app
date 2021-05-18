@@ -25,6 +25,8 @@ export class ViewPaymentsComponent implements OnInit {
   viewPaymentProgress: boolean;
   success = false;
   error = '';
+  total: number;
+  Remaining: number;
 
   constructor(
     private data: DataService,
@@ -53,7 +55,8 @@ export class ViewPaymentsComponent implements OnInit {
       this.data.getStudentPaymentTot(studentId).subscribe(
         response => {
           if (response.status) {
-            console.log('tot');
+            this.total=response.results[0][0].TOTAL;
+            this.Remaining=response.results[0][0].REMAIN;
           } else {
             this.viewPaymentProgress = true;
           }
