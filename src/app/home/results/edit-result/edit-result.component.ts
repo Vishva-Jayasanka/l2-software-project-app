@@ -44,6 +44,7 @@ export class EditResultComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     private router: Router
   ) {
+
     this.searchSubscription = this.term$.pipe(
       debounceTime(1000),
       switchMap(moduleCode => {
@@ -51,6 +52,7 @@ export class EditResultComponent implements OnInit, OnDestroy {
         return EMPTY;
       })
     ).subscribe();
+
   }
 
   ngOnInit(): void {
@@ -59,15 +61,22 @@ export class EditResultComponent implements OnInit, OnDestroy {
       response => this.academicYears = response.academicYears,
       error => this.error = error
     ).add(() => this.editResultsProgress = false);
-    this.route.params.subscribe(param => {
-      this.roteParameter = param.moduleCode;
-    });
+
     this.editResultsForm = this.formBuilder.group({
       moduleCode: [this.roteParameter, [Validators.required, Validators.pattern(/^[A-Za-z]{2}[0-9]{4}/)]],
       moduleName: [''],
       academicYear: [{value: '', disabled: true}, [Validators.required]],
       dateHeld: [{value: '', disabled: true}, [Validators.required]]
     });
+
+    this.route.params.subscribe(params => {
+      if (params.moduleCode && /^[A-Za-z]{2}[0-9]{4}/.test(params.moduleCode)) {
+        this.moduleCode.setValue(params.moduleCode);
+        this.editResultsProgress = true;
+        this.checkModule(params.moduleCode);
+      }
+    });
+
   }
 
   ngOnDestroy(): void {

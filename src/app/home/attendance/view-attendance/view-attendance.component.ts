@@ -1,13 +1,15 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {glow, YEARS} from '../../../_services/shared.service';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {MatSort} from '@angular/material/sort';
 import {DataService} from '../../../_services/data.service';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AttendanceDialogComponent} from '../module-attendance/module-attendance.component';
+
+import {glow, YEARS} from '../../../_services/shared.service';
 
 interface Attendance {
   moduleCode: string;
@@ -38,7 +40,7 @@ export class ViewAttendanceComponent implements OnInit {
   enteredKeyword = 0;
 
   viewAttendanceForm: FormGroup;
-  attendance: Attendance[] = [];
+  attendance: Attendance[];
 
   displayedColumnsStudent = ['no', 'moduleCode', 'moduleName', 'type', 'academicYear', 'attendance', 'details'];
   displayedColumnsModule = ['no', 'type', 'dateHeld', 'academicYear', 'attendance', 'details'];
@@ -49,6 +51,7 @@ export class ViewAttendanceComponent implements OnInit {
   private searchModuleCode: Subscription;
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('filter') filter;
 
   constructor(
@@ -119,6 +122,7 @@ export class ViewAttendanceComponent implements OnInit {
           this.attendance = response.attendance ? response.attendance as [] : [];
           this.displayedColumns = this.displayedColumnsStudent;
           this.dataSource = new MatTableDataSource<Attendance>(this.attendance);
+          this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           glow(this.elementRef, 'view_attendance', 'rgb(0,50,255)');
         },

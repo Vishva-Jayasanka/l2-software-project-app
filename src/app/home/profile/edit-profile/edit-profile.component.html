@@ -37,21 +37,7 @@
             <div class="input-group-prepend w-25">
               <span class="input-group-text w-100">Email</span>
             </div>
-            <input id="email-input"
-                   [ngClass]="{'form-control': true, 'is-valid': isGeneralSettingsEdited.email.success, 'is-invalid': isGeneralSettingsEdited.email.error || (email.touched && email.errors?.email)}"
-                   type="text"
-                   formControlName="email"
-                   [readOnly]="!isGeneralSettingsEdited.email.updated"
-            />
-            <div class="input-group-append">
-              <button id="email" class="btn btn-outline-secondary" (click)="saveGeneralSettingsChanges($event.target, email.value)" [disabled]="isGeneralSettingsEdited.email.progress || !email.valid">
-                <span *ngIf="isGeneralSettingsEdited.email.progress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                {{ isGeneralSettingsEdited.email.updated ? 'Save' : 'Edit' }}
-              </button>
-            </div>
-            <div *ngIf="isGeneralSettingsEdited.email.success" class="valid-feedback">Email address updated successfully</div>
-            <div *ngIf="isGeneralSettingsEdited.email.error" class="invalid-feedback">{{ isGeneralSettingsEdited.email.error }}</div>
-            <div *ngIf="email.touched && (email.errors?.required && email.errors?.email)" class="invalid-feedback">Invalid email address</div>
+            <input class="form-control" style="cursor: not-allowed" formControlName="email" readonly />
           </div>
 
           <div class="input-group mb-3 mx-0 col-12">

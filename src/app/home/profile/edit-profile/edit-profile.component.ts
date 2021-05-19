@@ -7,7 +7,6 @@ import {Router} from '@angular/router';
 import {PasswordValidator} from '../../../_services/shared.service';
 
 interface EditGeneralSettings {
-  email: FieldData;
   phone: FieldData;
   address: FieldData;
 }
@@ -40,7 +39,6 @@ export class EditProfileComponent implements OnInit {
 
   editGeneralSettings: FormGroup;
   isGeneralSettingsEdited: EditGeneralSettings = {
-    email: {},
     phone: {},
     address: {}
   };
@@ -89,7 +87,7 @@ export class EditProfileComponent implements OnInit {
     this.editGeneralSettings = this.formBuilder.group({
       fullName: ['A.K.V Jayasanka'],
       username: ['184061R'],
-      email: ['', [Validators.required, Validators.email]],
+      email: [''],
       phone: ['', [Validators.required, Validators.pattern(/^(0[1-9]{9})|(\+94[1-9]{9})$/)]],
       address: ['', [Validators.required, Validators.minLength(6)]]
     });

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PasswordValidator} from '../../_services/shared.service';
@@ -30,11 +30,14 @@ export class ResetPasswordComponent implements OnInit {
   token: string;
   passwordResetForm: FormGroup;
 
+  private chrome = navigator.userAgent.indexOf('Chrome') > -1;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authentication: AuthenticationService
+    private authentication: AuthenticationService,
+    private elementRef: ElementRef
   ) {
 
     this.passwordResetForm = this.formBuilder.group({
@@ -65,8 +68,9 @@ export class ResetPasswordComponent implements OnInit {
       this.token = params.token;
     });
 
+    console.log('here');
     if (!this.token) {
-      this.router.navigate(['/auth/forgot-password']);
+      this.router.navigate(['../forgot-password'], {relativeTo: this.route});
     }
 
   }

@@ -1,11 +1,11 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {EMPTY, Subject, Subscription} from 'rxjs';
 import {DataService} from '../../../_services/data.service';
 import * as XLSX from 'xlsx';
 import {ActivatedRoute, Router} from '@angular/router';
-import {YEARS, glow} from '../../../_services/shared.service';
+import {glow} from '../../../_services/shared.service';
 
 export interface Exam {
   examID: number;
@@ -47,6 +47,7 @@ export class UploadResultComponent implements OnInit {
   fileError = false;
   success = false;
 
+  @ViewChild('resultUploadFormRef') resultUploadFormRef;
   constructor(
     private formBuilder: FormBuilder,
     private data: DataService,
@@ -65,14 +66,7 @@ export class UploadResultComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.uploadResultsProgress = true;
-    this.data.getAcademicYears().subscribe(
-      response => {
-        this.academicYears = response.academicYears;
-      },
-      error => this.error = error
-    ).add(() => this.uploadResultsProgress = false);
-
+    this.getAcademicYears();
     this.route.params.subscribe(params => {
       this.routeParams = params.moduleCode;
     });
@@ -85,6 +79,16 @@ export class UploadResultComponent implements OnInit {
     if (this.routeParams !== undefined) {
       this.checkModule(this.routeParams);
     }
+  }
+
+  getAcademicYears(): void {
+    this.uploadResultsProgress = true;
+    this.data.getAcademicYears().subscribe(
+      response => {
+        this.academicYears = response.academicYears;
+      },
+      error => this.error = error
+    ).add(() => this.uploadResultsProgress = false);
   }
 
   checkModule(moduleCode: string) {
@@ -213,8 +217,10 @@ export class UploadResultComponent implements OnInit {
   }
 
   resetForm() {
-    this.resultsFile = [];
+    this.resultsFile = null;
     this.moduleExists = false;
+    this.resultUploadFormRef.reset();
+    this.getAcademicYears();
     setTimeout(() => this.uploadResultsProgress = false, 1000);
   }
 

@@ -11,7 +11,7 @@
       <mat-progress-bar [hidden]="!uploadResultsProgress" mode="query"></mat-progress-bar>
     </div>
 
-    <form [formGroup]="uploadResultsForm">
+    <form [formGroup]="uploadResultsForm" #resultUploadFormRef="ngForm">
 
       <div class="row mb-2">
 
