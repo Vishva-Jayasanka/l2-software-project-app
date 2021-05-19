@@ -92,8 +92,7 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    
   }
 
   getData(){
@@ -106,6 +105,8 @@ export class ViewRegistrationComponent implements OnInit, AfterViewInit {
         this.filterValue = '';
         this.dataSource.filter = '';
         this.viewRegistrationProgress = false;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
       },
       error => console.log(error)
     ).add(() => setTimeout(() => this.viewRegistrationProgress = false, 1000));
